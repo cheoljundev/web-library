@@ -1,6 +1,7 @@
 package com.weblibrary.domain.user.repository;
 
 import com.weblibrary.domain.user.model.User;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 public class MemoryUserRepository implements UserRepository {
+
+    @Getter
+    private static final UserRepository instance = new MemoryUserRepository();
+
+    private MemoryUserRepository() {
+    }
 
     private final Map<Long, User> store = new HashMap<>();
 
