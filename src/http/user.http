@@ -1,0 +1,19 @@
+### home test
+GET {{host}}/site
+
+### join GET test
+GET {{host}}/site/join
+
+### join POST test
+POST {{host}}/site/join
+Content-Type: application/x-www-form-urlencoded
+
+username=kim&
+password=1111
+
+### login test
+POST {{host}}/site/login
+Content-Type: application/x-www-form-urlencoded
+
+username=kim&
+password=1111

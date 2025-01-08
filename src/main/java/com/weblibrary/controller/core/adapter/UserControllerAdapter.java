@@ -32,7 +32,18 @@ public class UserControllerAdapter implements HandlerAdapter {
          * UserController는 view파일 경로에 home을 꼭 붙인다.
          * paramMap과 model을 process에서 가공
          */
-        String viewName = "home/" + controller.process(paramMap, model);
+        String processResult = controller.process(request, response, paramMap, model);
+
+        /**
+         * processResult이 null인 경우는 redirect된 경우이다. 이 경우 jsp를 그리지 않는다. (PRG패턴)
+         * ModelView가 아닌 null을 반환한다.
+         */
+        if (processResult == null) {
+            return null;
+        }
+
+        String viewName = "home/" + processResult;
+
 
         /* 논리적 이름(viewName)으로 ModelView 객체를 생성하고, model을 삽입 */
         ModelView mv = new ModelView(viewName);

@@ -18,6 +18,8 @@ public class MemoryUserRepository implements UserRepository {
 
     private final Map<Long, User> store = new HashMap<>();
 
+    public static Long lastId = 0L;
+
     @Override
     public void save(User user) {
         store.put(user.getId(), user);
