@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class UserRepositoryTest {
 
-    private final UserRepository userRepository = new MemoryUserRepository();
+    private final UserRepository userRepository = MemoryUserRepository.getInstance();
 
     @AfterEach
     void afterEach() {
