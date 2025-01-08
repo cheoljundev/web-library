@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * UserContoller를 핸들링하는 어댑터
+ */
 public class UserControllerAdapter implements HandlerAdapter {
     @Override
     public boolean supports(Controller handler) {
@@ -25,14 +28,25 @@ public class UserControllerAdapter implements HandlerAdapter {
         Map<String, String> paramMap = createParamMap(request);
         Map<String, Object> model = new HashMap<>();
 
+        /**
+         * UserController는 view파일 경로에 home을 꼭 붙인다.
+         * paramMap과 model을 process에서 가공
+         */
         String viewName = "home/" + controller.process(paramMap, model);
 
+        /* 논리적 이름(viewName)으로 ModelView 객체를 생성하고, model을 삽입 */
         ModelView mv = new ModelView(viewName);
         mv.setModel(model);
 
         return mv;
     }
 
+    /**
+     * request에 들어온 paramNames로 param을 받아 Map에 저장
+     *
+     * @param request : request 객체
+     * @return : paramMap
+     */
     private static Map<String, String> createParamMap(HttpServletRequest request) {
         Map<String, String> paramMap = new HashMap<>();
         request.getParameterNames().asIterator()
