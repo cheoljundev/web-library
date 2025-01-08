@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.*;
 
 @RequiredArgsConstructor
-public class MyView {
+public class View {
     private final String viewPath;
 
     public void render(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
