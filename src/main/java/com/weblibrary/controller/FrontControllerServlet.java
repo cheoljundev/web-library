@@ -3,6 +3,7 @@ package com.weblibrary.controller;
 import com.weblibrary.controller.core.HandlerAdapter;
 import com.weblibrary.controller.core.*;
 import com.weblibrary.controller.core.adapter.*;
+import com.weblibrary.controller.usercontroller.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -38,6 +39,8 @@ public class FrontControllerServlet extends HttpServlet {
      */
     private void initHandlerMappingMap() {
         handlerMappingMap.put("/site", new UserIndexController());
+        handlerMappingMap.put("/site/join", new UserJoinController());
+        handlerMappingMap.put("/site/login", new UserLoginController());
     }
 
     /**
@@ -64,6 +67,11 @@ public class FrontControllerServlet extends HttpServlet {
 
         /* 어댑터에서 handle 메서드 호출 */
         ModelView mv = adapter.handle(request, response, handler);
+
+        /* ModelView 객체가 null로 넘어온 경우(redirect된 경우) service 종료 */
+        if (mv == null) {
+            return;
+        }
 
         /* ModelView 인스턴스에서 viewName(논리적 주소) 획득 */
         String viewName = mv.getViewName();
