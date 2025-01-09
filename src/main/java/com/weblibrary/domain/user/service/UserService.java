@@ -4,13 +4,9 @@ import com.weblibrary.domain.user.model.Role;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.MemoryUserRepository;
 import com.weblibrary.domain.user.repository.UserRepository;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.Map;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserService {
@@ -29,7 +25,6 @@ public class UserService {
 
     /**
      * 로그인 처리를 담은 서비스 계층 메서드
-     *
      */
     public User login(String username, String password) {
 
@@ -41,5 +36,18 @@ public class UserService {
 
         return null;
 
+    }
+
+    public User findById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    public User delete(String username) {
+        User user = findByUsername(username);
+        return userRepository.remove(user);
     }
 }
