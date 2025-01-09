@@ -32,6 +32,13 @@ public interface UserRepository {
     List<User> findAll();
 
     /**
+     * 유저 삭제
+     * @param user : 삭제할 유저 객체
+     * @return 삭제한 유저 반환
+     */
+    User remove(User user);
+
+    /**
      * 저장소 비우기
      */
     void clearAll();
