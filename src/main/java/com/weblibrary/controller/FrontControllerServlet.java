@@ -4,12 +4,18 @@ import com.weblibrary.controller.core.HandlerAdapter;
 import com.weblibrary.controller.core.*;
 import com.weblibrary.controller.core.adapter.*;
 import com.weblibrary.controller.usercontroller.*;
+import com.weblibrary.domain.user.model.User;
+import com.weblibrary.domain.user.repository.MemoryUserRepository;
+import com.weblibrary.domain.user.repository.UserRepository;
+import com.weblibrary.domain.user.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.util.*;
+
+import static com.weblibrary.domain.user.model.Role.*;
 
 /**
  * 모든 요청이 이 Servlet을 거쳐서 처리됩니다.
@@ -32,6 +38,7 @@ public class FrontControllerServlet extends HttpServlet {
     public FrontControllerServlet() {
         initHandlerMappingMap();
         initHandlerAdapters();
+        initUser();
     }
 
     /**
@@ -117,6 +124,18 @@ public class FrontControllerServlet extends HttpServlet {
      */
     private static View viewResolver(String viewName) {
         return new View("/WEB-INF/views/" + viewName + ".jsp");
+    }
+
+    /**
+     * 메모리 리포지토리 환경에서 테스트를 위한 User init 메서드
+     */
+    private static void initUser() {
+        UserService userService = UserService.getInstance();
+        userService.join("admin", "1111");
+        userService.join("user", "1111");
+        UserRepository userRepository = MemoryUserRepository.getInstance();
+        User admin = userRepository.findByUsername("admin");
+        admin.setRole(Admin);
     }
 
 }
