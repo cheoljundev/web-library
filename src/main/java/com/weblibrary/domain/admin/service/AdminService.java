@@ -1,12 +1,9 @@
 package com.weblibrary.domain.admin.service;
 
 import com.weblibrary.domain.user.model.User;
-import com.weblibrary.domain.user.repository.MemoryUserRepository;
-import com.weblibrary.domain.user.repository.UserRepository;
 import com.weblibrary.domain.user.service.UserService;
 import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import static com.weblibrary.domain.user.model.Role.*;
 
@@ -14,8 +11,6 @@ import static com.weblibrary.domain.user.model.Role.*;
 public class AdminService {
     @Getter
     private static final AdminService instance = new AdminService();
-
-    UserRepository userRepository = MemoryUserRepository.getInstance();
 
     UserService userService = UserService.getInstance();
 
