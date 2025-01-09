@@ -19,11 +19,8 @@ public class UserService {
 
     /**
      * 가입 처리 서비스 계층 메서드
-     * @param paramMap : 파라미터를 담은 Map
      */
-    public void join(Map<String, String> paramMap) {
-        String username = paramMap.get("username");
-        String password = paramMap.get("password");
+    public void join(String username, String password) {
         User user = new User(MemoryUserRepository.lastId++, username, password);
         userRepository.save(user);
     }
@@ -31,19 +28,16 @@ public class UserService {
     /**
      * 로그인 처리를 담은 서비스 계층 메서드
      *
-     * @param request : session을 이용하기 위해 request를 받는다.
-     * @param paramMap : 파라미터를 담은 Map
      */
-    public void login(HttpServletRequest request, Map<String, String> paramMap) {
-        String username = paramMap.get("username");
-        String password = paramMap.get("password");
+    public User login(String username, String password) {
 
         User user = userRepository.findByUsername(username);
 
         if (user.getPassword().equals(password)) {
-            HttpSession session = request.getSession();
-            session.setAttribute("user", user);
+            return user;
         }
+
+        return null;
 
     }
 }

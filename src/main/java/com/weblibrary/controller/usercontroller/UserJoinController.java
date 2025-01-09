@@ -20,7 +20,9 @@ public class UserJoinController implements UserController {
         if (request.getMethod().equals("POST")) {
 
             // Service 계층의 join메서드로 가입 처리
-            userService.join(paramMap);
+            String username = paramMap.get("username");
+            String password = paramMap.get("password");
+            userService.join(username, password);
 
             response.sendRedirect("/site");
             return null;
