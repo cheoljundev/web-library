@@ -1,6 +1,5 @@
 package com.weblibrary.domain.user.repository;
 
-import com.weblibrary.domain.user.model.Role;
 import com.weblibrary.domain.user.model.User;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -44,11 +43,6 @@ public class MemoryUserRepository implements UserRepository {
     @Override
     public List<User> findAll() {
         return new ArrayList<>(store.values());
-    }
-
-    @Override
-    public void setRole(User user, Role role) {
-        user.setRole(role);
     }
 
     @Override

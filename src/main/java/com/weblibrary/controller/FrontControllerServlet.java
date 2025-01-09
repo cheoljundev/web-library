@@ -4,6 +4,7 @@ import com.weblibrary.controller.core.HandlerAdapter;
 import com.weblibrary.controller.core.*;
 import com.weblibrary.controller.core.adapter.*;
 import com.weblibrary.controller.usercontroller.*;
+import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.MemoryUserRepository;
 import com.weblibrary.domain.user.repository.UserRepository;
@@ -14,8 +15,6 @@ import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.util.*;
-
-import static com.weblibrary.domain.user.model.Role.*;
 
 /**
  * 모든 요청이 이 Servlet을 거쳐서 처리됩니다.
@@ -131,11 +130,13 @@ public class FrontControllerServlet extends HttpServlet {
      */
     private static void initUser() {
         UserService userService = UserService.getInstance();
+        AdminService adminService = AdminService.getInstance();
         userService.join("admin", "1111");
         userService.join("user", "1111");
         UserRepository userRepository = MemoryUserRepository.getInstance();
         User admin = userRepository.findByUsername("admin");
-        admin.setRole(Admin);
+        adminService.setUserAsAdmin(admin);
+
     }
 
 }

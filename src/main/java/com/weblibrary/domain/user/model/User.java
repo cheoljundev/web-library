@@ -11,8 +11,6 @@ public class User {
     private final Long id;
     private final String username;
     private final String password;
-    @Setter
-    private Role role;
     private int remainingRents = 3; // 남은 대출 가능 권수
 
     /**
