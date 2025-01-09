@@ -3,6 +3,9 @@ package com.weblibrary.domain.admin.service;
 import com.weblibrary.domain.admin.Repository.MemoryUserRoleRepository;
 import com.weblibrary.domain.admin.Repository.UserRoleRepository;
 import com.weblibrary.domain.admin.model.Role;
+import com.weblibrary.domain.book.model.Book;
+import com.weblibrary.domain.book.model.dto.ModifyBookInfo;
+import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.MemoryUserRepository;
 import com.weblibrary.domain.user.repository.UserRepository;
@@ -18,6 +21,7 @@ public class AdminService {
     private static final AdminService instance = new AdminService();
     private static final UserRepository userRepository = MemoryUserRepository.getInstance();
     private final UserRoleRepository userRoleRepository = MemoryUserRoleRepository.getInstance();
+    private final BookService bookService = BookService.getInstance();
 
     public boolean setUserAsAdmin(User user) {
         Role findAdminRole = userRoleRepository.findTypeByUserIdAndRoleType(user.getId(), Admin);
@@ -48,5 +52,17 @@ public class AdminService {
 
     public User deleteUser(User user) {
         return userRepository.remove(user);
+    }
+
+    public void addBook(Book book) {
+        bookService.addBook(book);
+    }
+
+    public Book deleteBook(Book book) {
+        return bookService.deleteBook(book);
+    }
+
+    public Book modifyBook(Book book, ModifyBookInfo newBookInfo) {
+        return book.modify(newBookInfo);
     }
 }
