@@ -1,5 +1,6 @@
 package com.weblibrary.domain.user.service;
 
+import com.weblibrary.domain.user.model.Role;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.MemoryUserRepository;
 import com.weblibrary.domain.user.repository.UserRepository;
@@ -22,6 +23,7 @@ public class UserService {
      */
     public void join(String username, String password) {
         User user = new User(MemoryUserRepository.lastId++, username, password);
+        user.setRole(Role.User);
         userRepository.save(user);
     }
 
