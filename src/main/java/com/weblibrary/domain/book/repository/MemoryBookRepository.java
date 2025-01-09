@@ -63,30 +63,6 @@ public class MemoryBookRepository implements BookRepository {
     }
 
     @Override
-    public boolean checkoutBook(User rentedBy, Book book) {
-        if (!book.isRental()) {
-            book.setRental(true);
-            book.setRentedBy(rentedBy);
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean checkinBook(User rentedBy, Book book) {
-        if (book.isRental()) {
-            if (book.getRentedBy() == rentedBy) {
-                book.setRental(false);
-                book.setRentedBy(null);
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
     public void clearAll() {
         store.clear();
     }

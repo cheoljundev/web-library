@@ -40,22 +40,6 @@ public interface BookRepository {
     Book remove(Book book);
 
     /**
-     * 책 대출
-     * @param rentedBy : 대출하는 유저
-     * @param book : 대출할 책
-     * @return : 정상 대출 여부를 반환
-     */
-    boolean checkoutBook(User rentedBy, Book book);
-
-    /**
-     * 책 대출
-     * @param rentedBy : 대출했던 유저
-     * @param book : 반납할 책
-     * @return : 정상 반납 여부를 반환
-     */
-    boolean checkinBook(User rentedBy, Book book);
-
-    /**
      * 모든 내용 삭제
      */
     void clearAll();
