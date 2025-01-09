@@ -1,5 +1,6 @@
 package com.weblibrary.domain.user.repository;
 
+import com.weblibrary.domain.user.model.Role;
 import com.weblibrary.domain.user.model.User;
 
 import java.util.List;
@@ -30,6 +31,8 @@ public interface UserRepository {
      * @return List로 모든 유저를 반환
      */
     List<User> findAll();
+
+    void setRole(User user, Role role);
 
     /**
      * 유저 삭제

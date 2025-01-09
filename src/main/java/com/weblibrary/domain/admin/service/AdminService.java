@@ -1,6 +1,8 @@
 package com.weblibrary.domain.admin.service;
 
 import com.weblibrary.domain.user.model.User;
+import com.weblibrary.domain.user.repository.MemoryUserRepository;
+import com.weblibrary.domain.user.repository.UserRepository;
 import com.weblibrary.domain.user.service.UserService;
 import lombok.AccessLevel;
 import lombok.*;
@@ -12,16 +14,17 @@ public class AdminService {
     @Getter
     private static final AdminService instance = new AdminService();
 
-    UserService userService = UserService.getInstance();
+    private final UserService userService = UserService.getInstance();
+    private final UserRepository userRepository = MemoryUserRepository.getInstance();
 
     public void setUserAsAdmin(String username) {
         User user = userService.findByUsername(username);
-        user.setRole(Admin);
+        userRepository.setRole(user, Admin);
     }
 
     public void setUserAsDefault(String username) {
         User user = userService.findByUsername(username);
-        user.setRole(Default);
+        userRepository.setRole(user, Default);
     }
 
     public User removeUser(String username) {
