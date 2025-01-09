@@ -1,6 +1,5 @@
 package com.weblibrary.domain.admin.service;
 
-import com.weblibrary.domain.user.model.Role;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.MemoryUserRepository;
 import com.weblibrary.domain.user.repository.UserRepository;
@@ -9,7 +8,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static com.weblibrary.domain.user.model.Role.Admin;
+import static com.weblibrary.domain.user.model.Role.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AdminService {
@@ -27,7 +26,7 @@ public class AdminService {
 
     public void setUserAsDefault(String username) {
         User user = userService.findByUsername(username);
-        user.setRole(Role.User);
+        user.setRole(Default);
     }
 
     public User removeUser(String username) {
