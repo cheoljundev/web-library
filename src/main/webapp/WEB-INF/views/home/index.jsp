@@ -20,9 +20,9 @@
     <p>안녕하세요, ${sessionScope.user.username}님!</p>
 </c:if>
 
-<c:if test="${sessionScope.books != null}">
+<c:if test="${books != null}">
     <ul>
-        <c:forEach var="book" items="${sessionScope.books}">
+        <c:forEach var="book" items="${books}">
             <li>${book.name} ${book.isbn} <button value="${book.id}" onclick="rent(this.value)">대출</button> <button value="${book.id}" onclick="unRent(this.value)">반납</button></li>
         </c:forEach>
     </ul>

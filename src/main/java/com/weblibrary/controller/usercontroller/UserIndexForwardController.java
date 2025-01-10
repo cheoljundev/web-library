@@ -25,7 +25,7 @@ public class UserIndexForwardController implements UserForwardController {
 
         if (user != null) {
             List<Book> books = bookService.findAll();
-            session.setAttribute("books", books);
+            request.setAttribute("books", books);
         }
 
         return "index";
