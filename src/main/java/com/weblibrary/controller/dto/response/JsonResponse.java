@@ -1,4 +1,4 @@
-package com.weblibrary.controller.response;
+package com.weblibrary.controller.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
