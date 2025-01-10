@@ -5,6 +5,7 @@
     <title>온라인 도서관</title>
 </head>
 <body>
+<script src="/js/rent.js"></script>
 <%-- user가 없을 경우에 폼 보여줌 --%>
 <c:if test="${sessionScope.user == null}">
     <form method="post" action="/site/login">
@@ -27,46 +28,4 @@
     </ul>
 </c:if>
 </body>
-
-<script>
-    const rent = (id) => {
-        fetch("site/book/rent", {
-            method : "POST",
-            headers : {
-                "Content-Type": "application/json",
-            },
-            body : id
-        })
-            .then((res) => {
-                if (!res.ok) {
-                    return res.json().then(body => {
-                        throw new Error(`HTTP Error! status : ${'${body.status}'}, message : ${'${body.message}'}`)
-                    })
-                }
-                return res.json();
-            })
-            .then((data) => alert("결과 : " + data.message))
-            .catch(error => alert(error.message));
-    };
-
-    const unRent = (id) => {
-        fetch("site/book/unrent", {
-            method : "POST",
-            headers : {
-                "Content-Type": "application/json",
-            },
-            body : id
-        })
-            .then((res) => {
-                if (!res.ok) {
-                    return res.json().then(body => {
-                        throw new Error(`HTTP Error! status : ${'${body.status}'}, message : ${'${body.message}'}`)
-                    })
-                }
-                return res.json();
-            })
-            .then((data) => alert("결과 : " + data.message))
-            .catch(error => alert(error.message));
-    };
-</script>
 </html>
