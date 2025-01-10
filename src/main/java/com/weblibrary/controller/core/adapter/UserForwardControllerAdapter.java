@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * UserContoller를 핸들링하는 어댑터
  */
-public class UserControllerAdapter implements HandlerAdapter {
+public class UserForwardControllerAdapter implements HandlerAdapter {
     @Override
     public boolean supports(Controller handler) {
         return (handler instanceof UserForwardController);

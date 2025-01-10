@@ -53,8 +53,8 @@ public class FrontControllerServlet extends HttpServlet {
      */
     private void initHandlerMappingMap() {
         handlerMappingMap.put("/site", new UserIndexForwardController());
-        handlerMappingMap.put("/site/join", new UserJoinForwardController());
-        handlerMappingMap.put("/site/login", new UserLoginForwardController());
+        handlerMappingMap.put("/site/join", new UserJoinController());
+        handlerMappingMap.put("/site/login", new UserLoginController());
         handlerMappingMap.put("/site/book/rent", new UserRentController());
         handlerMappingMap.put("/site/book/unrent", new UserUnRentController());
     }
@@ -63,7 +63,8 @@ public class FrontControllerServlet extends HttpServlet {
      * 컨트롤러 클래스 다루는 어댑터 클래스들을 초기화 합니다.
      */
     private void initHandlerAdapters() {
-        handlerAdapters.add(new UserControllerAdapter());
+        handlerAdapters.add(new UserForwardControllerAdapter());
+        handlerAdapters.add(new UserRedirectControllerAdapter());
         handlerAdapters.add(new JsonResponseControllerAdapter());
     }
 
@@ -93,23 +94,24 @@ public class FrontControllerServlet extends HttpServlet {
         }
 
         /* 어댑터 획득 */
-        HandlerAdapter adapter = getHandlerAdapter(handler);
+        List<HandlerAdapter> handlerAdapters = getHandlerAdapter(handler);
+        for (HandlerAdapter adapter : handlerAdapters) {
+            /* 어댑터에서 handle 메서드 호출 */
+            ModelView mv = adapter.handle(request, response, handler);
+            /* ModelView 객체가 null로 넘어온 경우(redirect된 경우) service 종료 */
+            if (mv == null) {
+                continue;
+            }
 
-        /* 어댑터에서 handle 메서드 호출 */
-        ModelView mv = adapter.handle(request, response, handler);
+            /* ModelView 인스턴스에서 viewName(논리적 주소) 획득 */
+            String viewName = mv.getViewName();
 
-        /* ModelView 객체가 null로 넘어온 경우(redirect된 경우) service 종료 */
-        if (mv == null) {
-            return;
+            /* 획득한 viewName으로 실제 뷰 위치 만들고 View 반환 */
+            View view = viewResolver(viewName);
+
+            view.render(mv.getModel(), request, response);
         }
 
-        /* ModelView 인스턴스에서 viewName(논리적 주소) 획득 */
-        String viewName = mv.getViewName();
-
-        /* 획득한 viewName으로 실제 뷰 위치 만들고 View 반환 */
-        View view = viewResolver(viewName);
-
-        view.render(mv.getModel(), request, response);
     }
 
     /**
@@ -127,16 +129,21 @@ public class FrontControllerServlet extends HttpServlet {
      * @param handler : Controller 인스턴스
      * @return : 핸들러에 맞는 Adapter 클래스를 반환
      */
-    private HandlerAdapter getHandlerAdapter(Controller handler) {
+    private List<HandlerAdapter> getHandlerAdapter(Controller handler) {
+        List<HandlerAdapter> list = new ArrayList<>();
         for (HandlerAdapter adapter : handlerAdapters) {
             /* 지원 여부 확인 */
             if (adapter.supports(handler)) {
-                return adapter;
+                list.add(adapter);
             }
         }
-
         /* 지원하는 어댑터가 없으면, null이 아닌 예외를 던짐 */
-        throw new IllegalArgumentException("handler adapter를 찾을 수 없습니다. hander=" + handler);
+        if (list.isEmpty()) {
+            throw new IllegalArgumentException("handler adapter를 찾을 수 없습니다. hander=" + handler);
+        }
+
+        return list;
+
     }
 
     /**
