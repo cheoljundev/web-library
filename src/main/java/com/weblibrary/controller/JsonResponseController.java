@@ -1,6 +1,6 @@
 package com.weblibrary.controller;
 
-import com.weblibrary.controller.response.JsonResponse;
+import com.weblibrary.controller.dto.response.JsonResponse;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.IOException;

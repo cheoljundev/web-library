@@ -6,7 +6,7 @@ import com.weblibrary.controller.Controller;
 import com.weblibrary.controller.JsonResponseController;
 import com.weblibrary.controller.core.HandlerAdapter;
 import com.weblibrary.controller.core.ModelView;
-import com.weblibrary.controller.response.JsonResponse;
+import com.weblibrary.controller.dto.response.JsonResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,8 +1,8 @@
 package com.weblibrary.controller.usercontroller;
 
 import com.weblibrary.controller.JsonResponseController;
-import com.weblibrary.controller.response.JsonResponse;
-import com.weblibrary.controller.response.RentResponse;
+import com.weblibrary.controller.dto.response.JsonResponse;
+import com.weblibrary.controller.dto.response.RentResponse;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.user.model.User;
