@@ -1,6 +1,6 @@
 package com.weblibrary.controller.usercontroller;
 
-import com.weblibrary.controller.UserController;
+import com.weblibrary.controller.UserForwardController;
 import com.weblibrary.domain.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * 유저 회원가입 컨트롤러, GET, POST에 따라 다르게 동작.
  */
-public class UserJoinController implements UserController {
+public class UserJoinForwardController implements UserForwardController {
 
     private final UserService userService = UserService.getInstance();
 

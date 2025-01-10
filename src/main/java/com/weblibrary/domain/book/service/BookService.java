@@ -7,6 +7,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BookService {
     @Getter
@@ -32,5 +34,9 @@ public class BookService {
 
     public Book findBookByIsbn(String isbn) {
         return bookRepository.findByIsbn(isbn);
+    }
+
+    public List<Book> findAll() {
+        return bookRepository.findAll();
     }
 }

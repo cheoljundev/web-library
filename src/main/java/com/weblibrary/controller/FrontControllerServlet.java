@@ -1,10 +1,15 @@
 package com.weblibrary.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.weblibrary.controller.core.HandlerAdapter;
 import com.weblibrary.controller.core.*;
 import com.weblibrary.controller.core.adapter.*;
+import com.weblibrary.controller.response.ErrorResponse;
+import com.weblibrary.controller.response.JsonResponse;
 import com.weblibrary.controller.usercontroller.*;
 import com.weblibrary.domain.admin.service.AdminService;
+import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.MemoryUserRepository;
 import com.weblibrary.domain.user.repository.UserRepository;
@@ -37,16 +42,21 @@ public class FrontControllerServlet extends HttpServlet {
     public FrontControllerServlet() {
         initHandlerMappingMap();
         initHandlerAdapters();
+
+        //테스트를 위한 초기 세팅
         initUser();
+        initBook();
     }
 
     /**
      * 컨트롤러 클래스를 URI에 맞게 등록해서 초기화 합니다.
      */
     private void initHandlerMappingMap() {
-        handlerMappingMap.put("/site", new UserIndexController());
-        handlerMappingMap.put("/site/join", new UserJoinController());
-        handlerMappingMap.put("/site/login", new UserLoginController());
+        handlerMappingMap.put("/site", new UserIndexForwardController());
+        handlerMappingMap.put("/site/join", new UserJoinForwardController());
+        handlerMappingMap.put("/site/login", new UserLoginForwardController());
+        handlerMappingMap.put("/site/book/rent", new UserRentController());
+        handlerMappingMap.put("/site/book/unrent", new UserUnRentController());
     }
 
     /**
@@ -54,6 +64,7 @@ public class FrontControllerServlet extends HttpServlet {
      */
     private void initHandlerAdapters() {
         handlerAdapters.add(new UserControllerAdapter());
+        handlerAdapters.add(new JsonResponseControllerAdapter());
     }
 
     @Override
@@ -62,9 +73,22 @@ public class FrontControllerServlet extends HttpServlet {
         /* 핸들러 획득 */
         Controller handler = getHandler(request);
 
+        /* 객체 To Json을 위한 ObjectMapper */
+        ObjectMapper mapper = new ObjectMapper();
+
+        /* Jackson에 JavaTimeModule 등록 */
+        mapper.registerModule(new JavaTimeModule());
+
         /* 핸들러를 획득하지 못하면, 404 응답 */
         if (handler == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            response.setContentType("application/json");
+            JsonResponse errorResponse = new ErrorResponse(
+                    HttpServletResponse.SC_NOT_FOUND,
+                    "Not Found"
+            );
+            String result = mapper.writeValueAsString(errorResponse);
+            response.getWriter().write(result);
             return;
         }
 
@@ -136,7 +160,17 @@ public class FrontControllerServlet extends HttpServlet {
         UserRepository userRepository = MemoryUserRepository.getInstance();
         User admin = userRepository.findByUsername("admin");
         adminService.setUserAsAdmin(admin);
+    }
 
+    /**
+     * 메모리 리포지토리 환경에서 테스트를 위한 Book init 메서드
+     */
+    private static void initBook() {
+        AdminService adminService = AdminService.getInstance();
+        Book jpa = new Book(MemoryUserRepository.lastId++, "JPA", "12345");
+        Book spring = new Book(MemoryUserRepository.lastId++, "SPRING", "45678");
+        adminService.addBook(jpa);
+        adminService.addBook(spring);
     }
 
 }

@@ -1,7 +1,7 @@
 package com.weblibrary.controller.core.adapter;
 
 import com.weblibrary.controller.Controller;
-import com.weblibrary.controller.UserController;
+import com.weblibrary.controller.UserForwardController;
 import com.weblibrary.controller.core.HandlerAdapter;
 import com.weblibrary.controller.core.ModelView;
 import jakarta.servlet.ServletException;
@@ -18,12 +18,12 @@ import java.util.Map;
 public class UserControllerAdapter implements HandlerAdapter {
     @Override
     public boolean supports(Controller handler) {
-        return (handler instanceof UserController);
+        return (handler instanceof UserForwardController);
     }
 
     @Override
     public ModelView handle(HttpServletRequest request, HttpServletResponse response, Controller handler) throws ServletException, IOException {
-        UserController controller = (UserController) handler;
+        UserForwardController controller = (UserForwardController) handler;
 
         Map<String, String> paramMap = createParamMap(request);
         Map<String, Object> model = new HashMap<>();
