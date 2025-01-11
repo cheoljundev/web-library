@@ -1,18 +1,8 @@
-const getRoleValue = btn => {
-  // btn의 이전 형제 요소를 찾습니다
-  const select = btn.previousElementSibling;
-
-  // 선택된 값을 가져옵니다
-  if (select && select.tagName === "SELECT") {
-    return select.value;
-  } else {
-    return null;
-  }
-}
+import {getPrevSelectValue} from "./util";
 
 const setRole = btn => {
   // btn의 이전 요소(select)의 선택값을 가져와야 함
-  const roleValue = getRoleValue(btn);
+  const roleValue = getPrevSelectValue(btn);
   const id = btn.value;
 
   if (roleValue == null) {
