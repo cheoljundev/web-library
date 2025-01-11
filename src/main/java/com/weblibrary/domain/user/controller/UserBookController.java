@@ -12,7 +12,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 도서 대출 컨트롤러
@@ -23,6 +25,9 @@ public class UserBookController implements JsonResponseController {
 
     @Override
     public JsonResponse response(HttpServletRequest request) throws IOException {
+
+        String[] allowControlUris = {"rent", "unrent"};
+
         HttpSession session = request.getSession();
 
         // 유저 세션 획득
@@ -30,16 +35,23 @@ public class UserBookController implements JsonResponseController {
 
         String[] uriParts = cleanUrlParts(request.getRequestURI());
 
-        // Book 정보 얻어서 Book 찾기
-        Long bookId = null;
+        boolean isAllowUri = false;
+        // uriParts[3] (control uri)가 맞지 않거나, 존재하지 않을 경우 null 반환
+        for (String controlUris : allowControlUris) {
+            try {
+                if (uriParts[3].equals(controlUris)) {
+                    isAllowUri = true;
+                }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                return null;
+            }
+        }
 
-        try {
-            bookId = Long.parseLong(uriParts[2]);
-        } catch (NumberFormatException e) {
-            // /user/books/1 과 같은 형식의 uri가 아니면 넘김
+        if (!isAllowUri) {
             return null;
         }
 
+        Long bookId = Long.parseLong(uriParts[2]);
         Book findBook = bookService.findBookById(bookId);
 
         switch (uriParts[3]) {
