@@ -1,6 +1,6 @@
 package com.weblibrary.controller.usercontroller;
 
-import com.weblibrary.controller.UserForwardController;
+import com.weblibrary.controller.ForwardController;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.user.model.User;
@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * site home 접속시 처리할 컨트롤러
  */
-public class UserIndexForwardController implements UserForwardController {
+public class IndexController implements ForwardController {
 
     private final BookService bookService = BookService.getInstance();
 
@@ -28,6 +28,6 @@ public class UserIndexForwardController implements UserForwardController {
             request.setAttribute("books", books);
         }
 
-        return "index";
+        return "home/index";
     }
 }

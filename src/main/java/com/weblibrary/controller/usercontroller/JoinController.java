@@ -1,7 +1,7 @@
 package com.weblibrary.controller.usercontroller;
 
-import com.weblibrary.controller.UserForwardController;
-import com.weblibrary.controller.UserRedirectController;
+import com.weblibrary.controller.ForwardController;
+import com.weblibrary.controller.RedirectController;
 import com.weblibrary.domain.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 유저 회원가입 컨트롤러, GET, POST에 따라 다르게 동작.
  */
-public class UserJoinController implements UserForwardController, UserRedirectController {
+public class JoinController implements ForwardController, RedirectController {
 
     private final UserService userService = UserService.getInstance();
 
@@ -21,7 +21,7 @@ public class UserJoinController implements UserForwardController, UserRedirectCo
     public String process(HttpServletRequest request, HttpServletResponse response, Map<String, String> paramMap, Map<String, Object> model) throws IOException {
         if (request.getMethod().equals("GET")) {
             // GET인 경우 join jsp를 forward
-            return "join";
+            return "home/join";
         }
 
         return null;

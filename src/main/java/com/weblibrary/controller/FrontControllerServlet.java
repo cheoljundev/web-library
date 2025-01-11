@@ -52,19 +52,19 @@ public class FrontControllerServlet extends HttpServlet {
      * 컨트롤러 클래스를 URI에 맞게 등록해서 초기화 합니다.
      */
     private void initHandlerMappingMap() {
-        handlerMappingMap.put("/site", new UserIndexForwardController());
-        handlerMappingMap.put("/site/join", new UserJoinController());
-        handlerMappingMap.put("/site/login", new UserLoginController());
-        handlerMappingMap.put("/site/book/rent", new UserRentController());
-        handlerMappingMap.put("/site/book/unrent", new UserUnRentController());
+        handlerMappingMap.put("/site", new IndexController());
+        handlerMappingMap.put("/site/join", new JoinController());
+        handlerMappingMap.put("/site/login", new LoginController());
+        handlerMappingMap.put("/site/book/rent", new RentController());
+        handlerMappingMap.put("/site/book/unrent", new UnRentController());
     }
 
     /**
      * 컨트롤러 클래스 다루는 어댑터 클래스들을 초기화 합니다.
      */
     private void initHandlerAdapters() {
-        handlerAdapters.add(new UserForwardControllerAdapter());
-        handlerAdapters.add(new UserRedirectControllerAdapter());
+        handlerAdapters.add(new ForwardControllerAdapter());
+        handlerAdapters.add(new RedirectControllerAdapter());
         handlerAdapters.add(new JsonResponseControllerAdapter());
     }
 

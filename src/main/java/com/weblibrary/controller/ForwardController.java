@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * 유저에게 보이는 요청 및 화면을 컨트롤합니다.
+ * view를 forward 해주기 위해 사용하는 컨트롤러
  */
-public interface UserForwardController extends Controller {
+public interface ForwardController extends Controller {
     /**
      * 컨트롤러에서 요청을 처리하는 process 메서드
      *

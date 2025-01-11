@@ -1,7 +1,7 @@
 package com.weblibrary.controller.core.adapter;
 
 import com.weblibrary.controller.Controller;
-import com.weblibrary.controller.UserRedirectController;
+import com.weblibrary.controller.RedirectController;
 import com.weblibrary.controller.core.HandlerAdapter;
 import com.weblibrary.controller.core.ModelView;
 import jakarta.servlet.ServletException;
@@ -13,18 +13,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * UserContoller를 핸들링하는 어댑터
+ * RedirectContoller를 핸들링하는 어댑터
  * Redirect를 처리한다.
  */
-public class UserRedirectControllerAdapter implements HandlerAdapter {
+public class RedirectControllerAdapter implements HandlerAdapter {
     @Override
     public boolean supports(Controller handler) {
-        return (handler instanceof UserRedirectController);
+        return (handler instanceof RedirectController);
     }
 
     @Override
-    public ModelView handle(HttpServletRequest request, HttpServletResponse response, Controller handler) throws ServletException, IOException {
-        UserRedirectController controller = (UserRedirectController) handler;
+    public ModelView handle(HttpServletRequest request, HttpServletResponse response, Controller handler) throws IOException {
+        RedirectController controller = (RedirectController) handler;
 
         Map<String, String> paramMap = createParamMap(request);
 

@@ -1,16 +1,14 @@
 package com.weblibrary.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.Map;
 
 /**
- * 유저에게 보이는 요청 및 화면을 컨트롤합니다.
  * 리다이렉트를 위한 컨트롤러
  */
-public interface UserRedirectController extends Controller {
+public interface RedirectController extends Controller {
     /**
      * 컨트롤러에서 요청을 처리하는 process 메서드
      *

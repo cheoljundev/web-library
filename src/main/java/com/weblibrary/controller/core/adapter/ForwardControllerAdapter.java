@@ -1,9 +1,10 @@
 package com.weblibrary.controller.core.adapter;
 
 import com.weblibrary.controller.Controller;
-import com.weblibrary.controller.UserForwardController;
+import com.weblibrary.controller.ForwardController;
 import com.weblibrary.controller.core.HandlerAdapter;
 import com.weblibrary.controller.core.ModelView;
+import com.weblibrary.controller.usercontroller.JoinController;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,17 +14,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * UserContoller를 핸들링하는 어댑터
+ * ForwardContoller를 핸들링하는 어댑터
  */
-public class UserForwardControllerAdapter implements HandlerAdapter {
+public class ForwardControllerAdapter implements HandlerAdapter {
     @Override
     public boolean supports(Controller handler) {
-        return (handler instanceof UserForwardController);
+        return (handler instanceof ForwardController);
     }
 
     @Override
     public ModelView handle(HttpServletRequest request, HttpServletResponse response, Controller handler) throws ServletException, IOException {
-        UserForwardController controller = (UserForwardController) handler;
+        ForwardController controller = (ForwardController) handler;
 
         Map<String, String> paramMap = createParamMap(request);
         Map<String, Object> model = new HashMap<>();
@@ -32,18 +33,16 @@ public class UserForwardControllerAdapter implements HandlerAdapter {
          * UserController는 view파일 경로에 home을 꼭 붙인다.
          * paramMap과 model을 process에서 가공
          */
-        String processResult = controller.process(request, response, paramMap, model);
+        String viewName = controller.process(request, response, paramMap, model);
 
         /**
-         * processResult이 null인 경우는 redirect된 경우이다. 이 경우 jsp를 그리지 않는다. (PRG패턴)
+         * processResult이 null인 경우는 컨트롤러가 다른 어댑터를 동시에 구현한 경우 선택되지 못한 경우이다.
+         * @see JoinController
          * ModelView가 아닌 null을 반환한다.
          */
-        if (processResult == null) {
+        if (viewName == null) {
             return null;
         }
-
-        String viewName = "home/" + processResult;
-
 
         /* 논리적 이름(viewName)으로 ModelView 객체를 생성하고, model을 삽입 */
         ModelView mv = new ModelView(viewName);
