@@ -1,5 +1,6 @@
 package com.weblibrary.domain.user.repository;
 
+import com.weblibrary.AppConfig;
 import com.weblibrary.domain.user.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class UserRepositoryTest {
 
-    private final UserRepository userRepository = MemoryUserRepository.getInstance();
+    private final AppConfig appConfig = AppConfig.getInstance();
+    private final UserRepository userRepository = appConfig.userRepository();
 
     @AfterEach
     void afterEach() {

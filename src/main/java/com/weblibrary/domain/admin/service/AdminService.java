@@ -7,21 +7,18 @@ import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.dto.ModifyBookInfo;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.user.model.User;
-import com.weblibrary.domain.user.repository.MemoryUserRepository;
 import com.weblibrary.domain.user.repository.UserRepository;
-import com.weblibrary.domain.user.service.UserService;
-import lombok.AccessLevel;
-import lombok.*;
+import lombok.RequiredArgsConstructor;
 
-import static com.weblibrary.domain.admin.model.RoleType.*;
+import static com.weblibrary.domain.admin.model.RoleType.Admin;
+import static com.weblibrary.domain.admin.model.RoleType.Default;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class AdminService {
-    @Getter
-    private static final AdminService instance = new AdminService();
-    private static final UserRepository userRepository = MemoryUserRepository.getInstance();
-    private final UserRoleRepository userRoleRepository = MemoryUserRoleRepository.getInstance();
-    private final BookService bookService = BookService.getInstance();
+
+    private final UserRepository userRepository;
+    private final UserRoleRepository userRoleRepository;
+    private final BookService bookService;
 
     public boolean setUserAsAdmin(User user) {
         Role findAdminRole = userRoleRepository.findTypeByUserIdAndRoleType(user.getId(), Admin);

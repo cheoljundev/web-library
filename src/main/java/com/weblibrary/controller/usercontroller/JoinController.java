@@ -1,5 +1,6 @@
 package com.weblibrary.controller.usercontroller;
 
+import com.weblibrary.AppConfig;
 import com.weblibrary.controller.ForwardController;
 import com.weblibrary.controller.RedirectController;
 import com.weblibrary.domain.user.service.UserService;
@@ -14,7 +15,8 @@ import java.util.Map;
  */
 public class JoinController implements ForwardController, RedirectController {
 
-    private final UserService userService = UserService.getInstance();
+    private final AppConfig appConfig = AppConfig.getInstance();
+    private final UserService userService = appConfig.userService();
 
     /* GET 처리를 위한 forwardController의 process */
     @Override

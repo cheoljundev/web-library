@@ -2,9 +2,13 @@ package com.weblibrary.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.weblibrary.AppConfig;
 import com.weblibrary.controller.core.HandlerAdapter;
-import com.weblibrary.controller.core.*;
-import com.weblibrary.controller.core.adapter.*;
+import com.weblibrary.controller.core.ModelView;
+import com.weblibrary.controller.core.View;
+import com.weblibrary.controller.core.adapter.ForwardControllerAdapter;
+import com.weblibrary.controller.core.adapter.JsonResponseControllerAdapter;
+import com.weblibrary.controller.core.adapter.RedirectControllerAdapter;
 import com.weblibrary.controller.dto.response.ErrorResponse;
 import com.weblibrary.controller.dto.response.JsonResponse;
 import com.weblibrary.controller.usercontroller.*;
@@ -16,14 +20,19 @@ import com.weblibrary.domain.user.repository.UserRepository;
 import com.weblibrary.domain.user.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 모든 요청이 이 Servlet을 거쳐서 처리됩니다.
-
+ * <p>
  * 현재는 /site/* 하위로 처리하고 있지만, 추후 /*로 처리되어야 합니다.
  * todo: /*로 처리
  */
@@ -115,7 +124,6 @@ public class FrontControllerServlet extends HttpServlet {
     }
 
     /**
-     *
      * @param request : HttpServletRequest 인스턴스
      * @return : Controller 인스턴스를 핸들러로 반환
      */
@@ -125,7 +133,6 @@ public class FrontControllerServlet extends HttpServlet {
     }
 
     /**
-     *
      * @param handler : Controller 인스턴스
      * @return : 핸들러에 맞는 Adapter 클래스를 반환
      */
@@ -160,11 +167,13 @@ public class FrontControllerServlet extends HttpServlet {
      * 메모리 리포지토리 환경에서 테스트를 위한 User init 메서드
      */
     private static void initUser() {
-        UserService userService = UserService.getInstance();
-        AdminService adminService = AdminService.getInstance();
+        AppConfig appConfig = AppConfig.getInstance();
+        UserService userService = appConfig.userService();
+        AdminService adminService = appConfig.adminService();
+        UserRepository userRepository = appConfig.userRepository();
+
         userService.join("admin", "1111");
         userService.join("user", "1111");
-        UserRepository userRepository = MemoryUserRepository.getInstance();
         User admin = userRepository.findByUsername("admin");
         adminService.setUserAsAdmin(admin);
     }
@@ -173,7 +182,8 @@ public class FrontControllerServlet extends HttpServlet {
      * 메모리 리포지토리 환경에서 테스트를 위한 Book init 메서드
      */
     private static void initBook() {
-        AdminService adminService = AdminService.getInstance();
+        AppConfig appConfig = AppConfig.getInstance();
+        AdminService adminService = appConfig.adminService();
         Book jpa = new Book(MemoryUserRepository.lastId++, "JPA", "12345");
         Book spring = new Book(MemoryUserRepository.lastId++, "SPRING", "45678");
         adminService.addBook(jpa);

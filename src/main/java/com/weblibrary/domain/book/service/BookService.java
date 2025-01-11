@@ -2,19 +2,13 @@ package com.weblibrary.domain.book.service;
 
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.repository.BookRepository;
-import com.weblibrary.domain.book.repository.MemoryBookRepository;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class BookService {
-    @Getter
-    private static final BookService instance = new BookService();
-
-    private final BookRepository bookRepository = MemoryBookRepository.getInstance();
+    private final BookRepository bookRepository;
 
     public void addBook(Book book) {
         bookRepository.save(book);

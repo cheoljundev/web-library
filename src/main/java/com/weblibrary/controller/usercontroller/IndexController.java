@@ -1,5 +1,6 @@
 package com.weblibrary.controller.usercontroller;
 
+import com.weblibrary.AppConfig;
 import com.weblibrary.controller.ForwardController;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.service.BookService;
@@ -16,7 +17,8 @@ import java.util.Map;
  */
 public class IndexController implements ForwardController {
 
-    private final BookService bookService = BookService.getInstance();
+    private final AppConfig appConfig = AppConfig.getInstance();
+    private final BookService bookService = appConfig.bookService();
 
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response, Map<String, String> paramMap, Map<String, Object> model) {

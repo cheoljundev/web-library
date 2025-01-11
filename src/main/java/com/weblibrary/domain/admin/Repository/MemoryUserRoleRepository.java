@@ -2,20 +2,14 @@ package com.weblibrary.domain.admin.Repository;
 
 import com.weblibrary.domain.admin.model.Role;
 import com.weblibrary.domain.admin.model.RoleType;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemoryUserRoleRepository implements UserRoleRepository {
 
-    @Getter
-    private static final UserRoleRepository instance = new MemoryUserRoleRepository();
     private static final Map<Long, Role> store = new HashMap<>();
     public static Long lastId = 0L;
 

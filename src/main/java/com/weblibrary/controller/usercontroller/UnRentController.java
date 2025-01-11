@@ -1,5 +1,6 @@
 package com.weblibrary.controller.usercontroller;
 
+import com.weblibrary.AppConfig;
 import com.weblibrary.controller.JsonResponseController;
 import com.weblibrary.controller.dto.response.JsonResponse;
 import com.weblibrary.controller.dto.response.RentResponse;
@@ -20,7 +21,9 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * 도서 반납 컨트롤러
  */
 public class UnRentController implements JsonResponseController {
-    private final BookService bookService = BookService.getInstance();
+
+    private final AppConfig appConfig = AppConfig.getInstance();
+    private final BookService bookService = appConfig.bookService();
 
     @Override
     public JsonResponse response(HttpServletRequest request) throws IOException {

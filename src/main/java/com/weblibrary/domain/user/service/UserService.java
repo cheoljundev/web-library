@@ -6,18 +6,14 @@ import com.weblibrary.domain.admin.model.Role;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.MemoryUserRepository;
 import com.weblibrary.domain.user.repository.UserRepository;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import static com.weblibrary.domain.admin.model.RoleType.Default;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class UserService {
-    @Getter
-    private static final UserService instance = new UserService();
-    private final UserRepository userRepository = MemoryUserRepository.getInstance();
-    private final UserRoleRepository userRoleRepository = MemoryUserRoleRepository.getInstance();
+    private final UserRepository userRepository;
+    private final UserRoleRepository userRoleRepository;
 
     /**
      * 가입 처리 서비스 계층 메서드

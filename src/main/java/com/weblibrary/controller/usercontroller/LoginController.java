@@ -1,5 +1,6 @@
 package com.weblibrary.controller.usercontroller;
 
+import com.weblibrary.AppConfig;
 import com.weblibrary.controller.RedirectController;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;
@@ -13,7 +14,8 @@ import java.util.Map;
  */
 public class LoginController implements RedirectController {
 
-    private final UserService userService = UserService.getInstance();
+    private final AppConfig appConfig = AppConfig.getInstance();
+    private final UserService userService = appConfig.userService();
 
     @Override
     public String process(HttpServletRequest request, Map<String, String> paramMap) {

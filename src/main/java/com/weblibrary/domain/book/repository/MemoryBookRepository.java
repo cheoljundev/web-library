@@ -1,21 +1,13 @@
 package com.weblibrary.domain.book.repository;
 
 import com.weblibrary.domain.book.model.Book;
-import com.weblibrary.domain.user.model.User;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemoryBookRepository implements BookRepository {
-
-    @Getter
-    private static final BookRepository instance = new MemoryBookRepository();
 
     private final Map<Long, Book> store = new HashMap<>();
 
@@ -41,6 +33,7 @@ public class MemoryBookRepository implements BookRepository {
 
         return null;
     }
+
     @Override
     public Book findByIsbn(String isbn) {
         for (Book book : store.values()) {
