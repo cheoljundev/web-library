@@ -30,17 +30,32 @@ public class UserService {
      */
     public User login(String username, String password) {
 
-        User user = userRepository.findByUsername(username);
-
-        if (user.getPassword().equals(password)) {
-            return user;
-        }
-
-        return null;
-
+        User foundUser = findByUsername(username);
+        return authenticateUser(foundUser, password);
     }
 
-    public User findByUsername(String username) {
+    /**
+     * 받은 User 객체와 password 파라미터가 일치하는지 확인하고 유저 반환
+     *
+     * @param user     : User 객체
+     * @param password : password
+     * @return : 일치하다면 유저 반환, 아니면 null 반환
+     */
+    private static User authenticateUser(User user, String password) {
+        if (user != null) {
+            if (user.getPassword().equals(password)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * username으로 유저를 찾음
+     * @param username : String
+     * @return : User
+     */
+    private User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
