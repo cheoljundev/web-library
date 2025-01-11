@@ -1,6 +1,7 @@
-package com.weblibrary.controller.core;
+package com.weblibrary.core;
 
-import com.weblibrary.controller.Controller;
+import com.weblibrary.core.controller.Controller;
+import com.weblibrary.core.view.ModelView;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

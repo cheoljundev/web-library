@@ -1,4 +1,4 @@
-package com.weblibrary.controller;
+package com.weblibrary.core.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 

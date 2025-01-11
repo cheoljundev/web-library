@@ -1,4 +1,4 @@
-package com.weblibrary.controller.core;
+package com.weblibrary.core.view;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;

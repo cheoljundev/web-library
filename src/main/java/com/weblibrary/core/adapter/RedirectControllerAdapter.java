@@ -1,10 +1,9 @@
-package com.weblibrary.controller.core.adapter;
+package com.weblibrary.core.adapter;
 
-import com.weblibrary.controller.Controller;
-import com.weblibrary.controller.RedirectController;
-import com.weblibrary.controller.core.HandlerAdapter;
-import com.weblibrary.controller.core.ModelView;
-import jakarta.servlet.ServletException;
+import com.weblibrary.core.controller.Controller;
+import com.weblibrary.core.controller.RedirectController;
+import com.weblibrary.core.HandlerAdapter;
+import com.weblibrary.core.view.ModelView;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

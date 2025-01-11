@@ -1,13 +1,12 @@
-package com.weblibrary.controller.admincontroller;
+package com.weblibrary.domain.admin.controller;
 
 import com.weblibrary.AppConfig;
-import com.weblibrary.controller.ForwardController;
+import com.weblibrary.core.controller.ForwardController;
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.user.model.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
 import java.util.Map;
 
 public class AdminPageController implements ForwardController {

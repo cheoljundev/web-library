@@ -1,10 +1,10 @@
-package com.weblibrary.controller.core.adapter;
+package com.weblibrary.core.adapter;
 
-import com.weblibrary.controller.Controller;
-import com.weblibrary.controller.ForwardController;
-import com.weblibrary.controller.core.HandlerAdapter;
-import com.weblibrary.controller.core.ModelView;
-import com.weblibrary.controller.usercontroller.JoinController;
+import com.weblibrary.core.controller.Controller;
+import com.weblibrary.core.controller.ForwardController;
+import com.weblibrary.core.HandlerAdapter;
+import com.weblibrary.core.view.ModelView;
+import com.weblibrary.domain.user.controller.JoinController;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

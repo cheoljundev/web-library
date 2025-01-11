@@ -1,9 +1,9 @@
-package com.weblibrary.controller.usercontroller;
+package com.weblibrary.domain.user.controller;
 
 import com.weblibrary.AppConfig;
-import com.weblibrary.controller.JsonResponseController;
-import com.weblibrary.controller.dto.response.JsonResponse;
-import com.weblibrary.controller.dto.response.RentResponse;
+import com.weblibrary.core.controller.JsonResponseController;
+import com.weblibrary.core.controller.dto.response.JsonResponse;
+import com.weblibrary.core.controller.dto.response.RentResponse;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.user.model.User;
@@ -18,10 +18,9 @@ import java.io.IOException;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * 도서 반납 컨트롤러
+ * 도서 대출 컨트롤러
  */
-public class UnRentController implements JsonResponseController {
-
+public class RentController implements JsonResponseController {
     private final AppConfig appConfig = AppConfig.getInstance();
     private final BookService bookService = appConfig.bookService();
 
@@ -37,18 +36,18 @@ public class UnRentController implements JsonResponseController {
         Long bookId = Long.parseLong(StreamUtils.copyToString(inputStream, UTF_8));
         Book rentBook = bookService.findBookById(bookId);
 
-        // unRent 메서드가 true이면 반납 완료
-        if (user.unRent(rentBook)) {
+        // rent 메서드가 true이면 대출 완료
+        if (user.rent(rentBook)) {
             return new RentResponse(
                     HttpServletResponse.SC_OK,
-                    "정상적으로 반납되었습니다."
+                    "정상적으로 대출되었습니다."
             );
         }
 
-        // 아닐 경우 반납 불가능
+        // 아닐 경우 대출 불가능
         return new RentResponse(
                 HttpServletResponse.SC_BAD_REQUEST,
-                "반납되지 않았습니다."
+                "대출되지 않았습니다."
         );
     }
 }

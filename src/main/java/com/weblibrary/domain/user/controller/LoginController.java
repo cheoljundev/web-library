@@ -1,7 +1,7 @@
-package com.weblibrary.controller.usercontroller;
+package com.weblibrary.domain.user.controller;
 
 import com.weblibrary.AppConfig;
-import com.weblibrary.controller.RedirectController;
+import com.weblibrary.core.controller.RedirectController;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;

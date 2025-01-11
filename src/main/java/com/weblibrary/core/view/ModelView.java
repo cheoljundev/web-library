@@ -1,4 +1,4 @@
-package com.weblibrary.controller.core;
+package com.weblibrary.core.view;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

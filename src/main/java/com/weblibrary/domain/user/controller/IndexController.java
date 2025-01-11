@@ -1,7 +1,7 @@
-package com.weblibrary.controller.usercontroller;
+package com.weblibrary.domain.user.controller;
 
 import com.weblibrary.AppConfig;
-import com.weblibrary.controller.ForwardController;
+import com.weblibrary.core.controller.ForwardController;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.user.model.User;

@@ -1,12 +1,12 @@
-package com.weblibrary.controller.core.adapter;
+package com.weblibrary.core.adapter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.weblibrary.controller.Controller;
-import com.weblibrary.controller.JsonResponseController;
-import com.weblibrary.controller.core.HandlerAdapter;
-import com.weblibrary.controller.core.ModelView;
-import com.weblibrary.controller.dto.response.JsonResponse;
+import com.weblibrary.core.controller.Controller;
+import com.weblibrary.core.controller.JsonResponseController;
+import com.weblibrary.core.HandlerAdapter;
+import com.weblibrary.core.view.ModelView;
+import com.weblibrary.core.controller.dto.response.JsonResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
