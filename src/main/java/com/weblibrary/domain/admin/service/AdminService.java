@@ -63,8 +63,8 @@ public class AdminService {
         bookService.addBook(newBookDto);
     }
 
-    public Book deleteBook(Book book) {
-        return bookService.deleteBook(book);
+    public Book deleteBook(Long bookId) {
+        return bookService.deleteBook(bookId);
     }
 
     public Book modifyBook(Book book, ModifyBookInfo newBookInfo) {

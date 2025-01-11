@@ -52,8 +52,8 @@ public class MemoryBookRepository implements BookRepository {
     }
 
     @Override
-    public Book remove(Book book) {
-        return store.remove(book.getId());
+    public Book remove(Long bookId) {
+        return store.remove(bookId);
     }
 
     @Override

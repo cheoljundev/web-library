@@ -40,7 +40,7 @@
                 <span>책 이름 : ${book.name}</span>
                 <span>isbn : ${book.isbn}</span>
                 <button value="${book.id}">수정</button>
-                <button value="${book.id}">삭제</button>
+                <button value="${book.id}" onclick="deleteBook(${book.id})">삭제</button>
             </li>
         </ul>
     </c:forEach>

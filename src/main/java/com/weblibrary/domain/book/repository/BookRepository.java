@@ -35,10 +35,10 @@ public interface BookRepository {
 
     /**
      * 책 삭제
-     * @param book : 삭제할 책
+     * @param bookId : 삭제할 책 id
      * @return 삭제한 책 리턴
      */
-    Book remove(Book book);
+    Book remove(Long bookId);
 
     /**
      * 모든 내용 삭제
