@@ -1,7 +1,6 @@
 package com.weblibrary.core.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.weblibrary.AppConfig;
 import com.weblibrary.core.HandlerAdapter;
 import com.weblibrary.core.adapter.ForwardControllerAdapter;
@@ -11,6 +10,7 @@ import com.weblibrary.core.controller.dto.response.ErrorResponse;
 import com.weblibrary.core.controller.dto.response.JsonResponse;
 import com.weblibrary.core.view.ModelView;
 import com.weblibrary.core.view.View;
+import com.weblibrary.domain.admin.controller.AdminBookController;
 import com.weblibrary.domain.admin.controller.AdminPageController;
 import com.weblibrary.domain.admin.controller.AdminUsersController;
 import com.weblibrary.domain.admin.service.AdminService;
@@ -30,10 +30,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 모든 요청이 이 Servlet을 거쳐서 처리됩니다.
@@ -44,8 +41,8 @@ import java.util.Map;
 @WebServlet(name = "frontControllerServlet", urlPatterns = "/site/*")
 public class FrontControllerServlet extends HttpServlet {
 
-    /* handler(Controller)가 매핑된 Map */
-    private final Map<String, Controller> handlerMappingMap = new HashMap<>();
+    /* handler(Controller)가 들어있는 Set이 매핑된 Map */
+    private final Map<String, Set<Controller>> handlerMappingMap = new HashMap<>();
 
     /* handler를 다루는 Adapter 클래스가 들어 있는 List */
     private final List<HandlerAdapter> handlerAdapters = new ArrayList<>();
@@ -67,14 +64,47 @@ public class FrontControllerServlet extends HttpServlet {
 
     /**
      * 컨트롤러 클래스를 URI에 맞게 등록해서 초기화 합니다.
+     * 다중 컨트롤러를 등록할 수 있습니다.
      */
     private void initHandlerMappingMap() {
-        handlerMappingMap.put("/site", new IndexController());
-        handlerMappingMap.put("/site/join", new JoinController());
-        handlerMappingMap.put("/site/login", new LoginController());
-        handlerMappingMap.put("/site/books/*", new UserBookController());
-        handlerMappingMap.put("/site/admin", new AdminPageController());
-        handlerMappingMap.put("/site/users/*", new AdminUsersController());
+
+        /* uri를 담은 리스트 */
+        List<String> uris = new ArrayList<>();
+        uris.add("/site");
+        uris.add("/site/login");
+        uris.add("/site/join");
+        uris.add("/site/books/*");
+        uris.add("/site/admin");
+        uris.add("/site/users/*");
+
+        /* uri 리스트를 돌면서 Set에 컨트롤러 add하기 */
+        for (String uri : uris) {
+            Set<Controller> handlerSet = new HashSet<>();
+            handlerMappingMap.put(uri, handlerSet);
+
+            switch (uri) {
+                case "/site" -> {
+                    handlerSet.add(new IndexController());
+                }
+                case "/site/login" -> {
+                    handlerSet.add(new LoginController());
+                }
+                case "/site/join" -> {
+                    handlerSet.add(new JoinController());
+                }
+                case "/site/books/*" -> {
+                    handlerSet.add(new UserBookController());
+                    handlerSet.add(new AdminBookController());
+                }
+                case "/site/admin" -> {
+                    handlerSet.add(new AdminPageController());
+                }
+                case "/site/users/*" -> {
+                    handlerSet.add(new AdminUsersController());
+                }
+            }
+        }
+
     }
 
     /**
@@ -89,11 +119,11 @@ public class FrontControllerServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        /* 핸들러 획득 */
-        Controller handler = getHandler(request);
+        /* handlerSet 획득 */
+        Set<Controller> handlerSet = getHandlerSet(request);
 
-        /* 핸들러를 획득하지 못하면, 404 응답 */
-        if (handler == null) {
+        /* handlerSet을 획득하지 못하면, 404 응답 */
+        if (handlerSet == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             response.setContentType("application/json");
             JsonResponse errorResponse = new ErrorResponse(
@@ -105,53 +135,63 @@ public class FrontControllerServlet extends HttpServlet {
             return;
         }
 
-        /* 어댑터 획득 */
-        List<HandlerAdapter> handlerAdapters = getHandlerAdapter(handler);
-        for (HandlerAdapter adapter : handlerAdapters) {
-            /* 어댑터에서 handle 메서드 호출 */
-            ModelView mv = adapter.handle(request, response, handler);
-            /* ModelView 객체가 null로 넘어온 경우(redirect된 경우) service 종료 */
-            if (mv == null) {
-                continue;
+        /* handlerSet을 돌며 어댑터 리스트 획득 */
+        for (Controller handler : handlerSet) {
+            List<HandlerAdapter> handlerAdapters = getHandlerAdapters(handler);
+
+            /* 등록된 adapter를 돌며 handle 호출  */
+            for (HandlerAdapter adapter : handlerAdapters) {
+                /* 어댑터에서 handle 메서드 호출 */
+                ModelView mv = adapter.handle(request, response, handler);
+
+                /* ModelView 객체가 null로 넘어온 경우(redirect된 경우) 다음으로 건너뜀 (무시) */
+                if (mv == null) {
+                    continue;
+                }
+
+                /* ModelView 인스턴스에서 viewName(논리적 주소) 획득 */
+                String viewName = mv.getViewName();
+
+                /* 획득한 viewName으로 실제 뷰 위치 만들고 View 반환 */
+                View view = viewResolver(viewName);
+
+                view.render(mv.getModel(), request, response);
             }
-
-            /* ModelView 인스턴스에서 viewName(논리적 주소) 획득 */
-            String viewName = mv.getViewName();
-
-            /* 획득한 viewName으로 실제 뷰 위치 만들고 View 반환 */
-            View view = viewResolver(viewName);
-
-            view.render(mv.getModel(), request, response);
         }
 
     }
 
     /**
+     * URI에 맞는 handlerSet을 반환하는 메서드
+     * 와일드카드 (/*)가 붙은 uri는 특별히 처리
+     *
      * @param request : HttpServletRequest 인스턴스
-     * @return : Controller 인스턴스를 핸들러로 반환
+     * @return : Controller 인스턴스가 담긴 Set을 반환
      */
-    private Controller getHandler(HttpServletRequest request) {
+    private Set<Controller> getHandlerSet(HttpServletRequest request) {
         String requestURI = request.getRequestURI();
-        Controller handler = handlerMappingMap.get(requestURI);
+        Set<Controller> handlerSet = handlerMappingMap.get(requestURI);
 
-        if (handler == null) {
+        if (handlerSet == null) {
             if (request.getRequestURI().startsWith("/site/books/")) {
-                //user books 컨트롤러
-                handler = handlerMappingMap.get("/site/books/*");
+                //books handlerSet
+                handlerSet = handlerMappingMap.get("/site/books/*");
             } else if (request.getRequestURI().startsWith("/site/users/")) {
-                //users 컨트롤러
-                handler = handlerMappingMap.get("/site/users/*");
+                //users handlerSet
+                handlerSet = handlerMappingMap.get("/site/users/*");
             }
         }
 
-        return handler;
+        return handlerSet;
     }
 
     /**
+     * 한 컨트롤러에서도 여러 Adapter에 맞는 컨트롤러를 구현해 놓아서 리스트가 필요.
+     *
      * @param handler : Controller 인스턴스
-     * @return : 핸들러에 맞는 Adapter 클래스를 반환
+     * @return : 핸들러에 맞는 Adapter 인스턴스를 담은 List를 반환
      */
-    private List<HandlerAdapter> getHandlerAdapter(Controller handler) {
+    private List<HandlerAdapter> getHandlerAdapters(Controller handler) {
         List<HandlerAdapter> list = new ArrayList<>();
         for (HandlerAdapter adapter : handlerAdapters) {
             /* 지원 여부 확인 */
