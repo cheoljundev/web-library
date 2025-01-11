@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>온라인 도서관 - 관리자 페이지</title>
-    <script defer type="module" src="/js/admin.js"></script>
+    <script type="module" src="/js/admin.js"></script>
 </head>
 <body>
 <h1>관리자 페이지</h1>
@@ -39,11 +39,17 @@
             <li>
                 <span>책 이름 : ${book.name}</span>
                 <span>isbn : ${book.isbn}</span>
-                <button value="${book.id}">수정</button>
-                <button value="${book.id}">삭제</button>
+                <button onclick="setModifySection('${book.id}', '${book.name}', '${book.isbn}')">수정</button>
+                <button value="${book.id}" onclick="deleteBook(${book.id})">삭제</button>
             </li>
         </ul>
     </c:forEach>
 </c:if>
+<div id="modifyBook">
+    <input type="hidden" id="bookId">
+    <input type="text" id="bookName">
+    <input type="text" id="isbn">
+    <button onclick="modifyBook()">최종 수정</button>
+</div>
 </body>
 </html>

@@ -3,7 +3,6 @@ package com.weblibrary.domain.book.model;
 import com.weblibrary.domain.book.model.dto.ModifyBookInfo;
 import com.weblibrary.domain.user.model.User;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public class Book {
@@ -42,7 +41,7 @@ public class Book {
     public Book modify(ModifyBookInfo newBookInfo) {
         Book oldBook = new Book(this);
 
-        this.name = newBookInfo.getName();
+        this.name = newBookInfo.getBookName();
         this.isbn = newBookInfo.getIsbn();
 
         return oldBook;

@@ -63,12 +63,16 @@ public class AdminService {
         bookService.addBook(newBookDto);
     }
 
-    public Book deleteBook(Book book) {
-        return bookService.deleteBook(book);
+    public Book deleteBook(Long bookId) {
+        return bookService.deleteBook(bookId);
     }
 
-    public Book modifyBook(Book book, ModifyBookInfo newBookInfo) {
-        return book.modify(newBookInfo);
+    public Book modifyBook(Long bookId, ModifyBookInfo newBookInfo) {
+        Book findBook = bookService.findBookById(bookId);
+        if (findBook == null) {
+            return null;
+        }
+        return findBook.modify(newBookInfo);
     }
 
     public boolean isAdmin(Long userId) {

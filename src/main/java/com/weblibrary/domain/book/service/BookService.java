@@ -16,8 +16,8 @@ public class BookService {
         bookRepository.save(newBookDto.getBookName(), newBookDto.getIsbn());
     }
 
-    public Book deleteBook(Book book) {
-        return bookRepository.remove(book);
+    public Book deleteBook(Long bookId) {
+        return bookRepository.remove(bookId);
     }
 
     public Book findBookById(Long id) {
