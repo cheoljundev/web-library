@@ -50,4 +50,4 @@
 
 ### 고도화 단계
 
-- [ ] 스프링 mvc1편 servlet + jsp mvc 프론트 컨트롤러 v5
+- [x] 스프링 mvc1편 servlet + jsp mvc 프론트 컨트롤러 v5
