@@ -33,10 +33,10 @@ public interface UserRepository {
 
     /**
      * 유저 삭제
-     * @param user : 삭제할 유저 객체
+     * @param userId : 삭제할 유저 id
      * @return 삭제한 유저 반환
      */
-    User remove(User user);
+    User remove(Long userId);
 
     /**
      * 저장소 비우기

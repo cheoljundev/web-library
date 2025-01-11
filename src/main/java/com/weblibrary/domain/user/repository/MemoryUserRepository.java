@@ -39,9 +39,10 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User remove(User user) {
-        store.remove(user.getId());
-        return user;
+    public User remove(Long userId) {
+        User removed = findById(userId);
+        store.remove(userId);
+        return removed;
     }
 
     @Override

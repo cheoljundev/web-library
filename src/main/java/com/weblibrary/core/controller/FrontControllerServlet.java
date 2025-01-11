@@ -12,6 +12,7 @@ import com.weblibrary.core.adapter.JsonResponseControllerAdapter;
 import com.weblibrary.core.adapter.RedirectControllerAdapter;
 import com.weblibrary.core.controller.dto.response.ErrorResponse;
 import com.weblibrary.core.controller.dto.response.JsonResponse;
+import com.weblibrary.domain.admin.controller.AdminUsersController;
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.user.controller.*;
@@ -68,6 +69,7 @@ public class FrontControllerServlet extends HttpServlet {
         handlerMappingMap.put("/site/book/rent", new RentController());
         handlerMappingMap.put("/site/book/unrent", new UnRentController());
         handlerMappingMap.put("/site/admin", new AdminPageController());
+        handlerMappingMap.put("/site/users/*", new AdminUsersController());
     }
 
     /**
@@ -131,7 +133,16 @@ public class FrontControllerServlet extends HttpServlet {
      */
     private Controller getHandler(HttpServletRequest request) {
         String requestURI = request.getRequestURI();
-        return handlerMappingMap.get(requestURI);
+        Controller handler = handlerMappingMap.get(requestURI);
+
+        if (handler == null) {
+            //users 컨트롤러
+            if (request.getRequestURI().startsWith("/site/users/")) {
+                handler = handlerMappingMap.get("/site/users/*");
+            }
+        }
+
+        return handler;
     }
 
     /**
@@ -177,7 +188,7 @@ public class FrontControllerServlet extends HttpServlet {
         userService.join("admin", "1111");
         userService.join("user", "1111");
         User admin = userRepository.findByUsername("admin");
-        adminService.setUserAsAdmin(admin);
+        adminService.setUserAsAdmin(admin.getId());
     }
 
     /**
