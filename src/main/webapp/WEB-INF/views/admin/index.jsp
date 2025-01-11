@@ -33,14 +33,17 @@
     <input type="text" name="isbn">
     <button type="submit">등록</button>
 </form>
-
-<ul>
-    <li>
-        id
-        책 이름
-        <button>수정</button>
-        <button>삭제</button>
-    </li>
-</ul>
+<c:if test="${books != null}">
+    <c:forEach var="book" items="${books}">
+        <ul>
+            <li>
+                <span>책 이름 : ${book.name}</span>
+                <span>isbn : ${book.isbn}</span>
+                <button value="${book.id}">수정</button>
+                <button value="${book.id}">삭제</button>
+            </li>
+        </ul>
+    </c:forEach>
+</c:if>
 </body>
 </html>
