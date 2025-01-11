@@ -11,10 +11,11 @@ public class MemoryBookRepository implements BookRepository {
 
     private final Map<Long, Book> store = new HashMap<>();
 
-    public Long lastId;
+    public Long lastId = 0L;
 
     @Override
-    public void save(Book book) {
+    public void save(String bookName, String isbn) {
+        Book book = new Book(lastId++, bookName, isbn);
         store.put(book.getId(), book);
     }
 

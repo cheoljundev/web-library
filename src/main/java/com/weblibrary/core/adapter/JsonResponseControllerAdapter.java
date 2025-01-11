@@ -31,11 +31,14 @@ public class JsonResponseControllerAdapter implements HandlerAdapter {
         JsonResponseController controller = (JsonResponseController) handler;
 
         JsonResponse jsonResponse = controller.response(request);
-        String result = mapper.writeValueAsString(jsonResponse);
 
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(result);
+        if (jsonResponse != null) {
+            String result = mapper.writeValueAsString(jsonResponse);
+
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(result);
+        }
 
         return null;
     }
