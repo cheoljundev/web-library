@@ -14,6 +14,9 @@ import static com.weblibrary.domain.admin.model.RoleType.Admin;
 import static com.weblibrary.domain.admin.model.RoleType.Default;
 
 @RequiredArgsConstructor
+/**
+ * 관리자 서비스 계층
+ */
 public class AdminService {
 
     private final UserRepository userRepository;
@@ -21,7 +24,7 @@ public class AdminService {
     private final BookService bookService;
 
     public boolean setUserAsAdmin(User user) {
-        Role findAdminRole = userRoleRepository.findTypeByUserIdAndRoleType(user.getId(), Admin);
+        Role findAdminRole = userRoleRepository.findRoleByUserIdAndRoleType(user.getId(), Admin);
         if (findAdminRole == null) {
             Role newRole = new Role(MemoryUserRoleRepository.lastId++, user.getId(), Admin);
             userRoleRepository.save(newRole);
@@ -31,8 +34,8 @@ public class AdminService {
     }
 
     public boolean setUserAsDefault(User user) {
-        Role findAdminRole = userRoleRepository.findTypeByUserIdAndRoleType(user.getId(), Admin);
-        Role findDefaltRole = userRoleRepository.findTypeByUserIdAndRoleType(user.getId(), Default);
+        Role findAdminRole = userRoleRepository.findRoleByUserIdAndRoleType(user.getId(), Admin);
+        Role findDefaltRole = userRoleRepository.findRoleByUserIdAndRoleType(user.getId(), Default);
 
         if (findAdminRole != null) {
             userRoleRepository.remove(findAdminRole.getId());
@@ -64,7 +67,7 @@ public class AdminService {
     }
 
     public boolean isAdmin(User user) {
-        Role adminRole = userRoleRepository.findTypeByUserIdAndRoleType(user.getId(), Admin);
+        Role adminRole = userRoleRepository.findRoleByUserIdAndRoleType(user.getId(), Admin);
         return adminRole != null;
     }
 }

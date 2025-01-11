@@ -19,7 +19,7 @@ public class MemoryUserRoleRepository implements UserRoleRepository {
     }
 
     @Override
-    public Role findTypeByUserIdAndRoleType(Long userId, RoleType roleType) {
+    public Role findRoleByUserIdAndRoleType(Long userId, RoleType roleType) {
         for (Role role : store.values()) {
             if (role.getUserId() == userId) {
                 if (role.getRoleType() == roleType) {
