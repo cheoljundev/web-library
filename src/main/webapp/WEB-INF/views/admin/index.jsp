@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>온라인 도서관 - 관리자 페이지</title>
-    <script defer type="module" src="/js/admin.js"></script>
+    <script type="module" src="/js/admin.js"></script>
 </head>
 <body>
 <h1>관리자 페이지</h1>
