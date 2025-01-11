@@ -17,11 +17,11 @@ public class AdminPageController implements ForwardController {
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response, Map<String, String> paramMap, Map<String, Object> model) {
         User user = (User) request.getSession().getAttribute("user");
-
-        if (adminService.isAdmin(user)) {
-         return "admin/index";
+        if (user != null) {
+            if (adminService.isAdmin(user)) {
+                return "admin/index";
+            }
         }
-
         return "access-denied";
     }
 }
