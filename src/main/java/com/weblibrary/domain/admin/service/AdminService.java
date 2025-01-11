@@ -62,4 +62,9 @@ public class AdminService {
     public Book modifyBook(Book book, ModifyBookInfo newBookInfo) {
         return book.modify(newBookInfo);
     }
+
+    public boolean isAdmin(User user) {
+        Role adminRole = userRoleRepository.findTypeByUserIdAndRoleType(user.getId(), Admin);
+        return adminRole != null;
+    }
 }
