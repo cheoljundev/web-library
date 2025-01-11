@@ -1,10 +1,9 @@
-const rent = (id) => {
-    fetch("site/book/rent", {
+const rent = id => {
+    fetch(`site/books/${id}/rent`, {
         method : "POST",
         headers : {
             "Content-Type": "application/json",
-        },
-        body : id
+        }
     })
         .then((res) => {
             if (!res.ok) {
@@ -18,13 +17,12 @@ const rent = (id) => {
         .catch(error => alert(error.message));
 };
 
-const unRent = (id) => {
-    fetch("site/book/unrent", {
+const unRent = id => {
+    fetch(`site/books/${id}/unrent`, {
         method : "POST",
         headers : {
             "Content-Type": "application/json",
-        },
-        body : id
+        }
     })
         .then((res) => {
             if (!res.ok) {

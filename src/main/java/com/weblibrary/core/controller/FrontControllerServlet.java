@@ -3,19 +3,22 @@ package com.weblibrary.core.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.weblibrary.AppConfig;
-import com.weblibrary.domain.admin.controller.AdminPageController;
 import com.weblibrary.core.HandlerAdapter;
-import com.weblibrary.core.view.ModelView;
-import com.weblibrary.core.view.View;
 import com.weblibrary.core.adapter.ForwardControllerAdapter;
 import com.weblibrary.core.adapter.JsonResponseControllerAdapter;
 import com.weblibrary.core.adapter.RedirectControllerAdapter;
 import com.weblibrary.core.controller.dto.response.ErrorResponse;
 import com.weblibrary.core.controller.dto.response.JsonResponse;
+import com.weblibrary.core.view.ModelView;
+import com.weblibrary.core.view.View;
+import com.weblibrary.domain.admin.controller.AdminPageController;
 import com.weblibrary.domain.admin.controller.AdminUsersController;
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.book.model.Book;
-import com.weblibrary.domain.user.controller.*;
+import com.weblibrary.domain.user.controller.IndexController;
+import com.weblibrary.domain.user.controller.JoinController;
+import com.weblibrary.domain.user.controller.LoginController;
+import com.weblibrary.domain.user.controller.UserBookController;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.MemoryUserRepository;
 import com.weblibrary.domain.user.repository.UserRepository;
@@ -66,8 +69,7 @@ public class FrontControllerServlet extends HttpServlet {
         handlerMappingMap.put("/site", new IndexController());
         handlerMappingMap.put("/site/join", new JoinController());
         handlerMappingMap.put("/site/login", new LoginController());
-        handlerMappingMap.put("/site/book/rent", new RentController());
-        handlerMappingMap.put("/site/book/unrent", new UnRentController());
+        handlerMappingMap.put("/site/books/*", new UserBookController());
         handlerMappingMap.put("/site/admin", new AdminPageController());
         handlerMappingMap.put("/site/users/*", new AdminUsersController());
     }
@@ -136,8 +138,11 @@ public class FrontControllerServlet extends HttpServlet {
         Controller handler = handlerMappingMap.get(requestURI);
 
         if (handler == null) {
-            //users 컨트롤러
-            if (request.getRequestURI().startsWith("/site/users/")) {
+            if (request.getRequestURI().startsWith("/site/books/")) {
+                //user books 컨트롤러
+                handler = handlerMappingMap.get("/site/books/*");
+            } else if (request.getRequestURI().startsWith("/site/users/")) {
+                //users 컨트롤러
                 handler = handlerMappingMap.get("/site/users/*");
             }
         }
