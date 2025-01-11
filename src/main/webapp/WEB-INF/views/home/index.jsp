@@ -3,9 +3,9 @@
 <html>
 <head>
     <title>온라인 도서관</title>
+    <script defer src="/js/rent.js"></script>
 </head>
 <body>
-<script src="/js/rent.js"></script>
 <%-- user가 없을 경우에 폼 보여줌 --%>
 <c:if test="${sessionScope.user == null}">
     <form method="post" action="/site/login">

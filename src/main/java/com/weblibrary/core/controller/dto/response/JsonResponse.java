@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 
 @Getter @RequiredArgsConstructor
-public abstract class JsonResponse {
+public class JsonResponse {
     private final int status; // HTTP 상태 코드
     private final String message; // 에러 메시지
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")

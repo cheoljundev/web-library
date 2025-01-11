@@ -1,8 +1,8 @@
 package com.weblibrary.domain.admin.service;
 
+import com.weblibrary.domain.admin.model.Role;
 import com.weblibrary.domain.admin.repository.MemoryUserRoleRepository;
 import com.weblibrary.domain.admin.repository.UserRoleRepository;
-import com.weblibrary.domain.admin.model.Role;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.dto.ModifyBookInfo;
 import com.weblibrary.domain.book.service.BookService;
@@ -10,8 +10,9 @@ import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 import static com.weblibrary.domain.admin.model.RoleType.Admin;
-import static com.weblibrary.domain.admin.model.RoleType.Default;
 
 @RequiredArgsConstructor
 /**
@@ -23,35 +24,37 @@ public class AdminService {
     private final UserRoleRepository userRoleRepository;
     private final BookService bookService;
 
-    public boolean setUserAsAdmin(User user) {
-        Role findAdminRole = userRoleRepository.findRoleByUserIdAndRoleType(user.getId(), Admin);
-        if (findAdminRole == null) {
-            Role newRole = new Role(MemoryUserRoleRepository.lastId++, user.getId(), Admin);
-            userRoleRepository.save(newRole);
-            return true;
+    public boolean setUserAsAdmin(Long userId) {
+        // 이미 관리자 일 경우에는 실패
+        if (isAdmin(userId)) {
+            return false;
         }
-        return false;
+
+        // 관리자 권한 생성해서 추가하기
+        Role newRole = new Role(MemoryUserRoleRepository.lastId++, userId, Admin);
+        userRoleRepository.save(newRole);
+        return true;
     }
 
-    public boolean setUserAsDefault(User user) {
-        Role findAdminRole = userRoleRepository.findRoleByUserIdAndRoleType(user.getId(), Admin);
-        Role findDefaltRole = userRoleRepository.findRoleByUserIdAndRoleType(user.getId(), Default);
-
-        if (findAdminRole != null) {
-            userRoleRepository.remove(findAdminRole.getId());
+    public boolean setUserAsDefault(Long userId) {
+        // 이미 일반 유저일 경우 실패
+        if (!isAdmin(userId)) {
+            return false;
         }
 
-        if (findDefaltRole == null) {
-            Role newRole = new Role(MemoryUserRoleRepository.lastId++, user.getId(), Default);
-            userRoleRepository.save(newRole);
-            return true;
-        }
+        // 관리자일 경우에는 관리자 권한을 삭제
+        Role findAdminRole = userRoleRepository.findRoleByUserIdAndRoleType(userId, Admin);
+        userRoleRepository.remove(findAdminRole.getUserId());
 
-        return false;
+        return true;
     }
 
-    public User deleteUser(User user) {
-        return userRepository.remove(user);
+    public User deleteUser(Long userId) {
+        return userRepository.remove(userId);
+    }
+
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
     }
 
     public void addBook(Book book) {
@@ -66,8 +69,8 @@ public class AdminService {
         return book.modify(newBookInfo);
     }
 
-    public boolean isAdmin(User user) {
-        Role adminRole = userRoleRepository.findRoleByUserIdAndRoleType(user.getId(), Admin);
+    public boolean isAdmin(Long userId) {
+        Role adminRole = userRoleRepository.findRoleByUserIdAndRoleType(userId, Admin);
         return adminRole != null;
     }
 }
