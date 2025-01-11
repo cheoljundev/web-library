@@ -22,7 +22,7 @@ public class AdminUsersController implements JsonResponseController {
 
     private final AppConfig appConfig = AppConfig.getInstance();
     private final AdminService adminService = appConfig.adminService();
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = appConfig.objectMapper();
 
     @Override
     public JsonResponse response(HttpServletRequest request) throws IOException {

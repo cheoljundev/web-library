@@ -50,6 +50,9 @@ public class FrontControllerServlet extends HttpServlet {
     /* handler를 다루는 Adapter 클래스가 들어 있는 List */
     private final List<HandlerAdapter> handlerAdapters = new ArrayList<>();
 
+    private final AppConfig appConfig = AppConfig.getInstance();
+    private final ObjectMapper mapper = appConfig.objectMapper();
+
     /**
      * 이 클래스가 생성되면서 handler(Controller)가 매핑된 Map, handlerAdapter가 들어있는 List가 초기화 됩니다.
      */
@@ -88,12 +91,6 @@ public class FrontControllerServlet extends HttpServlet {
 
         /* 핸들러 획득 */
         Controller handler = getHandler(request);
-
-        /* 객체 To Json을 위한 ObjectMapper */
-        ObjectMapper mapper = new ObjectMapper();
-
-        /* Jackson에 JavaTimeModule 등록 */
-        mapper.registerModule(new JavaTimeModule());
 
         /* 핸들러를 획득하지 못하면, 404 응답 */
         if (handler == null) {

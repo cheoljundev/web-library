@@ -1,5 +1,7 @@
 package com.weblibrary;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.weblibrary.domain.admin.repository.MemoryUserRoleRepository;
 import com.weblibrary.domain.admin.repository.UserRoleRepository;
 import com.weblibrary.domain.admin.service.AdminService;
@@ -9,11 +11,8 @@ import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.user.repository.MemoryUserRepository;
 import com.weblibrary.domain.user.repository.UserRepository;
 import com.weblibrary.domain.user.service.UserService;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AppConfig {
     @Getter
     private static final AppConfig instance = new AppConfig();
@@ -31,6 +30,11 @@ public class AppConfig {
             userRoleRepository(),
             bookService()
     );
+    private final ObjectMapper mapper = new ObjectMapper();
+
+    private AppConfig() {
+        mapper.registerModule(new JavaTimeModule());
+    }
 
     public UserRepository userRepository() {
         return userRepository;
@@ -54,5 +58,9 @@ public class AppConfig {
 
     public BookService bookService() {
         return bookService;
+    }
+
+    public ObjectMapper objectMapper() {
+        return mapper;
     }
 }
