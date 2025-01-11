@@ -3,6 +3,7 @@ package com.weblibrary.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.weblibrary.AppConfig;
+import com.weblibrary.controller.admincontroller.AdminPageController;
 import com.weblibrary.controller.core.HandlerAdapter;
 import com.weblibrary.controller.core.ModelView;
 import com.weblibrary.controller.core.View;
@@ -66,6 +67,7 @@ public class FrontControllerServlet extends HttpServlet {
         handlerMappingMap.put("/site/login", new LoginController());
         handlerMappingMap.put("/site/book/rent", new RentController());
         handlerMappingMap.put("/site/book/unrent", new UnRentController());
+        handlerMappingMap.put("/site/admin", new AdminPageController());
     }
 
     /**
