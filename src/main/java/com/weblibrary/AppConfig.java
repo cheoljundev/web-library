@@ -1,7 +1,7 @@
 package com.weblibrary;
 
-import com.weblibrary.domain.admin.Repository.MemoryUserRoleRepository;
-import com.weblibrary.domain.admin.Repository.UserRoleRepository;
+import com.weblibrary.domain.admin.repository.MemoryUserRoleRepository;
+import com.weblibrary.domain.admin.repository.UserRoleRepository;
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.book.repository.BookRepository;
 import com.weblibrary.domain.book.repository.MemoryBookRepository;

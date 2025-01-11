@@ -1,4 +1,4 @@
-package com.weblibrary.domain.admin.Repository;
+package com.weblibrary.domain.admin.repository;
 
 import com.weblibrary.domain.admin.model.Role;
 import com.weblibrary.domain.admin.model.RoleType;

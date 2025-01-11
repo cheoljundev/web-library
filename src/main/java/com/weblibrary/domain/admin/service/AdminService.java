@@ -1,7 +1,7 @@
 package com.weblibrary.domain.admin.service;
 
-import com.weblibrary.domain.admin.Repository.MemoryUserRoleRepository;
-import com.weblibrary.domain.admin.Repository.UserRoleRepository;
+import com.weblibrary.domain.admin.repository.MemoryUserRoleRepository;
+import com.weblibrary.domain.admin.repository.UserRoleRepository;
 import com.weblibrary.domain.admin.model.Role;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.dto.ModifyBookInfo;
