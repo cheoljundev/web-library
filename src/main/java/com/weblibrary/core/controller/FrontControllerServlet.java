@@ -15,10 +15,7 @@ import com.weblibrary.domain.admin.controller.AdminPageController;
 import com.weblibrary.domain.admin.controller.AdminUsersController;
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.book.model.Book;
-import com.weblibrary.domain.user.controller.IndexController;
-import com.weblibrary.domain.user.controller.JoinController;
-import com.weblibrary.domain.user.controller.LoginController;
-import com.weblibrary.domain.user.controller.UserBookController;
+import com.weblibrary.domain.user.controller.*;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.MemoryUserRepository;
 import com.weblibrary.domain.user.repository.UserRepository;
@@ -71,6 +68,7 @@ public class FrontControllerServlet extends HttpServlet {
         /* uri를 담은 리스트 */
         List<String> uris = new ArrayList<>();
         uris.add("/site");
+        uris.add("/site/access-denied");
         uris.add("/site/login");
         uris.add("/site/join");
         uris.add("/site/books/*");
@@ -85,6 +83,9 @@ public class FrontControllerServlet extends HttpServlet {
             switch (uri) {
                 case "/site" -> {
                     handlerSet.add(new IndexController());
+                }
+                case "/site/access-denied" -> {
+                    handlerSet.add(new AccessDeniedController());
                 }
                 case "/site/login" -> {
                     handlerSet.add(new LoginController());
@@ -239,10 +240,8 @@ public class FrontControllerServlet extends HttpServlet {
     private static void initBook() {
         AppConfig appConfig = AppConfig.getInstance();
         AdminService adminService = appConfig.adminService();
-        Book jpa = new Book(MemoryUserRepository.lastId++, "JPA", "12345");
-        Book spring = new Book(MemoryUserRepository.lastId++, "SPRING", "45678");
-        adminService.addBook(jpa);
-        adminService.addBook(spring);
+        adminService.addBook("JPA", "12345");
+        adminService.addBook("SPRING", "45668");
     }
 
 }

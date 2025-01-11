@@ -1,4 +1,4 @@
-import {getPrevSelectValue} from "./util";
+import {getPrevSelectValue} from "./util.js";
 
 const setRole = btn => {
   // btn의 이전 요소(select)의 선택값을 가져와야 함
@@ -48,3 +48,7 @@ const deleteUser = id => {
       .then((data) => alert("결과 : " + data.message))
       .catch(error => alert(error.message));
 }
+
+// 전역으로 노출
+window.setRole = setRole;
+window.deleteUser = deleteUser;

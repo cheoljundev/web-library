@@ -8,9 +8,10 @@ import java.util.List;
 public interface BookRepository {
     /**
      * 책 저장
-     * @param book : 저장할 책
+     * @param bookName : 저장할 책 이름
+     * @param isbn : 저장할 책 isbn
      */
-    void save(Book book);
+    void save(String bookName, String isbn);
 
     /**
      * id로 책을 찾음

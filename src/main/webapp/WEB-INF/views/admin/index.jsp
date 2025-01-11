@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>온라인 도서관 - 관리자 페이지</title>
-    <script defer src="/js/admin.js"></script>
+    <script defer type="module" src="/js/admin.js"></script>
 </head>
 <body>
 <h1>관리자 페이지</h1>
@@ -25,5 +25,22 @@
         </c:forEach>
     </ul>
 </c:if>
+
+<h2>도서 관리</h2>
+
+<form action="/site/books/add" method="post">
+    <input type="text" name="bookName">
+    <input type="text" name="isbn">
+    <button type="submit">등록</button>
+</form>
+
+<ul>
+    <li>
+        id
+        책 이름
+        <button>수정</button>
+        <button>삭제</button>
+    </li>
+</ul>
 </body>
 </html>

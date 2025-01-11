@@ -31,7 +31,15 @@ public class UserBookController implements JsonResponseController {
         String[] uriParts = cleanUrlParts(request.getRequestURI());
 
         // Book 정보 얻어서 Book 찾기
-        Long bookId = Long.parseLong(uriParts[2]);
+        Long bookId = null;
+
+        try {
+            bookId = Long.parseLong(uriParts[2]);
+        } catch (NumberFormatException e) {
+            // /user/books/1 과 같은 형식의 uri가 아니면 넘김
+            return null;
+        }
+
         Book findBook = bookService.findBookById(bookId);
 
         switch (uriParts[3]) {

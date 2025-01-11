@@ -5,6 +5,7 @@ import com.weblibrary.domain.admin.repository.MemoryUserRoleRepository;
 import com.weblibrary.domain.admin.repository.UserRoleRepository;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.dto.ModifyBookInfo;
+import com.weblibrary.domain.book.model.dto.NewBookInfo;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
@@ -57,8 +58,9 @@ public class AdminService {
         return userRepository.findAll();
     }
 
-    public void addBook(Book book) {
-        bookService.addBook(book);
+    public void addBook(String bookName, String isbn) {
+        NewBookInfo newBookDto = new NewBookInfo(bookName, isbn);
+        bookService.addBook(newBookDto);
     }
 
     public Book deleteBook(Book book) {
