@@ -1,5 +1,5 @@
 import {setRole, deleteUser} from "./manageMember.js";
-import {deleteBook} from "./manageBook.js";
+import {deleteBook, setModifySection, modifyBook} from "./manageBook.js";
 
 /**
 * window 전역 객체에 함수를 등록
@@ -8,3 +8,5 @@ import {deleteBook} from "./manageBook.js";
 window.setRole = setRole;
 window.deleteUser = deleteUser;
 window.deleteBook = deleteBook;
+window.setModifySection = setModifySection;
+window.modifyBook = modifyBook;
