@@ -1,7 +1,7 @@
 package com.weblibrary.domain.admin.service;
 
-import com.weblibrary.domain.admin.Repository.MemoryUserRoleRepository;
-import com.weblibrary.domain.admin.Repository.UserRoleRepository;
+import com.weblibrary.domain.admin.repository.MemoryUserRoleRepository;
+import com.weblibrary.domain.admin.repository.UserRoleRepository;
 import com.weblibrary.domain.admin.model.Role;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.dto.ModifyBookInfo;
@@ -14,6 +14,9 @@ import static com.weblibrary.domain.admin.model.RoleType.Admin;
 import static com.weblibrary.domain.admin.model.RoleType.Default;
 
 @RequiredArgsConstructor
+/**
+ * 관리자 서비스 계층
+ */
 public class AdminService {
 
     private final UserRepository userRepository;
@@ -21,7 +24,7 @@ public class AdminService {
     private final BookService bookService;
 
     public boolean setUserAsAdmin(User user) {
-        Role findAdminRole = userRoleRepository.findTypeByUserIdAndRoleType(user.getId(), Admin);
+        Role findAdminRole = userRoleRepository.findRoleByUserIdAndRoleType(user.getId(), Admin);
         if (findAdminRole == null) {
             Role newRole = new Role(MemoryUserRoleRepository.lastId++, user.getId(), Admin);
             userRoleRepository.save(newRole);
@@ -31,8 +34,8 @@ public class AdminService {
     }
 
     public boolean setUserAsDefault(User user) {
-        Role findAdminRole = userRoleRepository.findTypeByUserIdAndRoleType(user.getId(), Admin);
-        Role findDefaltRole = userRoleRepository.findTypeByUserIdAndRoleType(user.getId(), Default);
+        Role findAdminRole = userRoleRepository.findRoleByUserIdAndRoleType(user.getId(), Admin);
+        Role findDefaltRole = userRoleRepository.findRoleByUserIdAndRoleType(user.getId(), Default);
 
         if (findAdminRole != null) {
             userRoleRepository.remove(findAdminRole.getId());
@@ -61,5 +64,10 @@ public class AdminService {
 
     public Book modifyBook(Book book, ModifyBookInfo newBookInfo) {
         return book.modify(newBookInfo);
+    }
+
+    public boolean isAdmin(User user) {
+        Role adminRole = userRoleRepository.findRoleByUserIdAndRoleType(user.getId(), Admin);
+        return adminRole != null;
     }
 }
