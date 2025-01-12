@@ -4,11 +4,12 @@
     <title>온라인 도서관 회원가입</title>
 </head>
 <body>
-<form method="post" action="/site/join">
+<form method="post" action="join">
     <legend>회원가입</legend>
     <input type="text" name="username"/>
     <input type="password" name="password"/>
     <input type="submit" value="회원가입">
 </form>
+<a href="/">메인으로</a>
 </body>
 </html>

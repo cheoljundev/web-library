@@ -1,18 +1,18 @@
 ### home test
-GET {{host}}/site
+GET {{host}}
 
 ### join GET test
-GET {{host}}/site/join
+GET {{host}}/join
 
 ### join POST test
-POST {{host}}/site/join
+POST {{host}}/join
 Content-Type: application/x-www-form-urlencoded
 
 username=kim&
 password=1111
 
 ### login test
-POST {{host}}/site/login
+POST {{host}}/login
 Content-Type: application/x-www-form-urlencoded
 
 username=kim&

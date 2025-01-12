@@ -28,11 +28,9 @@
 
 <h2>도서 관리</h2>
 
-<form action="/site/books/add" method="post">
-    <input type="text" name="bookName">
-    <input type="text" name="isbn">
-    <button type="submit">등록</button>
-</form>
+<input type="text" name="bookName" id="addBookName">
+<input type="text" name="isbn" id="addBookIsbn">
+<button onclick="addBook()">등록</button>
 <c:if test="${books != null}">
     <c:forEach var="book" items="${books}">
         <ul>
@@ -51,5 +49,6 @@
     <input type="text" id="isbn">
     <button onclick="modifyBook()">최종 수정</button>
 </div>
+<a href="/">메인으로</a>
 </body>
 </html>
