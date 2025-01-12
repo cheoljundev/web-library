@@ -1,7 +1,7 @@
 ---
 name: 'issue : Refactory⚙️'
 about: refactory 작업 상황을 입력해주세요!
-title: ''
+title: 'ref/'
 labels: refactory
 assignees: cheoljundev
 
