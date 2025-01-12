@@ -1,5 +1,5 @@
 const rent = id => {
-    fetch(`site/books/${id}/rent`, {
+    fetch(`/books/${id}/rent`, {
         method : "POST",
         headers : {
             "Content-Type": "application/json",
@@ -18,7 +18,7 @@ const rent = id => {
 };
 
 const unRent = id => {
-    fetch(`site/books/${id}/unrent`, {
+    fetch(`/books/${id}/unrent`, {
         method : "POST",
         headers : {
             "Content-Type": "application/json",

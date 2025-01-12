@@ -1,42 +1,30 @@
 package com.weblibrary.domain.admin.controller;
 
 import com.weblibrary.AppConfig;
-import com.weblibrary.core.controller.ForwardController;
 import com.weblibrary.domain.admin.service.AdminService;
-import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.user.model.User;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.List;
-import java.util.Map;
-
-public class AdminPageController implements ForwardController {
+@Controller
+public class AdminPageController {
     private final AppConfig appConfig = AppConfig.getInstance();
     private final AdminService adminService = appConfig.adminService();
     private final BookService bookService = appConfig.bookService();
 
-    @Override
-    public String process(HttpServletRequest request, HttpServletResponse response, Map<String, String> paramMap, Map<String, Object> model) {
-        User user = (User) request.getSession().getAttribute("user");
+    @GetMapping("/admin")
+    public String adminPage(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
         if (user != null) {
             if (adminService.isAdmin(user.getId())) {
-                setUsersInRequest(request);
-                setBooksInRequest(request);
+                model.addAttribute("users", adminService.findAllUsers());
+                model.addAttribute("books", bookService.findAll());
                 return "admin/index";
             }
         }
         return "access-denied";
-    }
-
-    private void setUsersInRequest(HttpServletRequest request) {
-        List<User> users = adminService.findAllUsers();
-        request.setAttribute("users", users);
-    }
-
-    private void setBooksInRequest(HttpServletRequest request) {
-        List<Book> books = bookService.findAll();
-        request.setAttribute("books", books);
     }
 }

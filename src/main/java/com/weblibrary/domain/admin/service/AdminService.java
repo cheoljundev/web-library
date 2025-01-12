@@ -58,9 +58,8 @@ public class AdminService {
         return userRepository.findAll();
     }
 
-    public void addBook(String bookName, String isbn) {
-        NewBookInfo newBookDto = new NewBookInfo(bookName, isbn);
-        bookService.addBook(newBookDto);
+    public void addBook(NewBookInfo newBookInfo) {
+        bookService.addBook(newBookInfo);
     }
 
     public Book deleteBook(Long bookId) {

@@ -1,33 +1,32 @@
 package com.weblibrary.domain.user.controller;
 
 import com.weblibrary.AppConfig;
-import com.weblibrary.core.controller.ForwardController;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.user.model.User;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * site home 접속시 처리할 컨트롤러
  */
-public class IndexController implements ForwardController {
+@Controller
+public class IndexController {
 
     private final AppConfig appConfig = AppConfig.getInstance();
     private final BookService bookService = appConfig.bookService();
 
-    @Override
-    public String process(HttpServletRequest request, HttpServletResponse response, Map<String, String> paramMap, Map<String, Object> model) {
-        HttpSession session = request.getSession();
+    @GetMapping("/")
+    public String index(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
 
         if (user != null) {
             List<Book> books = bookService.findAll();
-            request.setAttribute("books", books);
+            model.addAttribute("books", books);
         }
 
         return "home/index";
