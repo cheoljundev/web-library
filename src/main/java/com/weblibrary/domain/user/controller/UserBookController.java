@@ -22,7 +22,7 @@ public class UserBookController {
     private final BookService bookService = appConfig.bookService();
 
     @PostMapping("/{bookId}/rent")
-    public RentResponse rent(@PathVariable("bookId") Long bookId, HttpSession session) {
+    public RentResponse rent(HttpSession session, @PathVariable("bookId") Long bookId, HttpServletResponse response) {
         User user = (User) session.getAttribute("user");
         Book findBook = bookService.findBookById(bookId);
 
@@ -33,6 +33,8 @@ public class UserBookController {
             );
         }
 
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+
         return new RentResponse(
                 HttpServletResponse.SC_BAD_REQUEST,
                 "대출되지 않았습니다."
@@ -40,7 +42,7 @@ public class UserBookController {
     }
 
     @PostMapping("/{bookId}/unrent")
-    public RentResponse unRent(@PathVariable("bookId") Long bookId, HttpSession session) {
+    public RentResponse unRent(HttpSession session, @PathVariable("bookId") Long bookId, HttpServletResponse response) {
         User user = (User) session.getAttribute("user");
         Book findBook = bookService.findBookById(bookId);
 
@@ -50,6 +52,8 @@ public class UserBookController {
                     "정상적으로 반납되었습니다."
             );
         }
+
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
         return new RentResponse(
                 HttpServletResponse.SC_BAD_REQUEST,
