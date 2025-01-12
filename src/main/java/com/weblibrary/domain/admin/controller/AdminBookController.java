@@ -20,8 +20,10 @@ public class AdminBookController {
     private final AdminService adminService = appConfig.adminService();
 
     @PostMapping("/add")
-    public JsonResponse addBook(HttpSession session, @RequestBody NewBookInfo newBookInfo) {
-        if (defaultUserResponse(session) != null) return defaultUserResponse(session);
+    public JsonResponse addBook(HttpSession session, HttpServletResponse response, @RequestBody NewBookInfo newBookInfo) {
+        if (isDefault(session)) {
+            return getForbiddenResponse(response);
+        }
 
         System.out.println("newBookInfo = " + newBookInfo);
         System.out.println("newBookInfo.getBookName() = " + newBookInfo.getBookName());
@@ -32,8 +34,10 @@ public class AdminBookController {
     }
 
     @DeleteMapping("/{bookId}")
-    public JsonResponse deleteBook(@PathVariable("bookId") Long bookId, HttpSession session) {
-        if (defaultUserResponse(session) != null) return defaultUserResponse(session);
+    public JsonResponse deleteBook(HttpSession session, HttpServletResponse response, @PathVariable("bookId") Long bookId) {
+        if (isDefault(session)) {
+            return getForbiddenResponse(response);
+        }
 
         Book removed = adminService.deleteBook(bookId);
 
@@ -46,9 +50,10 @@ public class AdminBookController {
     }
 
     @PutMapping("/{bookId}")
-    public JsonResponse modifyBook(HttpSession session, @PathVariable("bookId") Long bookId, @RequestBody ModifyBookInfo modifyBookInfo) {
-
-        if (defaultUserResponse(session) != null) return defaultUserResponse(session);
+    public JsonResponse modifyBook(HttpSession session, HttpServletResponse response, @PathVariable("bookId") Long bookId, @RequestBody ModifyBookInfo modifyBookInfo) {
+        if (isDefault(session)) {
+            return getForbiddenResponse(response);
+        }
 
         Book oldBook = adminService.modifyBook(bookId, modifyBookInfo);
 
@@ -60,12 +65,14 @@ public class AdminBookController {
 
     }
 
-    private ErrorResponse defaultUserResponse(HttpSession session) {
+    private ErrorResponse getForbiddenResponse(HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        return new ErrorResponse(HttpServletResponse.SC_FORBIDDEN, "권한이 없습니다.");
+    }
+
+    private boolean isDefault(HttpSession session) {
         User user = (User) session.getAttribute("user");
-        if (!adminService.isAdmin(user.getId())) {
-            return new ErrorResponse(HttpServletResponse.SC_FORBIDDEN, "권한이 없습니다.");
-        }
-        return null;
+        return !adminService.isAdmin(user.getId());
     }
 
 }

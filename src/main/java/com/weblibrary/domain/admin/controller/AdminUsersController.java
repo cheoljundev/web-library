@@ -20,9 +20,10 @@ public class AdminUsersController {
     private final AdminService adminService = appConfig.adminService();
 
     @PatchMapping("/{id}/role")
-    public JsonResponse setRole(HttpSession session, @PathVariable("id") Long id, @RequestBody RoleNameDto roleNameDto) {
-        if (defaultUserResponse(session) != null) return defaultUserResponse(session);
-
+    public JsonResponse setRole(HttpServletResponse response, HttpSession session, @PathVariable("id") Long id, @RequestBody RoleNameDto roleNameDto) {
+        if (isDefault(session)) {
+            return getForbiddenResponse(response);
+        }
         if (roleNameDto.getRoleName().equals("default")) {
             if (!adminService.setUserAsDefault(id)) {
                 return new ErrorResponse(HttpServletResponse.SC_BAD_REQUEST, "권한 변경에 실패했습니다.");
@@ -37,9 +38,10 @@ public class AdminUsersController {
     }
 
     @DeleteMapping("/{id}")
-    public JsonResponse deleteUser(HttpSession session, @PathVariable("id") Long id) {
-        if (defaultUserResponse(session) != null) return defaultUserResponse(session);
-
+    public JsonResponse deleteUser(HttpServletResponse response, HttpSession session, @PathVariable("id") Long id) {
+        if (isDefault(session)) {
+            return getForbiddenResponse(response);
+        }
         User removed = adminService.deleteUser(id);
 
         if (removed == null) {
@@ -55,11 +57,13 @@ public class AdminUsersController {
         );
     }
 
-    private ErrorResponse defaultUserResponse(HttpSession session) {
+    private ErrorResponse getForbiddenResponse(HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        return new ErrorResponse(HttpServletResponse.SC_FORBIDDEN, "권한이 없습니다.");
+    }
+
+    private boolean isDefault(HttpSession session) {
         User user = (User) session.getAttribute("user");
-        if (!adminService.isAdmin(user.getId())) {
-            return new ErrorResponse(HttpServletResponse.SC_FORBIDDEN, "권한이 없습니다.");
-        }
-        return null;
+        return !adminService.isAdmin(user.getId());
     }
 }

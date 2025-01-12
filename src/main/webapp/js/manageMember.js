@@ -21,17 +21,14 @@ export const setRole = btn => {
         .then((res) => {
             if (!res.ok) {
                 return res.json().then(body => {
-                    throw new Error(`HTTP Error! status : ${body.status}, message : ${body.message}`);
+                    const error = new Error(`HTTP Error! status : ${body.status}, message : ${body.message}`);
+                    error.status = res.status;
+                    throw error;
                 })
             }
             return res.json();
         })
         .then((data) => {
-            if (data.status == 403) {
-                const error = new Error(data.message);
-                error.status = 403;
-                throw error;
-            }
             alert("결과 : " + data.message);
         })
         .catch(error => {
@@ -52,17 +49,14 @@ export const deleteUser = id => {
         .then((res) => {
             if (!res.ok) {
                 return res.json().then(body => {
-                    throw new Error(`HTTP Error! status : ${body.status}, message : ${body.message}`);
+                    const error = new Error(`HTTP Error! status : ${body.status}, message : ${body.message}`);
+                    error.status = res.status;
+                    throw error;
                 })
             }
             return res.json();
         })
         .then((data) => {
-            if (data.status == 403) {
-                const error = new Error(data.message);
-                error.status = 403;
-                throw error;
-            }
             alert("결과 : " + data.message);
             location.reload();
         })
