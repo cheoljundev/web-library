@@ -1,37 +1,19 @@
-const rent = id => {
-    fetch(`/books/${id}/rent`, {
-        method : "POST",
-        headers : {
-            "Content-Type": "application/json",
-        }
-    })
-        .then((res) => {
-            if (!res.ok) {
-                return res.text().then(body => {
-                    throw new Error(`HTTP Error! status : ${res.status}, message : ${body}`)
-                })
-            }
-            return res.text();
-        })
-        .then((data) => alert("결과 : " + data))
-        .catch(error => alert(error.message));
+import {fetchTextRequest, handleError} from "./util.js";
+
+export const rent = async id => {
+    try {
+        const data = await fetchTextRequest(`/books/${id}/rent`, "POST");
+        alert("결과 : " + data);
+    } catch (e) {
+        handleError(e);
+    }
 };
 
-const unRent = id => {
-    fetch(`/books/${id}/unrent`, {
-        method : "POST",
-        headers : {
-            "Content-Type": "application/json",
-        }
-    })
-        .then((res) => {
-            if (!res.ok) {
-                return res.text().then(body => {
-                    throw new Error(`HTTP Error! status : ${res.status}, message : ${body}`)
-                })
-            }
-            return res.text();
-        })
-        .then((data) => alert("결과 : " + data))
-        .catch(error => alert(error.message));
+export const unRent = async id => {
+    try {
+        const data = await fetchTextRequest(`/books/${id}/unrent`, "POST");
+        alert("결과 : " + data);
+    } catch (e) {
+        handleError(e);
+    }
 };

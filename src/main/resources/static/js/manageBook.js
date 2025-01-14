@@ -1,66 +1,28 @@
-export const addBook = () => {
+import {fetchTextRequest, handleError} from "./util.js";
+
+export const addBook = async () => {
     const bookName = document.getElementById("addBookName").value;
     const isbn = document.getElementById("addBookIsbn").value;
 
-    fetch("/books/add", {
-        method : "POST",
-        headers : {
-            "Content-Type": "application/json",
-        },
-        body : JSON.stringify({
-            bookName,
-            isbn
-        })
-    })
-        .then((res) => {
-            if (!res.ok) {
-                return res.text().then(body => {
-                    const error = new Error(`HTTP Error! status : ${res.status}, message : ${body}`);
-                    error.status = res.status;
-                    throw error;
-                })
-            }
-            return res.text();
-        })
-        .then((data) => {
-            alert("결과 : " + data);
-            location.reload();
-        })
-        .catch(error => {
-            alert(error.message);
-            if (error.status == 403) {
-                location.href = "/access-denied";
-            }
-        });
+    try {
+        const data = await fetchTextRequest(`/books/add`, "POST", {bookName, isbn});
+        alert("결과 : " + data);
+        location.reload();
+    } catch (e) {
+        handleError(e);
+    }
 };
 
-export const deleteBook = id => {
-    fetch(`/books/${id}`, {
-        method : "DELETE",
-        headers : {
-            "Content-Type": "application/json",
-        }
-    })
-        .then((res) => {
-            if (!res.ok) {
-                return res.text().then(body => {
-                    const error = new Error(`HTTP Error! status : ${res.status}, message : ${body}`);
-                    error.status = res.status;
-                    throw error;
-                })
-            }
-            return res.text();
-        })
-        .then((data) => {
-            alert("결과 : " + data);
-            location.reload();
-        })
-        .catch(error => {
-            alert(error.message);
-            if (error.status == 403) {
-                location.href = "/access-denied";
-            }
-        });
+export const deleteBook = async id => {
+
+    try {
+        const data = await fetchTextRequest(`/books/${id}`, "DELETE");
+        alert("결과 : " + data);
+        location.reload();
+    } catch(e) {
+        handleError(e);
+    }
+
 };
 
 export const setModifySection = btn => {
@@ -73,39 +35,16 @@ export const setModifySection = btn => {
     idInput.value = btn.dataset.id;
 };
 
-export const modifyBook = () => {
+export const modifyBook = async () => {
     const id = document.getElementById("bookId").value;
     const bookName = document.getElementById("bookName").value;
     const isbn = document.getElementById("isbn").value;
 
-    fetch(`/books/${id}`, {
-        method : "PUT",
-        headers : {
-            "Content-Type": "application/json",
-        },
-        body : JSON.stringify({
-            bookName,
-            isbn
-        })
-    })
-        .then((res) => {
-            if (!res.ok) {
-                return res.text().then(body => {
-                    const error = new Error(`HTTP Error! status : ${res.status}, message : ${body}`);
-                    error.status = res.status;
-                    throw error;
-                })
-            }
-            return res.text();
-        })
-        .then((data) => {
-            alert("결과 : " + data);
-            location.reload();
-        })
-        .catch(error => {
-            alert(error.message);
-            if (error.status == 403) {
-                location.href = "/access-denied";
-            }
-        });
+    try {
+        const data = await fetchTextRequest(`/books/${id}`, "PUT", {bookName, isbn});
+        alert("결과 : " + data);
+        location.reload();
+    } catch (e) {
+        handleError(e);
+    }
 };
