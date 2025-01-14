@@ -7,13 +7,13 @@ const rent = id => {
     })
         .then((res) => {
             if (!res.ok) {
-                return res.json().then(body => {
-                    throw new Error(`HTTP Error! status : ${body.status}, message : ${body.message}`)
+                return res.text().then(body => {
+                    throw new Error(`HTTP Error! status : ${res.status}, message : ${body}`)
                 })
             }
-            return res.json();
+            return res.text();
         })
-        .then((data) => alert("결과 : " + data.message))
+        .then((data) => alert("결과 : " + data))
         .catch(error => alert(error.message));
 };
 
@@ -26,12 +26,12 @@ const unRent = id => {
     })
         .then((res) => {
             if (!res.ok) {
-                return res.json().then(body => {
-                    throw new Error(`HTTP Error! status : ${body.status}, message : ${body.message}`);
+                return res.text().then(body => {
+                    throw new Error(`HTTP Error! status : ${res.status}, message : ${body}`)
                 })
             }
-            return res.json();
+            return res.text();
         })
-        .then((data) => alert("결과 : " + data.message))
+        .then((data) => alert("결과 : " + data))
         .catch(error => alert(error.message));
 };

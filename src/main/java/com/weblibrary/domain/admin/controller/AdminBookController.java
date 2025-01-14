@@ -1,7 +1,5 @@
 package com.weblibrary.domain.admin.controller;
 
-import com.weblibrary.core.controller.dto.response.ErrorResponse;
-import com.weblibrary.core.controller.dto.response.JsonResponse;
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.dto.ModifyBookInfo;
@@ -10,6 +8,8 @@ import com.weblibrary.domain.user.model.User;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,9 +20,9 @@ public class AdminBookController {
     private final AdminService adminService;
 
     @PostMapping("/add")
-    public JsonResponse addBook(HttpSession session, HttpServletResponse response, @RequestBody NewBookInfo newBookInfo) {
+    public ResponseEntity<String> addBook(HttpSession session, @RequestBody NewBookInfo newBookInfo) {
         if (isDefault(session)) {
-            return getForbiddenResponse(response);
+            return new ResponseEntity<>("권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
 
         System.out.println("newBookInfo = " + newBookInfo);
@@ -30,44 +30,40 @@ public class AdminBookController {
         System.out.println("newBookInfo.getIsbn() = " + newBookInfo.getIsbn());
 
         adminService.addBook(newBookInfo);
-        return new JsonResponse(HttpServletResponse.SC_OK, "정상 등록되었습니다.");
+
+        return new ResponseEntity<>("정상 등록되었습니다.", HttpStatus.OK);
     }
 
     @DeleteMapping("/{bookId}")
-    public JsonResponse deleteBook(HttpSession session, HttpServletResponse response, @PathVariable("bookId") Long bookId) {
+    public ResponseEntity<String> deleteBook(HttpSession session, @PathVariable("bookId") Long bookId) {
         if (isDefault(session)) {
-            return getForbiddenResponse(response);
+            return new ResponseEntity<>("권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
 
         Book removed = adminService.deleteBook(bookId);
 
         if (removed == null) {
-            return new ErrorResponse(HttpServletResponse.SC_BAD_REQUEST, "삭제되지 않았습니다.");
+            return new ResponseEntity<>("삭제되지 않았습니다.", HttpStatus.BAD_REQUEST);
         }
 
-        return new JsonResponse(HttpServletResponse.SC_OK, "정상 삭제되었습니다.");
+        return new ResponseEntity<>("정상 삭제되었습니다.", HttpStatus.OK);
 
     }
 
     @PutMapping("/{bookId}")
-    public JsonResponse modifyBook(HttpSession session, HttpServletResponse response, @PathVariable("bookId") Long bookId, @RequestBody ModifyBookInfo modifyBookInfo) {
+    public ResponseEntity<String> modifyBook(HttpSession session, HttpServletResponse response, @PathVariable("bookId") Long bookId, @RequestBody ModifyBookInfo modifyBookInfo) {
         if (isDefault(session)) {
-            return getForbiddenResponse(response);
+            return new ResponseEntity<>("권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
 
         Book oldBook = adminService.modifyBook(bookId, modifyBookInfo);
 
         if (oldBook == null) {
-            return new ErrorResponse(HttpServletResponse.SC_BAD_REQUEST, "수정되지 않았습니다.");
+            return new ResponseEntity<>("수정되지 않았습니다.", HttpStatus.BAD_REQUEST);
         }
 
-        return new JsonResponse(HttpServletResponse.SC_OK, "수정되었습니다.");
+        return new ResponseEntity<>("정상 수정되었습니다.", HttpStatus.OK);
 
-    }
-
-    private ErrorResponse getForbiddenResponse(HttpServletResponse response) {
-        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        return new ErrorResponse(HttpServletResponse.SC_FORBIDDEN, "권한이 없습니다.");
     }
 
     private boolean isDefault(HttpSession session) {

@@ -25,6 +25,6 @@ public class AdminPageController {
                 return "admin/index";
             }
         }
-        return "access-denied";
+        return "redirect:/access-denied";
     }
 }

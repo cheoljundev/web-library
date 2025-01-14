@@ -14,16 +14,16 @@ export const addBook = () => {
     })
         .then((res) => {
             if (!res.ok) {
-                return res.json().then(body => {
-                    const error = new Error(`HTTP Error! status : ${body.status}, message : ${body.message}`);
+                return res.text().then(body => {
+                    const error = new Error(`HTTP Error! status : ${res.status}, message : ${body}`);
                     error.status = res.status;
                     throw error;
                 })
             }
-            return res.json();
+            return res.text();
         })
         .then((data) => {
-            alert("결과 : " + data.message);
+            alert("결과 : " + data);
             location.reload();
         })
         .catch(error => {
@@ -43,16 +43,16 @@ export const deleteBook = id => {
     })
         .then((res) => {
             if (!res.ok) {
-                return res.json().then(body => {
-                    const error = new Error(`HTTP Error! status : ${body.status}, message : ${body.message}`);
+                return res.text().then(body => {
+                    const error = new Error(`HTTP Error! status : ${res.status}, message : ${body}`);
                     error.status = res.status;
                     throw error;
                 })
             }
-            return res.json();
+            return res.text();
         })
         .then((data) => {
-            alert("결과 : " + data.message);
+            alert("결과 : " + data);
             location.reload();
         })
         .catch(error => {
@@ -63,13 +63,14 @@ export const deleteBook = id => {
         });
 };
 
-export const setModifySection = (id, bookName, isbn) => {
+export const setModifySection = btn => {
     const idInput = document.getElementById("bookId");
     const bookNameInput = document.getElementById("bookName");
     const isbnInput = document.getElementById("isbn");
-    bookNameInput.value = bookName;
-    isbnInput.value = isbn;
-    idInput.value = id;
+
+    bookNameInput.value = btn.dataset.name;
+    isbnInput.value = btn.dataset.isbn;
+    idInput.value = btn.dataset.id;
 };
 
 export const modifyBook = () => {
@@ -89,16 +90,16 @@ export const modifyBook = () => {
     })
         .then((res) => {
             if (!res.ok) {
-                return res.json().then(body => {
-                    const error = new Error(`HTTP Error! status : ${body.status}, message : ${body.message}`);
+                return res.text().then(body => {
+                    const error = new Error(`HTTP Error! status : ${res.status}, message : ${body}`);
                     error.status = res.status;
                     throw error;
                 })
             }
-            return res.json();
+            return res.text();
         })
         .then((data) => {
-            alert("결과 : " + data.message);
+            alert("결과 : " + data);
             location.reload();
         })
         .catch(error => {
