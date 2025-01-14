@@ -1,18 +1,20 @@
 package com.weblibrary.domain.user.repository;
 
-import com.weblibrary.AppConfig;
 import com.weblibrary.domain.user.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SpringBootTest
 class UserRepositoryTest {
 
-    private final AppConfig appConfig = AppConfig.getInstance();
-    private final UserRepository userRepository = appConfig.userRepository();
+    @Autowired
+    UserRepository userRepository;
 
     @AfterEach
     void afterEach() {

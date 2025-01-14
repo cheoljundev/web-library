@@ -1,9 +1,8 @@
-import {getPrevSelectValue} from "./util.js";
-
 export const setRole = btn => {
-    // btn의 이전 요소(select)의 선택값을 가져와야 함
-    const roleValue = getPrevSelectValue(btn);
     const id = btn.value;
+
+    // id가 roleType + id인 select의 선택값을 가지고 온다.
+    const roleValue = document.getElementById("roleType" + id).value;
 
     if (roleValue == null) {
         return;
@@ -20,16 +19,17 @@ export const setRole = btn => {
     })
         .then((res) => {
             if (!res.ok) {
-                return res.json().then(body => {
-                    const error = new Error(`HTTP Error! status : ${body.status}, message : ${body.message}`);
+                return res.text().then(body => {
+                    const error = new Error(`HTTP Error! status : ${res.status}, message : ${body}`);
                     error.status = res.status;
                     throw error;
                 })
             }
-            return res.json();
+            return res.text();
         })
         .then((data) => {
-            alert("결과 : " + data.message);
+            alert("결과 : " + data);
+            location.reload();
         })
         .catch(error => {
             alert(error.message);
@@ -48,16 +48,16 @@ export const deleteUser = id => {
     })
         .then((res) => {
             if (!res.ok) {
-                return res.json().then(body => {
-                    const error = new Error(`HTTP Error! status : ${body.status}, message : ${body.message}`);
+                return res.text().then(body => {
+                    const error = new Error(`HTTP Error! status : ${res.status}, message : ${body}`);
                     error.status = res.status;
                     throw error;
                 })
             }
-            return res.json();
+            return res.text();
         })
         .then((data) => {
-            alert("결과 : " + data.message);
+            alert("결과 : " + data);
             location.reload();
         })
         .catch(error => {

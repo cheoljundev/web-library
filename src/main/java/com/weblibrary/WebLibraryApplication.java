@@ -5,27 +5,27 @@ import com.weblibrary.domain.book.model.dto.NewBookInfo;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
 import com.weblibrary.domain.user.service.UserService;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.ServletComponentScan;
 
 //@ServletComponentScan
 @SpringBootApplication
+@RequiredArgsConstructor
 public class WebLibraryApplication {
+
+    private final AdminService adminService;
+    private final UserService userService;
+    private final UserRepository userRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(WebLibraryApplication.class, args);
-        initUser();
-        initBook();
     }
 
 
-    private static void initUser() {
-        AppConfig appConfig = AppConfig.getInstance();
-        UserService userService = appConfig.userService();
-        AdminService adminService = appConfig.adminService();
-        UserRepository userRepository = appConfig.userRepository();
-
+    @PostConstruct
+    private void initUser() {
         userService.join("admin", "1111");
         userService.join("user", "1111");
         User admin = userRepository.findByUsername("admin");
@@ -35,9 +35,8 @@ public class WebLibraryApplication {
     /**
      * 메모리 리포지토리 환경에서 테스트를 위한 Book init 메서드
      */
-    private static void initBook() {
-        AppConfig appConfig = AppConfig.getInstance();
-        AdminService adminService = appConfig.adminService();
+    @PostConstruct
+    private void initBook() {
         NewBookInfo jpa = new NewBookInfo("JPA", "12345");
         NewBookInfo spring = new NewBookInfo("SPRING", "45678");
         adminService.addBook(jpa);

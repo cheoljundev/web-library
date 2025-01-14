@@ -1,10 +1,11 @@
 package com.weblibrary.domain.user.controller;
 
-import com.weblibrary.AppConfig;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,10 +17,11 @@ import java.io.IOException;
  * 유저 회원가입 컨트롤러, GET, POST에 따라 다르게 동작.
  */
 @Controller
+@RequiredArgsConstructor
+@Slf4j
 public class AccountController {
 
-    private final AppConfig appConfig = AppConfig.getInstance();
-    private final UserService userService = appConfig.userService();
+    private final UserService userService;
 
     /* join form 보여주기 */
     @GetMapping("/join")
@@ -40,16 +42,19 @@ public class AccountController {
 
     /* 로그인 처리하기 */
     @PostMapping("/login")
-    public void login(HttpSession session, HttpServletResponse response, @RequestParam("username") String username, @RequestParam("password") String password) throws IOException {
+    public String login(HttpSession session, @RequestParam("username") String username, @RequestParam("password") String password) throws IOException {
 
         User loginUser = userService.login(username, password);
+
+        /* 로그린한 유저 로그 찍기 */
+        log.debug("loginUser={}", loginUser);
 
         if (loginUser != null) {
             session.setAttribute("user", loginUser);
         }
 
         // 로그인 후에 홈으로 리다이렉트
-        response.sendRedirect("/");
+        return "redirect:/";
 
     }
 }
