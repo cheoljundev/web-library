@@ -5,10 +5,12 @@ import com.weblibrary.domain.book.model.dto.ModifyBookInfo;
 import com.weblibrary.domain.book.model.dto.NewBookInfo;
 import com.weblibrary.domain.book.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @RequiredArgsConstructor
+@Service
 public class BookService {
     private final BookRepository bookRepository;
 

@@ -10,6 +10,7 @@ import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ import static com.weblibrary.domain.admin.model.RoleType.Admin;
 /**
  * 관리자 서비스 계층
  */
+@Service
 public class AdminService {
 
     private final UserRepository userRepository;

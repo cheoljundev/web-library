@@ -1,6 +1,5 @@
 package com.weblibrary.domain.admin.controller;
 
-import com.weblibrary.AppConfig;
 import com.weblibrary.core.controller.dto.response.ErrorResponse;
 import com.weblibrary.core.controller.dto.response.JsonResponse;
 import com.weblibrary.domain.admin.service.AdminService;
@@ -10,14 +9,15 @@ import com.weblibrary.domain.book.model.dto.NewBookInfo;
 import com.weblibrary.domain.user.model.User;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/books")
+@RequiredArgsConstructor
 public class AdminBookController {
 
-    private final AppConfig appConfig = AppConfig.getInstance();
-    private final AdminService adminService = appConfig.adminService();
+    private final AdminService adminService;
 
     @PostMapping("/add")
     public JsonResponse addBook(HttpSession session, HttpServletResponse response, @RequestBody NewBookInfo newBookInfo) {

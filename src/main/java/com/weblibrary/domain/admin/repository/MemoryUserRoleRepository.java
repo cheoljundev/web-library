@@ -2,12 +2,14 @@ package com.weblibrary.domain.admin.repository;
 
 import com.weblibrary.domain.admin.model.Role;
 import com.weblibrary.domain.admin.model.RoleType;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Repository
 public class MemoryUserRoleRepository implements UserRoleRepository {
 
     private static final Map<Long, Role> store = new HashMap<>();

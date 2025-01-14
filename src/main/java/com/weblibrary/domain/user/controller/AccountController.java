@@ -1,10 +1,10 @@
 package com.weblibrary.domain.user.controller;
 
-import com.weblibrary.AppConfig;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,10 +16,10 @@ import java.io.IOException;
  * 유저 회원가입 컨트롤러, GET, POST에 따라 다르게 동작.
  */
 @Controller
+@RequiredArgsConstructor
 public class AccountController {
 
-    private final AppConfig appConfig = AppConfig.getInstance();
-    private final UserService userService = appConfig.userService();
+    private final UserService userService;
 
     /* join form 보여주기 */
     @GetMapping("/join")

@@ -1,19 +1,19 @@
 package com.weblibrary.domain.admin.controller;
 
-import com.weblibrary.AppConfig;
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.user.model.User;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
+@RequiredArgsConstructor
 public class AdminPageController {
-    private final AppConfig appConfig = AppConfig.getInstance();
-    private final AdminService adminService = appConfig.adminService();
-    private final BookService bookService = appConfig.bookService();
+    private final AdminService adminService;
+    private final BookService bookService;
 
     @GetMapping("/admin")
     public String adminPage(HttpSession session, Model model) {
