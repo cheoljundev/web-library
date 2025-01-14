@@ -59,3 +59,4 @@
 
 - [x] 스프링 mvc1편 servlet + jsp mvc 프론트 컨트롤러 v5
 - [x] 스프링 mvc1편 springmvc v3 (실용적인 컨트롤러)
+- [x] Jsp -> thymeleaf로 리팩토링
