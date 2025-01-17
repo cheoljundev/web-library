@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" th:fragment="common_header(title, links, scripts, content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- 타이틀 -->
+    <title th:replace="${title}">title</title>
+
+    <!-- 공통 -->
+
+    <!-- link, script -->
+    <th:block th:if="${links != null}">
+        <th:block th:replace="${links}"/>
+    </th:block>
+    <th:block th:if="${scripts != null}">
+        <th:block th:replace="${scripts}"/>
+    </th:block>
+
+</head>
+<body>
+<main th:replace="${content}">
+    메인 콘텐츠
+</main>
+</body>
+</html>
