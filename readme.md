@@ -9,8 +9,9 @@
 
 작업을 하면서 블로그에 작성한 아티클, 이슈 문서입니다.
 
-- [articles](https://cheoljundev.github.io/docs/projects/web-library/articles/)
-- [issues](https://cheoljundev.github.io/docs/projects/web-library/issues/)
+- [article](https://devcj.kr/category/projects/web-library/web-library-articles/)
+- [issue](https://devcj.kr/category/projects/web-library/web-library-issues/)
+
 
 ## 도메인별 주요 기능 정리
 
