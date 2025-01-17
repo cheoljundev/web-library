@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" th:replace="layout/common :: common_header(~{::title}, ~{::link ?: null}, ~{::script ?: null}, ~{::#content})">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/common :: common_header(~{::title}, ~{::link ?: null}, ~{::script ?: null}, ~{::#content})}">
 <head>
     <title>온라인 도서관</title>
     <script defer type="module" src="../js/book.js" th:src="@{/js/book.js}"></script>

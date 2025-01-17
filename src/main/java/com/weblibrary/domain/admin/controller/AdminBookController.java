@@ -8,10 +8,12 @@ import com.weblibrary.domain.user.model.User;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/books")
 @RequiredArgsConstructor
@@ -25,12 +27,11 @@ public class AdminBookController {
             return new ResponseEntity<>("권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
 
-        System.out.println("newBookInfo = " + newBookInfo);
-        System.out.println("newBookInfo.getBookName() = " + newBookInfo.getBookName());
-        System.out.println("newBookInfo.getIsbn() = " + newBookInfo.getIsbn());
+        log.debug("newBookInfo={}", newBookInfo);
+        log.debug("newBookInfo.bookName={}", newBookInfo.getBookName());
+        log.debug("newBookInfo.isbn={}", newBookInfo.getIsbn());
 
         adminService.addBook(newBookInfo);
-
         return new ResponseEntity<>("정상 등록되었습니다.", HttpStatus.OK);
     }
 
