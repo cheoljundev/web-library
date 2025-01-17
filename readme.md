@@ -60,3 +60,6 @@
 - [x] 스프링 mvc1편 servlet + jsp mvc 프론트 컨트롤러 v5
 - [x] 스프링 mvc1편 springmvc v3 (실용적인 컨트롤러)
 - [x] Jsp -> thymeleaf로 리팩토링
+- [x] thymeleaf 레이아웃 적용하기
+  - [x] 헤더 푸터 적용
+  - [x] 로그인과 홈페이지 분리(홈에서는 대출/반납만)
