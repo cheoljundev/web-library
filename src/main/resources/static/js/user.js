@@ -1,4 +1,11 @@
-import {rent, unRent} from "./rent.js";
+import {fetchTextRequest, handleError} from "./util.js";
 
-window.rent = rent;
-window.unRent = unRent;
+export const signout = async () => {
+    try {
+        const data = await fetchTextRequest("/signout", "POST");
+        alert("결과 : " + data);
+        location.href = "/";
+    } catch (e) {
+        handleError(e);
+    }
+}

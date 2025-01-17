@@ -9,6 +9,8 @@
     <title th:replace="${title}">title</title>
 
     <!-- 공통 -->
+    <link rel="stylesheet" href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+    <script defer type="module" src="../js/common.js" th:src="@{/js/common.js}"></script>
 
     <!-- link, script -->
     <th:block th:if="${links != null}">
@@ -20,8 +22,61 @@
 
 </head>
 <body>
-<main th:replace="${content}">
-    메인 콘텐츠
+<header class="p-3 bg-dark text-white">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none me-4">
+                온라인 도서관
+            </a>
+
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="/" class="nav-link px-2 text-white">Home</a></li>
+                <li><a href="/admin" class="nav-link px-2 text-white">Admin</a></li>
+            </ul>
+
+            <div class="text-end">
+                <a href="/login" class="btn btn-outline-light me-2">Login</a>
+                <a href="/join" class="btn btn-warning">Join</a>
+                <button onclick="signout()" class="btn btn-danger">Sign-out</button>
+            </div>
+        </div>
+    </div>
+</header>
+<main th:insert="${content}" class="container-sm my-5">
+
 </main>
+<footer class="bg-dark text-white pt-4">
+    <div class="container">
+        <div class="row">
+            <!-- Logo and Description -->
+            <div class="col-md-4 mb-4">
+                <h5>온라인 도서관</h5>
+                <p>당신의 독서를 돕는 최고의 디지털 공간입니다. 언제 어디서나 독서하세요!</p>
+            </div>
+            <!-- Navigation Links -->
+            <div class="col-md-4 mb-4">
+                <h5>유용한 링크</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#" class="text-white text-decoration-none">홈</a></li>
+                    <li><a href="#" class="text-white text-decoration-none">도서 카테고리</a></li>
+                    <li><a href="#" class="text-white text-decoration-none">이벤트</a></li>
+                    <li><a href="#" class="text-white text-decoration-none">문의하기</a></li>
+                </ul>
+            </div>
+            <!-- Contact Information -->
+            <div class="col-md-4 mb-4">
+                <h5>연락처</h5>
+                <ul class="list-unstyled">
+                    <li><i class="bi bi-telephone"></i> 123-456-7890</li>
+                    <li><i class="bi bi-envelope"></i> support@online-library.com</li>
+                    <li><i class="bi bi-geo-alt"></i> 서울특별시, 대한민국</li>
+                </ul>
+            </div>
+        </div>
+        <div class="text-center border-top border-light pt-3">
+            <p class="mb-0">&copy; 2025 온라인 도서관. 모든 권리 보유.</p>
+        </div>
+    </div>
+</footer>
 </body>
 </html>

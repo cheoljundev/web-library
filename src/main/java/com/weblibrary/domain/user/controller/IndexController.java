@@ -21,13 +21,10 @@ public class IndexController {
     private final BookService bookService;
 
     @GetMapping("/")
-    public String index(HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
+    public String index(Model model) {
 
-        if (user != null) {
-            List<Book> books = bookService.findAll();
-            model.addAttribute("books", books);
-        }
+        List<Book> books = bookService.findAll();
+        model.addAttribute("books", books);
 
         return "home/index";
     }
