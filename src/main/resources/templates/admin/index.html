@@ -1,45 +1,68 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/common :: common_header(~{::title}, ~{::link ?: null}, ~{::script ?: null}, ~{::#content})}">
 <head>
     <title>온라인 도서관 - 관리자 페이지</title>
+    <link rel="stylesheet" href="../css/admin.css" th:href="@{/css/admin.css}">
     <script type="module" src="../js/admin.js" th:src="@{/js/admin.js}"></script>
 </head>
 <body>
-<h1>관리자 페이지</h1>
-<p>안녕하세요, 관리자 <span th:text="${session.user.username}">관리자명</span></p>
+<div id="content">
+    <header class="mb-4">
+        <h1>관리자 페이지</h1>
+        <p>안녕하세요, 관리자 <span th:text="${session.user.username}">관리자명</span>님!</p>
+    </header>
 
-<h2>회원 관리</h2>
-<ul>
-    <li th:each="user : ${users}">
-        <span th:text="${user.username}">username</span>
-        <select th:id="|roleType${user.id}|">
-            <option selected value="default">일반 유저</option>
-            <option value="admin">관리자</option>
-        </select>
-        <button th:value="${user.id}" onclick="setRole(this)">권한 변경</button>
-        <button th:value="${user.id}" onclick="deleteUser(this.value)">삭제</button>
-    </li>
-</ul>
+    <!-- 회원 관리 -->
+    <section class="section">
+        <h2>회원 관리</h2>
+        <ul class="list-group">
+            <li class="list-group-item" th:each="user : ${users}">
+                <span th:text="${user.username}">username</span>
+                <select class="form-select w-auto d-inline-block" th:id="|roleType${user.id}|">
+                    <option selected value="default">일반 유저</option>
+                    <option value="admin">관리자</option>
+                </select>
+                <div class="btn-group">
+                    <button class="btn btn-primary" th:value="${user.id}" onclick="setRole(this)">권한 변경</button>
+                    <button class="btn btn-danger" th:value="${user.id}" onclick="deleteUser(this.value)">삭제</button>
+                </div>
+            </li>
+        </ul>
+    </section>
 
-<h2>도서 관리</h2>
+    <!-- 도서 관리 -->
+    <section class="section">
+        <h2>도서 관리</h2>
+        <div class="mb-3">
+            <input type="text" class="form-control mb-2" id="addBookName" placeholder="도서 이름 입력">
+            <input type="text" class="form-control mb-2" id="addBookIsbn" placeholder="ISBN 입력">
+            <button class="btn btn-success" onclick="addBook()">등록</button>
+        </div>
+        <ul class="list-group" th:if="${books != null}">
+            <li class="list-group-item" th:each="book : ${books}">
+                <div>
+                    <span th:text="'책 이름 : ' + ${book.name}">책 이름</span>
+                    <small class="text-muted ms-2" th:text="'ISBN : ' + ${book.isbn}">isbn</small>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-warning" th:data-id="${book.id}" th:data-name="${book.name}" th:data-isbn="${book.isbn}" onclick="setModifySection(this)">수정</button>
+                    <button class="btn btn-danger" th:onclick="'deleteBook(' + ${book.id} + ')'">삭제</button>
+                </div>
+            </li>
+        </ul>
+        <div id="modifyBook" class="mt-3 p-3 border rounded">
+            <h3>도서 수정</h3>
+            <input type="hidden" id="bookId">
+            <input type="text" class="form-control mb-2" id="bookName" placeholder="도서 이름 수정">
+            <input type="text" class="form-control mb-2" id="isbn" placeholder="ISBN 수정">
+            <button class="btn btn-primary" onclick="modifyBook()">최종 수정</button>
+        </div>
+    </section>
 
-<input type="text" name="bookName" id="addBookName">
-<input type="text" name="isbn" id="addBookIsbn">
-<button onclick="addBook()">등록</button>
-<ul th:if="${books != null}">
-    <li th:each="book : ${books}">
-        <span th:text="'책 이름 : ' + ${book.name}"></span>
-        <span th:text="'isbn : ' + ${book.isbn}"></span>
-        <button th:data-id="${book.id}" th:data-name="${book.name}" th:data-isbn="${book.isbn}" onclick="setModifySection(this)">수정</button>
-        <button th:onclick="'deleteBook(' + ${book.id} + ')'">삭제</button>
-    </li>
-</ul>
-<div id="modifyBook">
-    <input type="hidden" id="bookId">
-    <input type="text" id="bookName">
-    <input type="text" id="isbn">
-    <button onclick="modifyBook()">최종 수정</button>
+    <!-- 메인으로 이동 -->
+    <footer>
+        <a href="/" class="btn btn-secondary">메인으로</a>
+    </footer>
 </div>
-<a href="/">메인으로</a>
 </body>
 </html>

@@ -6,6 +6,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,6 +42,11 @@ public class AccountController {
         response.sendRedirect("/");
     }
 
+    @GetMapping("/login")
+    public String loginForm() {
+        return "home/login";
+    }
+
     /* 로그인 처리하기 */
     @PostMapping("/login")
     public String login(HttpSession session, @RequestParam("username") String username, @RequestParam("password") String password) throws IOException {
@@ -57,4 +64,21 @@ public class AccountController {
         return "redirect:/";
 
     }
+
+    @PostMapping("/signout")
+    public ResponseEntity<String> signOut(HttpSession session) {
+
+        User user = (User) session.getAttribute("user");
+
+        log.debug("login user={}", user);
+
+        if (user == null) {
+            return new ResponseEntity<>("로그인되지 않았습니다.", HttpStatus.FORBIDDEN);
+        }
+
+        session.setAttribute("user", null);
+
+        return new ResponseEntity<>("로그아웃 되었습니다.", HttpStatus.OK);
+    }
+
 }

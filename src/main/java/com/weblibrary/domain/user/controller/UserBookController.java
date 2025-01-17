@@ -26,6 +26,11 @@ public class UserBookController {
     @PostMapping("/{bookId}/rent")
     public ResponseEntity<String> rent(HttpSession session, @PathVariable("bookId") Long bookId) {
         User user = (User) session.getAttribute("user");
+
+        if (user == null) {
+            return new ResponseEntity<>("로그인해주세요.", HttpStatus.FORBIDDEN);
+        }
+
         Book findBook = bookService.findBookById(bookId);
 
         log.debug("rent by user={}", user);
@@ -42,6 +47,11 @@ public class UserBookController {
     @PostMapping("/{bookId}/unrent")
     public ResponseEntity<String> unRent(HttpSession session, @PathVariable("bookId") Long bookId) {
         User user = (User) session.getAttribute("user");
+
+        if (user == null) {
+            return new ResponseEntity<>("로그인해주세요.", HttpStatus.FORBIDDEN);
+        }
+
         Book findBook = bookService.findBookById(bookId);
 
         log.debug("unRent by user={}", user);
