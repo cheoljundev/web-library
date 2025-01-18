@@ -23,10 +23,21 @@ public class MemoryUserRoleRepository implements UserRoleRepository {
     @Override
     public Role findRoleByUserIdAndRoleType(Long userId, RoleType roleType) {
         for (Role role : store.values()) {
-            if (role.getUserId() == userId) {
+            if (role.getUserId().equals(userId)) {
                 if (role.getRoleType() == roleType) {
                     return role;
                 }
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public Role findByUserId(Long userId) {
+        for (Role role : store.values()) {
+            if (role.getUserId().equals(userId)) {
+                return role;
             }
         }
 
