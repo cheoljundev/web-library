@@ -1,20 +1,20 @@
 <!doctype html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/common :: common_header(~{::title}, ~{::link ?: null}, ~{::script ?: null}, ~{::#content})}">
 <head>
-    <title>온라인 도서관 - 관리자 페이지</title>
+    <title th:text="|#{site.name} #{admin.title}|">온라인 도서관 - 관리자 페이지</title>
     <link rel="stylesheet" href="../css/admin.css" th:href="@{/css/admin.css}">
     <script type="module" src="../js/admin.js" th:src="@{/js/admin.js}"></script>
 </head>
 <body>
 <div id="content">
     <header class="mb-4">
-        <h1>관리자 페이지</h1>
-        <p>안녕하세요, 관리자 <span th:text="${session.user.username}">관리자명</span>님!</p>
+        <h1 th:text="#{admin.title}">관리자 페이지</h1>
+        <p th:text="#{admin.welcome(${session.user.username})}">안녕하세요, 관리자 관리자명님!</p>
     </header>
 
     <!-- 회원 관리 -->
     <section class="section">
-        <h2>회원 관리</h2>
+        <h2 th:text="#{admin.manage.member.title}">회원 관리</h2>
         <ul class="list-group">
             <li class="list-group-item" th:each="user : ${users}" th:object="${user}">
                 <span th:text="*{username}">username</span>
@@ -26,8 +26,8 @@
                 </select>
 
                 <div class="btn-group">
-                    <button class="btn btn-primary" th:value="*{id}" onclick="setRole(this)">권한 변경</button>
-                    <button class="btn btn-danger" th:value="*{id}" onclick="deleteUser(this.value)">삭제</button>
+                    <button class="btn btn-primary" th:value="*{id}" onclick="setRole(this)" th:text="#{button.admin.set-role}">권한 변경</button>
+                    <button class="btn btn-danger" th:value="*{id}" onclick="deleteUser(this.value)" th:text="#{button.delete}">삭제</button>
                 </div>
             </li>
 
@@ -37,36 +37,36 @@
 
     <!-- 도서 관리 -->
     <section class="section">
-        <h2>도서 관리</h2>
+        <h2 th:text="#{admin.manage.book.title}">도서 관리</h2>
         <div class="mb-3">
-            <input type="text" class="form-control mb-2" id="addBookName" placeholder="도서 이름 입력">
-            <input type="text" class="form-control mb-2" id="addBookIsbn" placeholder="ISBN 입력">
-            <button class="btn btn-success" onclick="addBook()">등록</button>
+            <input type="text" class="form-control mb-2" id="addBookName" th:placeholder="#{placeholder.bookName}" placeholder="도서 이름 입력">
+            <input type="text" class="form-control mb-2" id="addBookIsbn" th:placeholder="#{placeholder.isbn}" placeholder="ISBN 입력">
+            <button class="btn btn-success" onclick="addBook()" th:text="#{button.add}">등록</button>
         </div>
         <ul class="list-group" th:if="${books != null}">
             <li class="list-group-item" th:each="book : ${books}">
                 <div>
-                    <span th:text="'책 이름 : ' + ${book.name}">책 이름</span>
-                    <small class="text-muted ms-2" th:text="'ISBN : ' + ${book.isbn}">isbn</small>
+                    <span th:text="|#{book.name} ${book.name}|">책 이름</span>
+                    <small class="text-muted ms-2" th:text="|#{book.isbn} ${book.isbn}|">isbn</small>
                 </div>
                 <div class="btn-group">
-                    <button class="btn btn-warning" th:data-id="${book.id}" th:data-name="${book.name}" th:data-isbn="${book.isbn}" onclick="setModifySection(this)">수정</button>
-                    <button class="btn btn-danger" th:onclick="'deleteBook(' + ${book.id} + ')'">삭제</button>
+                    <button class="btn btn-warning" th:data-id="${book.id}" th:data-name="${book.name}" th:data-isbn="${book.isbn}" onclick="setModifySection(this)" th:text="#{button.edit}">수정</button>
+                    <button class="btn btn-danger" th:onclick="'deleteBook(' + ${book.id} + ')'" th:text="#{button.delete}">삭제</button>
                 </div>
             </li>
         </ul>
         <div id="modifyBook" class="mt-3 p-3 border rounded">
-            <h3>도서 수정</h3>
+            <h3 th:text="#{admin.manage.book.modify.title}">도서 수정</h3>
             <input type="hidden" id="bookId">
-            <input type="text" class="form-control mb-2" id="bookName" placeholder="도서 이름 수정">
-            <input type="text" class="form-control mb-2" id="isbn" placeholder="ISBN 수정">
-            <button class="btn btn-primary" onclick="modifyBook()">최종 수정</button>
+            <input type="text" class="form-control mb-2" id="bookName" th:placeholder="#{placeholder.bookName}" placeholder="도서 이름 수정">
+            <input type="text" class="form-control mb-2" id="isbn" th:placeholder="#{placeholder.isbn}" placeholder="ISBN 수정">
+            <button class="btn btn-primary" onclick="modifyBook()" th:text="#{button.edit-final}">최종 수정</button>
         </div>
     </section>
 
     <!-- 메인으로 이동 -->
     <footer>
-        <a href="/" class="btn btn-secondary">메인으로</a>
+        <a href="/" class="btn btn-secondary" th:text="#{button.user.home}">메인으로</a>
     </footer>
 </div>
 </body>

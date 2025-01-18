@@ -1,20 +1,20 @@
 <!doctype html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/common :: common_header(~{::title}, ~{::link ?: null}, ~{::script ?: null}, ~{::#content})}">
 <head>
-    <title>온라인 도서관</title>
+    <title th:text="#{site.name}">온라인 도서관</title>
     <script defer type="module" src="../js/book.js" th:src="@{/js/book.js}"></script>
     <link rel="stylesheet" href="../css/index.css" th:href="@{/css/index.css}">
 </head>
 <body>
 <div id="content">
     <section id="user-info" class="mb-4">
-        <p th:if="${session.user != null}" class="welcome-message">
-            안녕하세요, <span th:text="${session.user.username}">username</span>님!
+        <p th:if="${session.user != null}" class="welcome-message" th:text="#{user.welcome(${session.user.username})}">
+            안녕하세요, username님!
         </p>
     </section>
 
     <section id="book-list">
-        <h2 class="mb-3">도서 목록</h2>
+        <h2 class="mb-3" th:text="#{book.list.title}">도서 목록</h2>
         <ul class="book-list" th:if="${books != null}">
             <li class="book-item" th:each="book : ${books}">
                 <div>
@@ -22,8 +22,8 @@
                     <small class="text-muted ms-2">(ISBN: <span th:text="${book.isbn}">책 isbn</span>)</small>
                 </div>
                 <div class="btn-container">
-                    <button class="btn btn-primary" th:value="${book.id}" onclick="rent(this.value)">대출</button>
-                    <button class="btn btn-danger" th:value="${book.id}" onclick="unRent(this.value)">반납</button>
+                    <button class="btn btn-primary" th:value="${book.id}" onclick="rent(this.value)" th:text="#{button.book.rent}">대출</button>
+                    <button class="btn btn-danger" th:value="${book.id}" onclick="unRent(this.value)" th:text="#{button.book.unrent}">반납</button>
                 </div>
             </li>
         </ul>

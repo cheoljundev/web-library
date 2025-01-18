@@ -4,31 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>온라인 도서관 로그인</title>
+    <title th:text="|#{site.name} #{menu.login}|">온라인 도서관 로그인</title>
     <link rel="stylesheet" href="../css/access-denied.css" th:href="@{css/access-denied.css}">
 </head>
 <body>
 <div id="content" class="w-25 mx-auto">
     <section id="login" th:if="${session.user == null}">
         <form action="login" th:action method="post">
-            <legend>로그인</legend>
+            <legend th:text="#{menu.login}">로그인</legend>
             <div class="mb-3">
-                <label for="username" class="form-label">username</label>
+                <label for="username" class="form-label" th:text="#{user.username}">username</label>
                 <input type="text" class="form-control" name="username" id="username">
             </div>
             <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
+                <label for="password" class="form-label" th:text="#{user.password}">Password</label>
                 <input type="password" class="form-control" name="password" id="password">
             </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-            <a href="join" class="btn btn-dark">Join</a>
+            <button type="submit" class="btn btn-primary" th:text="#{menu.login}">Login</button>
+            <a href="join" class="btn btn-dark" th:text="#{menu.join}">Join</a>
         </form>
     </section>
     <section id="already" th:if="${session.user != null}">
         <div class="error-container">
-            <p class="error-message">이미 로그인한 유저입니다.</p>
-            <p>이미 로그인한 유저입니다. 홈으로 이동하세요.</p>
-            <a href="/" class="btn btn-primary mt-3">홈으로 이동</a>
+            <p class="error-message" th:text="#{user.already.title}">이미 로그인한 유저입니다.</p>
+            <p th:text="#{user.already.message}">이미 로그인한 유저입니다. 홈으로 이동하세요.</p>
+            <a href="/" class="btn btn-primary mt-3" th:text="#{button.user.home}">홈으로 이동</a>
         </div>
     </section>
 </div>
