@@ -1,6 +1,6 @@
 package com.weblibrary.domain.admin.controller;
 
-import com.weblibrary.domain.admin.controller.dto.RoleNameDto;
+import com.weblibrary.domain.admin.model.RoleType;
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.user.model.User;
 import jakarta.servlet.http.HttpSession;
@@ -21,16 +21,16 @@ public class AdminUsersController {
     private final AdminService adminService;
 
     @PatchMapping("/{id}/role")
-    public ResponseEntity<String> setRole(HttpSession session, @PathVariable("id") Long id, @RequestBody RoleNameDto roleNameDto) {
+    public ResponseEntity<String> setRole(HttpSession session, @PathVariable("id") Long id, @RequestBody RoleType roleType) {
 
 
         if (isDefault(session)) {
             return new ResponseEntity<>("권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
 
-        log.debug("변경하는 roleName={}", roleNameDto);
+        log.debug("roleType={}", roleType);
 
-        if (roleNameDto.getRoleName().equals("default")) {
+        if (roleType == RoleType.DEFAULT) {
             if (!adminService.setUserAsDefault(id)) {
                 return new ResponseEntity<>("권한 변경에 실패했습니다.", HttpStatus.BAD_REQUEST);
             }

@@ -4,14 +4,14 @@ export const setRole = async btn => {
     const id = btn.value;
 
     // id가 roleType + id인 select의 선택값을 가지고 온다.
-    const roleName = document.getElementById("roleType" + id).value;
+    const roleType = document.getElementById("roleType" + id).value;
 
-    if (roleName == null) {
+    if (roleType == null) {
         return;
     }
 
     try {
-        const data = await fetchTextRequest(`/users/${id}/role`, "PATCH", { roleName });
+        const data = await fetchTextRequest(`/users/${id}/role`, "PATCH", roleType);
         alert("결과 : " + data);
         location.reload();
     } catch (error) {
