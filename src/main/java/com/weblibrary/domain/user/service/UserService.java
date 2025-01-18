@@ -9,7 +9,7 @@ import com.weblibrary.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import static com.weblibrary.domain.admin.model.RoleType.Default;
+import static com.weblibrary.domain.admin.model.RoleType.*;
 
 @RequiredArgsConstructor
 @Service
@@ -22,7 +22,7 @@ public class UserService {
      */
     public void join(String username, String password) {
         User user = new User(MemoryUserRepository.lastId++, username, password);
-        Role role = new Role(MemoryUserRoleRepository.lastId, user.getId(), Default);
+        Role role = new Role(MemoryUserRoleRepository.lastId++, user.getId(), DEFAULT);
         userRoleRepository.save(role);
         userRepository.save(user);
     }

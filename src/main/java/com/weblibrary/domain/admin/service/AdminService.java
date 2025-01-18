@@ -1,6 +1,7 @@
 package com.weblibrary.domain.admin.service;
 
 import com.weblibrary.domain.admin.model.Role;
+import com.weblibrary.domain.admin.model.RoleType;
 import com.weblibrary.domain.admin.repository.MemoryUserRoleRepository;
 import com.weblibrary.domain.admin.repository.UserRoleRepository;
 import com.weblibrary.domain.book.model.Book;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.weblibrary.domain.admin.model.RoleType.Admin;
+import static com.weblibrary.domain.admin.model.RoleType.ADMIN;
 
 @RequiredArgsConstructor
 /**
@@ -34,9 +35,19 @@ public class AdminService {
         }
 
         // 관리자 권한 생성해서 추가하기
-        Role newRole = new Role(MemoryUserRoleRepository.lastId++, userId, Admin);
+        Role newRole = new Role(MemoryUserRoleRepository.lastId++, userId, ADMIN);
         userRoleRepository.save(newRole);
         return true;
+    }
+
+    public RoleType findUserRoleType(Long userId) {
+        List<Role> roles = userRoleRepository.findByUserId(userId);
+
+        /* 가장 높은 권한 순서로 sort <- Comparable<Role> */
+        roles.sort(null);
+
+         /* 첫번째 (가장 높은 권한을 반환) Role의 RoleType 반환 */
+        return roles.get(0).getRoleType();
     }
 
     public boolean setUserAsDefault(Long userId) {
@@ -46,8 +57,8 @@ public class AdminService {
         }
 
         // 관리자일 경우에는 관리자 권한을 삭제
-        Role findAdminRole = userRoleRepository.findRoleByUserIdAndRoleType(userId, Admin);
-        userRoleRepository.remove(findAdminRole.getUserId());
+        Role findAdminRole = userRoleRepository.findRoleByUserIdAndRoleType(userId, ADMIN);
+        userRoleRepository.remove(findAdminRole.getId());
 
         return true;
     }
@@ -77,7 +88,7 @@ public class AdminService {
     }
 
     public boolean isAdmin(Long userId) {
-        Role adminRole = userRoleRepository.findRoleByUserIdAndRoleType(userId, Admin);
+        Role adminRole = userRoleRepository.findRoleByUserIdAndRoleType(userId, ADMIN);
         return adminRole != null;
     }
 }

@@ -16,17 +16,22 @@
     <section class="section">
         <h2>회원 관리</h2>
         <ul class="list-group">
-            <li class="list-group-item" th:each="user : ${users}">
-                <span th:text="${user.username}">username</span>
-                <select class="form-select w-auto d-inline-block" th:id="|roleType${user.id}|">
-                    <option selected value="default">일반 유저</option>
-                    <option value="admin">관리자</option>
+            <li class="list-group-item" th:each="user : ${users}" th:object="${user}">
+                <span th:text="*{username}">username</span>
+                <select class="form-select w-auto d-inline-block" th:id="|roleType*{id}|">
+                    <option th:each="roleType : ${roleTypes}"
+                            th:value="${roleType.name()}"
+                            th:selected="${roleType.name()} == *{roleTypeName}"
+                            th:text="${roleType.description}">일반 유저</option>
                 </select>
+
                 <div class="btn-group">
-                    <button class="btn btn-primary" th:value="${user.id}" onclick="setRole(this)">권한 변경</button>
-                    <button class="btn btn-danger" th:value="${user.id}" onclick="deleteUser(this.value)">삭제</button>
+                    <button class="btn btn-primary" th:value="*{id}" onclick="setRole(this)">권한 변경</button>
+                    <button class="btn btn-danger" th:value="*{id}" onclick="deleteUser(this.value)">삭제</button>
                 </div>
             </li>
+
+
         </ul>
     </section>
 

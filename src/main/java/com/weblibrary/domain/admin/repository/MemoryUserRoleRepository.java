@@ -34,14 +34,15 @@ public class MemoryUserRoleRepository implements UserRoleRepository {
     }
 
     @Override
-    public Role findByUserId(Long userId) {
+    public List<Role> findByUserId(Long userId) {
+        List<Role> roles = new ArrayList<>();
         for (Role role : store.values()) {
             if (role.getUserId().equals(userId)) {
-                return role;
+                roles.add(role);
             }
         }
 
-        return null;
+        return roles;
     }
 
     @Override

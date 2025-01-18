@@ -3,9 +3,10 @@ package com.weblibrary.domain.user.model;
 import com.weblibrary.domain.book.model.Book;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @RequiredArgsConstructor
-@Getter
+@Getter @ToString
 public class User {
     private final Long id;
     private final String username;
