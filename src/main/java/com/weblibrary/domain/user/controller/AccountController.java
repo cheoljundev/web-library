@@ -67,7 +67,7 @@ public class AccountController {
         log.debug("Login User: {}", loginUser);
 
         if (loginUser == null) {
-            bindingResult.addError(new ObjectError("user", new String[]{"loginGlobal"}, null, null));
+            bindingResult.reject("loginGlobal", null, null);
         }
 
         if (bindingResult.hasErrors()) {
