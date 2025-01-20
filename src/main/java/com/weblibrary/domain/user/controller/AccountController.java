@@ -1,5 +1,6 @@
 package com.weblibrary.domain.user.controller;
 
+import ch.qos.logback.core.util.StringUtil;
 import com.weblibrary.domain.user.model.LoginUserDto;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,12 +64,21 @@ public class AccountController {
 
         log.debug("Input User DTO: {}", user);
 
-        User loginUser = userService.login(user);
+        if (!StringUtils.hasText(user.getUsername())) {
+            bindingResult.rejectValue("username", "required");
+        } else if (!StringUtils.hasText(user.getPassword())) {
+            bindingResult.rejectValue("password", "required");
+        } else {
+            User loginUser = userService.login(user);
 
-        log.debug("Login User: {}", loginUser);
+            log.debug("Login User: {}", loginUser);
 
-        if (loginUser == null) {
-            bindingResult.reject("loginGlobal", null, null);
+            if (loginUser == null) {
+                bindingResult.reject("loginGlobal", null, null);
+            }
+
+            session.setAttribute("user", loginUser);
+
         }
 
         if (bindingResult.hasErrors()) {
@@ -75,7 +86,6 @@ public class AccountController {
             return "home/login";
         }
 
-        session.setAttribute("user", loginUser);
 
         // 로그인 후에 홈으로 리다이렉트
         return "redirect:/";
