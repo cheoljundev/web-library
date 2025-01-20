@@ -3,7 +3,7 @@ package com.weblibrary.domain.user.controller;
 import com.weblibrary.domain.user.model.LoginUserDto;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;
-import com.weblibrary.domain.user.validation.LoginValidation;
+import com.weblibrary.domain.user.validation.LoginValidator;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -28,11 +28,11 @@ import java.io.IOException;
 public class AccountController {
 
     private final UserService userService;
-    private final LoginValidation loginValidation;
+    private final LoginValidator loginValidator;
 
     @InitBinder
     public void init(WebDataBinder dataBinder) {
-        dataBinder.addValidators(loginValidation);
+        dataBinder.addValidators(loginValidator);
     }
 
     /* join form 보여주기 */

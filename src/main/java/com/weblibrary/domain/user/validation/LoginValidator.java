@@ -14,10 +14,13 @@ import org.springframework.validation.Validator;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class LoginValidation implements Validator {
+public class LoginValidator implements Validator {
 
     private final UserService userService;
     private final HttpSession session;
+
+    public static final String REQUIRED_FIELD = "required";
+    public static final String LOGIN_ERROR = "loginGlobal";
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -31,22 +34,45 @@ public class LoginValidation implements Validator {
         // 필수값 검증
         if (!StringUtils.hasText(user.getUsername()) || !StringUtils.hasText(user.getPassword())) {
             if (!StringUtils.hasText(user.getUsername())) {
-                errors.rejectValue("username", "required");
+                errors.rejectValue("username", REQUIRED_FIELD);
             }
             if (!StringUtils.hasText(user.getPassword())) {
-                errors.rejectValue("password", "required");
+                errors.rejectValue("password", REQUIRED_FIELD);
             }
             return; // 이후 검증 불필요
         }
 
         // 로그인 검증
-        User loginUser = userService.login(user);
-        log.debug("Login User: {}", loginUser);
+        User foundUser = getFoundUser(user);
 
-        if (loginUser == null) {
-            errors.reject("loginGlobal", null, null);
+        boolean authenticated = authenticateUser(foundUser, user.getPassword());
+
+        if (authenticated) {
+            userService.login(session, foundUser);
         } else {
-            session.setAttribute("user", loginUser);
+            errors.reject(LOGIN_ERROR, null, null);
         }
+
+    }
+
+    private User getFoundUser(LoginUserDto user) {
+        return userService.findByUsername(user.getUsername());
+    }
+
+    /**
+     * 받은 User 객체와 password 파라미터가 일치하는지 확인하고 유저 반환
+     *
+     * @param user     : User 객체
+     * @param password : password
+     * @return : 일치하다면 true, 일치하지 않으면 false
+     */
+    private boolean authenticateUser(User user, String password) {
+
+        if (user == null) {
+            return false;
+        }
+
+        return user.getPassword().equals(password);
+
     }
 }
