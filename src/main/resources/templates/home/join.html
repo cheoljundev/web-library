@@ -8,7 +8,7 @@
 <body>
 <div id="content" class="w-25 mx-auto">
     <section id="login" th:if="${session.user == null}">
-        <form action="join" th:action method="post" th:object="${joinUser}">
+        <form action="join" th:action method="post" th:object="${user}">
             <legend th:text="#{menu.login}">로그인</legend>
             <div th:if="${#fields.hasGlobalErrors()}">
                 <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>

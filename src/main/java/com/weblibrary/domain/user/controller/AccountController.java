@@ -33,31 +33,23 @@ public class AccountController {
     private final LoginValidator loginValidator;
     private final JoinValidator joinValidator;
 
-    @InitBinder("joinUser")
-    public void initJoinBinder(WebDataBinder dataBinder) {
-        dataBinder.addValidators(joinValidator);
-    }
-
-    @InitBinder("loginUser")
-    public void initLoginBinder(WebDataBinder dataBinder) {
-        dataBinder.addValidators(loginValidator);
-    }
-
     /* join form 보여주기 */
     @GetMapping("/join")
     public String joinForm(Model model) {
-        model.addAttribute("joinUser", new JoinUserDto());
+        model.addAttribute("user", new JoinUserDto());
         return "home/join";
     }
 
     /* 회원가입 처리하기 */
     @PostMapping("/join")
-    public String join(@Validated @ModelAttribute("joinUser") JoinUserDto user, BindingResult bindingResult) {
+    public String join(@Validated @ModelAttribute("user") JoinUserDto user, BindingResult bindingResult) {
 
         log.debug("objectName={}", bindingResult.getObjectName());
         log.debug("target={}", bindingResult.getTarget());
 
         log.debug("Input User DTO: {}", user);
+
+        joinValidator.validate(user, bindingResult);
 
         if (bindingResult.hasErrors()) {
             log.debug("errors={}", bindingResult);
@@ -70,18 +62,20 @@ public class AccountController {
 
     @GetMapping("/login")
     public String loginForm(Model model) {
-        model.addAttribute("loginUser", new LoginUserDto());
+        model.addAttribute("user", new LoginUserDto());
         return "home/login";
     }
 
     /* 로그인 처리하기 */
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute("loginUser") LoginUserDto user, BindingResult bindingResult) {
+    public String login(@Validated @ModelAttribute("user") LoginUserDto user, BindingResult bindingResult) {
 
         log.debug("objectName={}", bindingResult.getObjectName()); // loginUserDto로 나오고 있었다. @ModelAttribute("user")로 해결
         log.debug("target={}", bindingResult.getTarget()); // 정상적으로 LoginUserDto 인스턴스를 찾아옴.
 
         log.debug("Input User DTO: {}", user);
+
+        loginValidator.validate(user, bindingResult);
 
         if (bindingResult.hasErrors()) {
             log.debug("errors={}", bindingResult);

@@ -18,9 +18,9 @@ public class JoinValidator implements Validator {
 
     private final UserService userService;
 
-    public static final String REQUIRED_FIELD = "required.user";
-    public static final String MIN_FIELD = "min.user";
-    private static final String DUPLICATED_FIELD = "duplicated.user";
+    public static final String REQUIRED_FIELD = "required";
+    public static final String MIN_FIELD = "min";
+    private static final String DUPLICATED_FIELD = "duplicated";
     private static final int MIN_USERNAME_LENGTH = 5;
     private static final int MIN_PASSWORD_LENGTH = 5;
 

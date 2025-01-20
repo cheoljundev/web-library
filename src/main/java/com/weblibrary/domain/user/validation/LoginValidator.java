@@ -19,7 +19,7 @@ public class LoginValidator implements Validator {
     private final UserService userService;
     private final HttpSession session;
 
-    public static final String REQUIRED_FIELD = "required.user";
+    public static final String REQUIRED_FIELD = "required";
     public static final String LOGIN_ERROR = "loginGlobal";
 
     @Override
