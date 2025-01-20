@@ -46,7 +46,7 @@ public class LoginValidation implements Validator {
         if (loginUser == null) {
             errors.reject("loginGlobal", null, null);
         } else {
-            session.setAttribute("user", user);
+            session.setAttribute("user", loginUser);
         }
     }
 }
