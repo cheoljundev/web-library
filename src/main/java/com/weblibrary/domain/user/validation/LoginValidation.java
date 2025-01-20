@@ -28,21 +28,25 @@ public class LoginValidation implements Validator {
     public void validate(Object target, Errors errors) {
         LoginUserDto user = (LoginUserDto) target;
 
-        if (!StringUtils.hasText(user.getUsername())) {
-            errors.rejectValue("username", "required");
-        } else if (!StringUtils.hasText(user.getPassword())) {
-            errors.rejectValue("password", "required");
-        } else {
-            User loginUser = userService.login(user);
-
-            log.debug("Login User: {}", loginUser);
-
-            if (loginUser == null) {
-                errors.reject("loginGlobal", null, null);
-            } else {
-                session.setAttribute("user", user);
+        // 필수값 검증
+        if (!StringUtils.hasText(user.getUsername()) || !StringUtils.hasText(user.getPassword())) {
+            if (!StringUtils.hasText(user.getUsername())) {
+                errors.rejectValue("username", "required");
             }
+            if (!StringUtils.hasText(user.getPassword())) {
+                errors.rejectValue("password", "required");
+            }
+            return; // 이후 검증 불필요
+        }
 
+        // 로그인 검증
+        User loginUser = userService.login(user);
+        log.debug("Login User: {}", loginUser);
+
+        if (loginUser == null) {
+            errors.reject("loginGlobal", null, null);
+        } else {
+            session.setAttribute("user", user);
         }
     }
 }
