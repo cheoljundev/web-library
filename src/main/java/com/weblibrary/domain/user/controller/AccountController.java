@@ -4,6 +4,7 @@ import ch.qos.logback.core.util.StringUtil;
 import com.weblibrary.domain.user.model.LoginUserDto;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;
+import com.weblibrary.domain.user.validation.LoginValidation;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ import java.io.IOException;
 public class AccountController {
 
     private final UserService userService;
+    private final LoginValidation loginValidation;
 
     /* join form 보여주기 */
     @GetMapping("/join")
@@ -64,30 +66,15 @@ public class AccountController {
 
         log.debug("Input User DTO: {}", user);
 
-        if (!StringUtils.hasText(user.getUsername())) {
-            bindingResult.rejectValue("username", "required");
-        } else if (!StringUtils.hasText(user.getPassword())) {
-            bindingResult.rejectValue("password", "required");
-        } else {
-            User loginUser = userService.login(user);
-
-            log.debug("Login User: {}", loginUser);
-
-            if (loginUser == null) {
-                bindingResult.reject("loginGlobal", null, null);
-            }
-
-            session.setAttribute("user", loginUser);
-
-        }
+        loginValidation.validate(user, bindingResult);
 
         if (bindingResult.hasErrors()) {
             log.debug("errors={}", bindingResult);
             return "home/login";
         }
 
-
         // 로그인 후에 홈으로 리다이렉트
+
         return "redirect:/";
 
     }
