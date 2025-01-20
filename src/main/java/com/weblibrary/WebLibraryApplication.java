@@ -1,7 +1,7 @@
 package com.weblibrary;
 
 import com.weblibrary.domain.admin.service.AdminService;
-import com.weblibrary.domain.book.model.dto.NewBookInfo;
+import com.weblibrary.domain.book.model.dto.NewBookDto;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
 import com.weblibrary.domain.user.service.UserService;
@@ -37,8 +37,8 @@ public class WebLibraryApplication {
      */
     @PostConstruct
     private void initBook() {
-        NewBookInfo jpa = new NewBookInfo("JPA", "12345");
-        NewBookInfo spring = new NewBookInfo("SPRING", "45678");
+        NewBookDto jpa = new NewBookDto("JPA", "12345");
+        NewBookDto spring = new NewBookDto("SPRING", "45678");
         adminService.addBook(jpa);
         adminService.addBook(spring);
     }

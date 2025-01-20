@@ -5,8 +5,8 @@ import com.weblibrary.domain.admin.model.RoleType;
 import com.weblibrary.domain.admin.repository.MemoryUserRoleRepository;
 import com.weblibrary.domain.admin.repository.UserRoleRepository;
 import com.weblibrary.domain.book.model.Book;
-import com.weblibrary.domain.book.model.dto.ModifyBookInfo;
-import com.weblibrary.domain.book.model.dto.NewBookInfo;
+import com.weblibrary.domain.book.model.dto.ModifyBookDto;
+import com.weblibrary.domain.book.model.dto.NewBookDto;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
@@ -71,15 +71,15 @@ public class AdminService {
         return userRepository.findAll();
     }
 
-    public void addBook(NewBookInfo newBookInfo) {
-        bookService.addBook(newBookInfo);
+    public void addBook(NewBookDto newBookDto) {
+        bookService.addBook(newBookDto);
     }
 
     public Book deleteBook(Long bookId) {
         return bookService.deleteBook(bookId);
     }
 
-    public Book modifyBook(Long bookId, ModifyBookInfo newBookInfo) {
+    public Book modifyBook(Long bookId, ModifyBookDto newBookInfo) {
         Book findBook = bookService.findBookById(bookId);
         if (findBook == null) {
             return null;

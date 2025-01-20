@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @RequiredArgsConstructor
 @Getter @Setter
-public class NewBookInfo {
+public class NewBookDto {
     private final String bookName;
     private final String isbn;
 }

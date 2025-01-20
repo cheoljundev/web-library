@@ -2,8 +2,8 @@ package com.weblibrary.domain.admin.controller;
 
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.book.model.Book;
-import com.weblibrary.domain.book.model.dto.ModifyBookInfo;
-import com.weblibrary.domain.book.model.dto.NewBookInfo;
+import com.weblibrary.domain.book.model.dto.ModifyBookDto;
+import com.weblibrary.domain.book.model.dto.NewBookDto;
 import com.weblibrary.domain.user.model.User;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -22,16 +22,16 @@ public class AdminBookController {
     private final AdminService adminService;
 
     @PostMapping("/add")
-    public ResponseEntity<String> addBook(HttpSession session, @RequestBody NewBookInfo newBookInfo) {
+    public ResponseEntity<String> addBook(HttpSession session, @RequestBody NewBookDto newBookDto) {
         if (isDefault(session)) {
             return new ResponseEntity<>("권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
 
-        log.debug("newBookInfo={}", newBookInfo);
-        log.debug("newBookInfo.bookName={}", newBookInfo.getBookName());
-        log.debug("newBookInfo.isbn={}", newBookInfo.getIsbn());
+        log.debug("newBookInfo={}", newBookDto);
+        log.debug("newBookInfo.bookName={}", newBookDto.getBookName());
+        log.debug("newBookInfo.isbn={}", newBookDto.getIsbn());
 
-        adminService.addBook(newBookInfo);
+        adminService.addBook(newBookDto);
         return new ResponseEntity<>("정상 등록되었습니다.", HttpStatus.OK);
     }
 
@@ -52,12 +52,12 @@ public class AdminBookController {
     }
 
     @PutMapping("/{bookId}")
-    public ResponseEntity<String> modifyBook(HttpSession session, HttpServletResponse response, @PathVariable("bookId") Long bookId, @RequestBody ModifyBookInfo modifyBookInfo) {
+    public ResponseEntity<String> modifyBook(HttpSession session, HttpServletResponse response, @PathVariable("bookId") Long bookId, @RequestBody ModifyBookDto modifyBookDto) {
         if (isDefault(session)) {
             return new ResponseEntity<>("권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
 
-        Book oldBook = adminService.modifyBook(bookId, modifyBookInfo);
+        Book oldBook = adminService.modifyBook(bookId, modifyBookDto);
 
         if (oldBook == null) {
             return new ResponseEntity<>("수정되지 않았습니다.", HttpStatus.BAD_REQUEST);
