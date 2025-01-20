@@ -1,6 +1,5 @@
 package com.weblibrary.domain.user.controller;
 
-import ch.qos.logback.core.util.StringUtil;
 import com.weblibrary.domain.user.model.LoginUserDto;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;
@@ -13,13 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -33,6 +29,11 @@ public class AccountController {
 
     private final UserService userService;
     private final LoginValidation loginValidation;
+
+    @InitBinder
+    public void init(WebDataBinder dataBinder) {
+        dataBinder.addValidators(loginValidation);
+    }
 
     /* join form 보여주기 */
     @GetMapping("/join")
@@ -59,14 +60,12 @@ public class AccountController {
 
     /* 로그인 처리하기 */
     @PostMapping("/login")
-    public String login(HttpSession session, @ModelAttribute("user") LoginUserDto user, BindingResult bindingResult) throws IOException {
+    public String login(@Validated @ModelAttribute("user") LoginUserDto user, BindingResult bindingResult) {
 
         log.debug("objectName={}", bindingResult.getObjectName()); // loginUserDto로 나오고 있었다. @ModelAttribute("user")로 해결
         log.debug("target={}", bindingResult.getTarget()); // 정상적으로 LoginUserDto 인스턴스를 찾아옴.
 
         log.debug("Input User DTO: {}", user);
-
-        loginValidation.validate(user, bindingResult);
 
         if (bindingResult.hasErrors()) {
             log.debug("errors={}", bindingResult);
