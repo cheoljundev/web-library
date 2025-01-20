@@ -3,6 +3,7 @@ package com.weblibrary.domain.user.service;
 import com.weblibrary.domain.admin.repository.MemoryUserRoleRepository;
 import com.weblibrary.domain.admin.repository.UserRoleRepository;
 import com.weblibrary.domain.admin.model.Role;
+import com.weblibrary.domain.user.model.LoginUserDto;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.MemoryUserRepository;
 import com.weblibrary.domain.user.repository.UserRepository;
@@ -30,10 +31,10 @@ public class UserService {
     /**
      * 로그인 처리를 담은 서비스 계층 메서드
      */
-    public User login(String username, String password) {
 
-        User foundUser = findByUsername(username);
-        return authenticateUser(foundUser, password);
+    public User login(LoginUserDto user) {
+        User foundUser = findByUsername(user.getUsername());
+        return authenticateUser(foundUser, user.getPassword());
     }
 
     /**
@@ -60,5 +61,4 @@ public class UserService {
     private User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
-
 }

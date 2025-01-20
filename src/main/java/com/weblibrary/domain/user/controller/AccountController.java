@@ -1,5 +1,6 @@
 package com.weblibrary.domain.user.controller;
 
+import com.weblibrary.domain.user.model.LoginUserDto;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,7 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -43,22 +48,34 @@ public class AccountController {
     }
 
     @GetMapping("/login")
-    public String loginForm() {
+    public String loginForm(Model model) {
+        model.addAttribute("user", new LoginUserDto());
         return "home/login";
     }
 
     /* 로그인 처리하기 */
     @PostMapping("/login")
-    public String login(HttpSession session, @RequestParam("username") String username, @RequestParam("password") String password) throws IOException {
+    public String login(HttpSession session, @ModelAttribute("user") LoginUserDto user, BindingResult bindingResult) throws IOException {
 
-        User loginUser = userService.login(username, password);
+        log.debug("objectName={}", bindingResult.getObjectName()); // loginUserDto로 나오고 있었다. @ModelAttribute("user")로 해결
+        log.debug("target={}", bindingResult.getTarget()); // 정상적으로 LoginUserDto 인스턴스를 찾아옴.
 
-        /* 로그린한 유저 로그 찍기 */
-        log.debug("loginUser={}", loginUser);
+        log.debug("Input User DTO: {}", user);
 
-        if (loginUser != null) {
-            session.setAttribute("user", loginUser);
+        User loginUser = userService.login(user);
+
+        log.debug("Login User: {}", loginUser);
+
+        if (loginUser == null) {
+            bindingResult.addError(new ObjectError("user", new String[]{"loginGlobal"}, null, null));
         }
+
+        if (bindingResult.hasErrors()) {
+            log.debug("errors={}", bindingResult);
+            return "home/login";
+        }
+
+        session.setAttribute("user", loginUser);
 
         // 로그인 후에 홈으로 리다이렉트
         return "redirect:/";

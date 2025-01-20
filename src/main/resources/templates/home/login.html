@@ -5,20 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title th:text="|#{site.name} #{menu.login}|">온라인 도서관 로그인</title>
-    <link rel="stylesheet" href="../css/access-denied.css" th:href="@{css/access-denied.css}">
+    <link rel="stylesheet" href="../css/access-denied.css" th:href="@{/css/access-denied.css}">
+    <link rel="stylesheet" href="../css/error.css" th:href="@{/css/error.css}">
 </head>
 <body>
 <div id="content" class="w-25 mx-auto">
     <section id="login" th:if="${session.user == null}">
-        <form action="login" th:action method="post">
+        <form action="login" th:action method="post" th:object="${user}">
             <legend th:text="#{menu.login}">로그인</legend>
+            <div th:if="${#fields.hasGlobalErrors()}">
+                <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+            </div>
             <div class="mb-3">
                 <label for="username" class="form-label" th:text="#{user.username}">username</label>
-                <input type="text" class="form-control" name="username" id="username">
+                <input type="text" class="form-control"
+                       th:errorclass="field-error"
+                       th:field="*{username}" id="username">
+            </div>
+            <div class="field-error" th:errors="*{username}">
+                아이디 오류
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label" th:text="#{user.password}">Password</label>
-                <input type="password" class="form-control" name="password" id="password">
+                <input type="password" class="form-control" th:field="*{password}"
+                       th:errorclass="field-error"
+                       id="password">
+            </div>
+            <div class="field-error" th:errors="*{password}">
+                아이디 오류
             </div>
             <button type="submit" class="btn btn-primary" th:text="#{menu.login}">Login</button>
             <a href="join" class="btn btn-dark" th:text="#{menu.join}">Join</a>
