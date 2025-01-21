@@ -3,8 +3,9 @@ package com.weblibrary.domain.book.model;
 import com.weblibrary.domain.book.model.dto.ModifyBookDto;
 import com.weblibrary.domain.user.model.User;
 import lombok.Getter;
+import lombok.ToString;
 
-@Getter
+@Getter @ToString
 public class Book {
     private final Long id;
     private String name;
@@ -54,14 +55,9 @@ public class Book {
      * @param rentedBy : 대출할 유저
      * @return : 성공 여부
      */
-    public boolean rent(User rentedBy) {
-        if (!isRental) {
-            this.rentedBy = rentedBy;
-            isRental = true;
-            return true;
-        }
-
-        return false;
+    public void rent(User rentedBy) {
+        this.rentedBy = rentedBy;
+        isRental = true;
     }
 
     /**

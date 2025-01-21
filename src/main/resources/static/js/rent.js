@@ -1,11 +1,11 @@
 import {fetchRequest, handleError} from "./util.js";
 
-export const rent = async id => {
+export const rent = async (id, errorContainer) => {
     try {
         const data = await fetchRequest(`/books/${id}/rent`, "POST");
         alert("결과 : " + data.message);
     } catch (e) {
-        handleError(e);
+        handleError(e, errorContainer);
     }
 };
 

@@ -19,14 +19,9 @@ public class User {
      * @param book : 빌릴 책
      * @return 성공 여부
      */
-    public boolean rent(Book book) {
-        if (remainingRents > 0) {
-            remainingRents--;
-
-            return book.rent(this);
-        }
-
-        return false;
+    public void rent(Book book) {
+        remainingRents--;
+        book.rent(this);
     }
 
     /**

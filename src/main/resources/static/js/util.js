@@ -1,11 +1,14 @@
-const handleValidationError = (error, errorContainer) => {
-    const errors = error.response.errors;
+const resetErrorFields = () => {
     const errorFieldErrors = document.querySelectorAll(".field-error");
-
-    // 모든 .field-error 요소를 숨김 처리
-    errorFieldErrors.forEach((el) => {
+    errorFieldErrors?.forEach((el) => {
         el.style.display = "none";
     });
+}
+
+const handleValidationError = (error, errorContainer) => {
+    const errors = error.response.errors;
+
+    resetErrorFields();
 
     // errors 객체에 해당하는 클래스만 표시
     Object.keys(errors).forEach((field) => {
@@ -19,6 +22,8 @@ const handleValidationError = (error, errorContainer) => {
 
 // 공통 fetch 요청 함수
 export const fetchRequest = async (url, method, body = null) => {
+    resetErrorFields();
+
     const options = {
         method: method,
         headers: {

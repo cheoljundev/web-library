@@ -19,10 +19,15 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
 }
 .book-item span {
     font-size: 1rem;
 }
 .btn-container button {
     margin-left: 0.5rem;
+}
+.field-error{
+    display: none;
+    width: 100%;
 }

@@ -40,7 +40,11 @@ public class WebLibraryApplication {
     private void initBook() {
         NewBookDto jpa = new NewBookDto("JPA", "12345");
         NewBookDto spring = new NewBookDto("SPRING", "45678");
+        NewBookDto kor = new NewBookDto("KOREAN", "72347982");
+        NewBookDto en = new NewBookDto("ENGLISH", "590328402");
         adminService.addBook(jpa);
         adminService.addBook(spring);
+        adminService.addBook(kor);
+        adminService.addBook(en);
     }
 }
