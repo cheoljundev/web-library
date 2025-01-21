@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -129,7 +128,7 @@ public class AdminBookController {
             errors.put(globalError.getCode(), globalError.getDefaultMessage());
         }
         for (FieldError error : fieldErrors) {
-            errors.put((StringUtils.hasText(error.getField()) ? error.getField() : error.getCode()), error.getDefaultMessage());
+            errors.put(error.getField(), error.getDefaultMessage());
         }
 
         return new ResponseEntity<>(ErrorResponse.builder()
