@@ -79,12 +79,8 @@ public class AdminService {
         return bookService.deleteBook(bookId);
     }
 
-    public Book modifyBook(Long bookId, ModifyBookDto newBookInfo) {
-        Book findBook = bookService.findBookById(bookId);
-        if (findBook == null) {
-            return null;
-        }
-        return findBook.modify(newBookInfo);
+    public Book modifyBook(Long bookId, ModifyBookDto modifyBookDto) {
+        return bookService.findBookById(bookId).modify(modifyBookDto);
     }
 
     public boolean isAdmin(Long userId) {

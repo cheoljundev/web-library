@@ -26,9 +26,9 @@ export const deleteBook = async id => {
 };
 
 export const setModifySection = btn => {
-    const idInput = document.getElementById("bookId");
-    const bookNameInput = document.getElementById("bookName");
-    const isbnInput = document.getElementById("isbn");
+    const idInput = document.getElementById("modifyBookId");
+    const bookNameInput = document.getElementById("modifyBookName");
+    const isbnInput = document.getElementById("modifyIsbn");
 
     bookNameInput.value = btn.dataset.name;
     isbnInput.value = btn.dataset.isbn;
@@ -36,15 +36,15 @@ export const setModifySection = btn => {
 };
 
 export const modifyBook = async errorContainer => {
-    const id = document.getElementById("bookId").value;
-    const bookName = document.getElementById("bookName").value;
-    const isbn = document.getElementById("isbn").value;
+    const id = document.getElementById("modifyBookId").value;
+    const bookName = document.getElementById("modifyBookName").value;
+    const isbn = document.getElementById("modifyIsbn").value;
 
     try {
-        const data = await fetchRequest(`/books/${id}`, "PUT", {bookName, isbn}, errorContainer);
+        const data = await fetchRequest(`/books/${id}`, "PUT", {id, bookName, isbn});
         alert("결과 : " + data.message);
         location.reload();
     } catch (e) {
-        handleError(e);
+        handleError(e, errorContainer);
     }
 };

@@ -6,15 +6,17 @@ import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.dto.ModifyBookDto;
 import com.weblibrary.domain.book.model.dto.NewBookDto;
+import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.book.validation.BookAddValidator;
+import com.weblibrary.domain.book.validation.BookModifyValidator;
 import com.weblibrary.domain.user.model.User;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
@@ -32,9 +34,11 @@ public class AdminBookController {
 
     private final AdminService adminService;
     private final BookAddValidator bookAddValidator;
+    private final BookModifyValidator bookModifyValidator;
+    private final BookService bookService;
 
     @PostMapping("/add")
-    public ResponseEntity<JsonResponse> addBook(HttpSession session, @Validated @RequestBody NewBookDto book) {
+    public ResponseEntity<JsonResponse> addBook(HttpSession session, @Validated @RequestBody NewBookDto book, BindingResult bindingResult) {
 
         if (isDefault(session)) {
             return new ResponseEntity<>(ErrorResponse.builder()
@@ -43,9 +47,7 @@ public class AdminBookController {
                     .build(), HttpStatus.FORBIDDEN);
         }
 
-        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(book, "book");
-
-        log.debug("bindingResult.objectName={}", bindingResult.getObjectName()); // 이름을 book으로 바꾸고 싶다면?
+        log.debug("bindingResult.objectName={}", bindingResult.getObjectName());
         log.debug("bindingResult.target={}", bindingResult.getTarget());
 
         log.debug("book={}", book);
@@ -91,7 +93,7 @@ public class AdminBookController {
     }
 
     @PutMapping("/{bookId}")
-    public ResponseEntity<JsonResponse> modifyBook(HttpSession session, HttpServletResponse response, @PathVariable("bookId") Long bookId, @RequestBody ModifyBookDto modifyBookDto) {
+    public ResponseEntity<JsonResponse> modifyBook(HttpSession session, @PathVariable("bookId") Long bookId, @RequestBody ModifyBookDto modifyBookDto, BindingResult bindingResult) {
 
         if (isDefault(session)) {
             return new ResponseEntity<>(ErrorResponse.builder()
@@ -100,13 +102,14 @@ public class AdminBookController {
                     .build(), HttpStatus.FORBIDDEN);
         }
 
-        Book oldBook = adminService.modifyBook(bookId, modifyBookDto);
+        bookModifyValidator.validate(modifyBookDto, bindingResult);
 
-        if (oldBook == null) {
-            return new ResponseEntity<>(ErrorResponse.builder()
-                    .message("수정되지 않았습니다.")
-                    .build(), HttpStatus.FORBIDDEN);
+        if (bindingResult.hasErrors()) {
+            log.debug("errors={}", bindingResult);
+            return handleValidationErrors(bindingResult);
         }
+
+        adminService.modifyBook(bookId, modifyBookDto);
 
         return new ResponseEntity<>(JsonResponse.builder()
                 .message("정상 수정되었습니다.")
@@ -119,7 +122,7 @@ public class AdminBookController {
         return !adminService.isAdmin(user.getId());
     }
 
-    private static ResponseEntity<JsonResponse> handleValidationErrors(BeanPropertyBindingResult bindingResult) {
+    private static ResponseEntity<JsonResponse> handleValidationErrors(Errors bindingResult) {
         Map<String, String> errors = new HashMap<>();
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         List<ObjectError> globalErrors = bindingResult.getGlobalErrors();
