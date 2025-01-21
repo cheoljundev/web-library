@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
+import java.util.Objects;
+
 @RequiredArgsConstructor
 @Getter @ToString
 public class User {
@@ -14,27 +16,36 @@ public class User {
     private int remainingRents = 3; // 남은 대출 가능 권수
 
     /**
-     * 책 대출 메서드, 남은 권수가 0권 이상이면, book.rent 메서드 호출해서 결과 리턴
+     * 책 대출 메서드
+     * 책을 대출, 대출 권수 차감
      *
      * @param book : 빌릴 책
-     * @return 성공 여부
      */
     public void rent(Book book) {
-        remainingRents--;
         book.rent(this);
+        remainingRents--;
     }
 
     /**
-     * 책 반납 메서드, book.unRent 메서드 호출해서 성공하면, 대출 가능 권수 늘리고 성공 리턴
+     * 책 반납 메서드
+     * 책을 반납, 대출 권수를 복구한다.
      *
      * @param book : 반납할 책
-     * @return : 성공 여부
      */
-    public boolean unRent(Book book) {
-        if (book.unRent(this)) {
-            remainingRents++;
-            return true;
-        }
-        return false;
+    public void unRent(Book book) {
+        book.unRent(this);
+        remainingRents++;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == null || getClass() != object.getClass()) return false;
+        User user = (User) object;
+        return Objects.equals(getId(), user.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId());
     }
 }

@@ -6,6 +6,7 @@ import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.dto.BookRentDto;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.book.validation.BookRentValidator;
+import com.weblibrary.domain.book.validation.BookUnRentValidator;
 import com.weblibrary.domain.user.model.User;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ import java.util.Map;
 public class UserBookController {
     private final BookService bookService;
     private final BookRentValidator bookRentValidator;
+    private final BookUnRentValidator bookUnRentValidator;
 
     @PostMapping("/{bookId}/rent")
     public ResponseEntity<JsonResponse> rent(HttpSession session, @PathVariable("bookId") Long bookId) {
@@ -81,11 +83,17 @@ public class UserBookController {
         log.debug("unRent by user={}", user);
         log.debug("unRent findBook={}", findBook);
 
-        if (!user.unRent(findBook)) {
-            return new ResponseEntity<>(ErrorResponse.builder()
-                    .message("정상 반납 되지 않았습니다.")
-                    .build(), HttpStatus.BAD_REQUEST);
+        BookRentDto bookRentDto = new BookRentDto(user.getId(), bookId);
+        BindingResult bindingResult = new BeanPropertyBindingResult(bookRentDto, "bookRentDto");
+
+        bookUnRentValidator.validate(bookRentDto, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            log.debug("errors={}", bindingResult);
+            return handleValidationErrors(bindingResult);
         }
+
+        user.unRent(findBook);
 
         return new ResponseEntity<>(JsonResponse.builder()
                 .message("정상 반납되었습니다.")

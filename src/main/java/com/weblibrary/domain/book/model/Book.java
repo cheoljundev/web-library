@@ -5,7 +5,8 @@ import com.weblibrary.domain.user.model.User;
 import lombok.Getter;
 import lombok.ToString;
 
-@Getter @ToString
+@Getter
+@ToString
 public class Book {
     private final Long id;
     private String name;
@@ -50,32 +51,23 @@ public class Book {
 
     /**
      * 도서 대출 메서드
-     * 현재 도서가 대출 중이 아니면, 대출한다.
+     * 대출상태를 변경하고, 대출한 사람을 기록한다.
      *
      * @param rentedBy : 대출할 유저
-     * @return : 성공 여부
      */
     public void rent(User rentedBy) {
-        this.rentedBy = rentedBy;
         isRental = true;
+        this.rentedBy = rentedBy;
     }
 
     /**
      * 도서 반납 메서드
-     * 현재 도서가 대출중이라면, 대출한 유저가 요청한 유저가 맞는지 확인하고, 반납한다.
+     * 대출 상태를 변경하고, 대출한 사람도 비운다.
      *
      * @param rentedBy : 대출했던 유저
-     * @return : 성공 여부
      */
-    public boolean unRent(User rentedBy) {
-        if (isRental) {
-            if (this.rentedBy == rentedBy) {
-                isRental = false;
-                this.rentedBy = null;
-                return true;
-            }
-        }
-
-        return false;
+    public void unRent(User rentedBy) {
+        isRental = false;
+        this.rentedBy = null;
     }
 }

@@ -27,7 +27,7 @@
                 </div>
                 <div class="btn-container">
                     <button class="btn btn-primary" th:value="*{id}" onclick="rent(this.value, `rent${this.value}`)" th:text="#{button.book.rent}">대출</button>
-                    <button class="btn btn-danger" th:value="*{id}" onclick="unRent(this.value)" th:text="#{button.book.unrent}">반납</button>
+                    <button class="btn btn-danger" th:value="*{id}" onclick="unRent(this.value, `rent${this.value}`)" th:text="#{button.book.unrent}">반납</button>
                 </div>
             </li>
         </ul>
