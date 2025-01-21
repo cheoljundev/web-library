@@ -1,6 +1,6 @@
 import {fetchRequest, handleError} from "./util.js";
 
-export const addBook = async () => {
+export const addBook = async errorContainer => {
     const bookName = document.getElementById("addBookName").value;
     const isbn = document.getElementById("addBookIsbn").value;
 
@@ -9,7 +9,7 @@ export const addBook = async () => {
         alert("결과 : " + data.message);
         location.reload();
     } catch (e) {
-        handleError(e);
+        handleError(e, errorContainer);
     }
 };
 
@@ -35,13 +35,13 @@ export const setModifySection = btn => {
     idInput.value = btn.dataset.id;
 };
 
-export const modifyBook = async () => {
+export const modifyBook = async errorContainer => {
     const id = document.getElementById("bookId").value;
     const bookName = document.getElementById("bookName").value;
     const isbn = document.getElementById("isbn").value;
 
     try {
-        const data = await fetchRequest(`/books/${id}`, "PUT", {bookName, isbn});
+        const data = await fetchRequest(`/books/${id}`, "PUT", {bookName, isbn}, errorContainer);
         alert("결과 : " + data.message);
         location.reload();
     } catch (e) {

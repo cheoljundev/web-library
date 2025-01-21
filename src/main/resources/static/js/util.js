@@ -1,4 +1,4 @@
-const handleValidationError = error => {
+const handleValidationError = (error, errorContainer) => {
     const errors = error.response.errors;
     const errorFieldErrors = document.querySelectorAll(".field-error");
 
@@ -9,7 +9,7 @@ const handleValidationError = error => {
 
     // errors 객체에 해당하는 클래스만 표시
     Object.keys(errors).forEach((field) => {
-        const fieldErrorElement = document.querySelector(`.field-error.${field}`);
+        const fieldErrorElement = document.querySelector(`#${errorContainer} .field-error.${field}`);
         if (fieldErrorElement) {
             fieldErrorElement.style.display = "block";
             fieldErrorElement.textContent = errors[field]; // 에러 메시지 추가
@@ -44,12 +44,12 @@ export const fetchRequest = async (url, method, body = null) => {
 };
 
 // 공통 에러 처리 함수
-export const handleError = (error) => {
+export const handleError = (error, errorContainer) => {
     if (error.status === 403) {
         location.href = "/access-denied"
     } else if (error.status == 400) {
         if (error.response.code == "validation") {
-            handleValidationError(error);
+            handleValidationError(error, errorContainer);
         } else {
             alert(error.response.message);
         }

@@ -39,7 +39,7 @@
     <!-- 도서 관리 -->
     <section class="section">
         <h2 th:text="#{admin.manage.book.title}">도서 관리</h2>
-        <div class="mb-3" th:object="${book}">
+        <div class="mb-3" th:object="${addBook}" id="addBook">
             <div class="field-error global">
                 <p>책 등록 글로벌 오류</p>
             </div>
@@ -51,7 +51,7 @@
             <div class="field-error isbn">
                 <p>isbn 오류</p>
             </div>
-            <button class="btn btn-success" onclick="addBook()" th:text="#{button.add}">등록</button>
+            <button class="btn btn-success" onclick="addBook('addBook')" th:text="#{button.add}">등록</button>
         </div>
         <ul class="list-group" th:if="${books != null}">
             <li class="list-group-item" th:each="book : ${books}">
