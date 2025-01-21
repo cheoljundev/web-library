@@ -58,23 +58,7 @@ public class AdminBookController {
         if (bindingResult.hasErrors()) {
 
             log.debug("errors={}", bindingResult);
-
-            Map<String, String> errors = new HashMap<>();
-            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-            List<ObjectError> globalErrors = bindingResult.getGlobalErrors();
-
-            for (ObjectError globalError : globalErrors) {
-                errors.put(globalError.getCode(), globalError.getDefaultMessage());
-            }
-            for (FieldError error : fieldErrors) {
-                errors.put((StringUtils.hasText(error.getField()) ? error.getField() : error.getCode()), error.getDefaultMessage());
-            }
-
-            return new ResponseEntity<>(ErrorResponse.builder()
-                    .code("validation")
-                    .message("validation 실패")
-                    .errors(errors).build()
-                    , HttpStatus.BAD_REQUEST);
+            return handleValidationErrors(bindingResult);
         }
 
         adminService.addBook(book);
@@ -134,6 +118,25 @@ public class AdminBookController {
     private boolean isDefault(HttpSession session) {
         User user = (User) session.getAttribute("user");
         return !adminService.isAdmin(user.getId());
+    }
+
+    private static ResponseEntity<JsonResponse> handleValidationErrors(BeanPropertyBindingResult bindingResult) {
+        Map<String, String> errors = new HashMap<>();
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        List<ObjectError> globalErrors = bindingResult.getGlobalErrors();
+
+        for (ObjectError globalError : globalErrors) {
+            errors.put(globalError.getCode(), globalError.getDefaultMessage());
+        }
+        for (FieldError error : fieldErrors) {
+            errors.put((StringUtils.hasText(error.getField()) ? error.getField() : error.getCode()), error.getDefaultMessage());
+        }
+
+        return new ResponseEntity<>(ErrorResponse.builder()
+                .code("validation")
+                .message("validation 실패")
+                .errors(errors).build()
+                , HttpStatus.BAD_REQUEST);
     }
 
 }
