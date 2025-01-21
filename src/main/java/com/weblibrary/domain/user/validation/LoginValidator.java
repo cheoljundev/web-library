@@ -31,12 +31,18 @@ public class LoginValidator implements Validator {
     public void validate(Object target, Errors errors) {
         LoginUserDto user = (LoginUserDto) target;
 
+        String username = user.getUsername();
+        String password = user.getPassword();
+
+        boolean isUsernameEmptyOrBlank = !StringUtils.hasText(username);
+        boolean isPasswordEmptyOrBlank = !StringUtils.hasText(password);
+
         // 필수값 검증
-        if (!StringUtils.hasText(user.getUsername()) || !StringUtils.hasText(user.getPassword())) {
-            if (!StringUtils.hasText(user.getUsername())) {
+        if (isUsernameEmptyOrBlank || isPasswordEmptyOrBlank) {
+            if (isUsernameEmptyOrBlank) {
                 errors.rejectValue("username", REQUIRED_FIELD);
             }
-            if (!StringUtils.hasText(user.getPassword())) {
+            if (isPasswordEmptyOrBlank) {
                 errors.rejectValue("password", REQUIRED_FIELD);
             }
             return; // 이후 검증 불필요
@@ -45,7 +51,7 @@ public class LoginValidator implements Validator {
         // 로그인 검증
         User foundUser = getFoundUser(user);
 
-        boolean authenticated = authenticateUser(foundUser, user.getPassword());
+        boolean authenticated = authenticateUser(foundUser, password);
 
         if (authenticated) {
             userService.login(session, foundUser);
