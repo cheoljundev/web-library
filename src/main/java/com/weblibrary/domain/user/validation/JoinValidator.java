@@ -36,19 +36,26 @@ public class JoinValidator implements Validator {
         JoinUserDto user = (JoinUserDto) target;
 
         // 필수값 검증
-        if (!StringUtils.hasText(user.getUsername()) || !StringUtils.hasText(user.getPassword()) ||
-                user.getUsername().length() <= MIN_USERNAME_LENGTH || user.getPassword().length() <= MIN_PASSWORD_LENGTH) {
+        String username = user.getUsername();
+        String password = user.getPassword();
 
-            if (!StringUtils.hasText(user.getUsername())) {
+        boolean isUsernameEmptyOrBlank = !StringUtils.hasText(username);
+        boolean isPasswordEmptyOrBlank = !StringUtils.hasText(password);
+
+        boolean isUsernameTooShort = username.length() < MIN_USERNAME_LENGTH;
+        boolean isPasswordTooShort = password.length() < MIN_PASSWORD_LENGTH;
+
+        if (isUsernameEmptyOrBlank || isPasswordEmptyOrBlank || isUsernameTooShort || isPasswordTooShort) {
+            if (isUsernameEmptyOrBlank) {
                 errors.rejectValue("username", REQUIRED_FIELD);
-            } else if (user.getUsername().length() <= 5) {
-                log.debug("username length={}", user.getUsername().length());
+            } else if (isUsernameTooShort) {
+                log.debug("username length={}", username.length());
                 errors.rejectValue("username", MIN_FIELD, new Object[]{MIN_USERNAME_LENGTH}, null);
             }
 
-            if (!StringUtils.hasText(user.getPassword())) {
+            if (isPasswordEmptyOrBlank) {
                 errors.rejectValue("password", REQUIRED_FIELD);
-            } else if (user.getPassword().length() <= 5) {
+            } else if (isPasswordTooShort) {
                 errors.rejectValue("password", MIN_FIELD, new Object[]{MIN_PASSWORD_LENGTH}, null);
             }
 
@@ -56,8 +63,8 @@ public class JoinValidator implements Validator {
         }
 
         // 중복 계정 검증 검증
-        if (isUniqueUsername(user.getUsername())) {
-            userService.join(user.getUsername(), user.getPassword());
+        if (isUniqueUsername(username)) {
+            userService.join(username, password);
         } else {
             errors.rejectValue("username", DUPLICATED_FIELD);
         }
