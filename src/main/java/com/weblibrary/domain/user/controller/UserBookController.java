@@ -1,5 +1,7 @@
 package com.weblibrary.domain.user.controller;
 
+import com.weblibrary.core.dto.response.ErrorResponse;
+import com.weblibrary.core.dto.response.JsonResponse;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.user.model.User;
@@ -24,11 +26,13 @@ public class UserBookController {
     private final BookService bookService;
 
     @PostMapping("/{bookId}/rent")
-    public ResponseEntity<String> rent(HttpSession session, @PathVariable("bookId") Long bookId) {
+    public ResponseEntity<JsonResponse> rent(HttpSession session, @PathVariable("bookId") Long bookId) {
         User user = (User) session.getAttribute("user");
 
         if (user == null) {
-            return new ResponseEntity<>("로그인해주세요.", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(ErrorResponse.builder()
+                    .message("로그인 해주세요.")
+                    .build(), HttpStatus.FORBIDDEN);
         }
 
         Book findBook = bookService.findBookById(bookId);
@@ -36,20 +40,26 @@ public class UserBookController {
         log.debug("rent by user={}", user);
         log.debug("rent findBook={}", findBook);
 
-        if (user.rent(findBook)) {
-            return new ResponseEntity<>("정상 대출 되었습니다.", HttpStatus.OK);
+        if (!user.rent(findBook)) {
+            return new ResponseEntity<>(ErrorResponse.builder()
+                    .message("정상 대출 되지 않았습니다.")
+                    .build(), HttpStatus.BAD_REQUEST);
 
         }
 
-        return new ResponseEntity<>("정상 대출 되지 않았습니다.", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(JsonResponse.builder()
+                .message("정상 대출되었습니다.")
+                .build(), HttpStatus.OK);
     }
 
     @PostMapping("/{bookId}/unrent")
-    public ResponseEntity<String> unRent(HttpSession session, @PathVariable("bookId") Long bookId) {
+    public ResponseEntity<JsonResponse> unRent(HttpSession session, @PathVariable("bookId") Long bookId) {
         User user = (User) session.getAttribute("user");
 
         if (user == null) {
-            return new ResponseEntity<>("로그인해주세요.", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(ErrorResponse.builder()
+                    .message("로그인 해주세요.")
+                    .build(), HttpStatus.FORBIDDEN);
         }
 
         Book findBook = bookService.findBookById(bookId);
@@ -57,11 +67,15 @@ public class UserBookController {
         log.debug("unRent by user={}", user);
         log.debug("unRent findBook={}", findBook);
 
-        if (user.unRent(findBook)) {
-            return new ResponseEntity<>("정상 반납 되었습니다.", HttpStatus.OK);
+        if (!user.unRent(findBook)) {
+            return new ResponseEntity<>(ErrorResponse.builder()
+                    .message("정상 반납 되지 않았습니다.")
+                    .build(), HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>("정상 반납 되지 않았습니다.", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(JsonResponse.builder()
+                .message("정상 반납되었습니다.")
+                .build(), HttpStatus.OK);
 
     }
 

@@ -1,12 +1,12 @@
-import {fetchTextRequest, handleError} from "./util.js";
+import {fetchRequest, handleError} from "./util.js";
 
 export const addBook = async () => {
     const bookName = document.getElementById("addBookName").value;
     const isbn = document.getElementById("addBookIsbn").value;
 
     try {
-        const data = await fetchTextRequest(`/books/add`, "POST", {bookName, isbn});
-        alert("결과 : " + data);
+        const data = await fetchRequest(`/books/add`, "POST", {bookName, isbn});
+        alert("결과 : " + data.message);
         location.reload();
     } catch (e) {
         handleError(e);
@@ -16,8 +16,8 @@ export const addBook = async () => {
 export const deleteBook = async id => {
 
     try {
-        const data = await fetchTextRequest(`/books/${id}`, "DELETE");
-        alert("결과 : " + data);
+        const data = await fetchRequest(`/books/${id}`, "DELETE");
+        alert("결과 : " + data.message);
         location.reload();
     } catch(e) {
         handleError(e);
@@ -41,8 +41,8 @@ export const modifyBook = async () => {
     const isbn = document.getElementById("isbn").value;
 
     try {
-        const data = await fetchTextRequest(`/books/${id}`, "PUT", {bookName, isbn});
-        alert("결과 : " + data);
+        const data = await fetchRequest(`/books/${id}`, "PUT", {bookName, isbn});
+        alert("결과 : " + data.message);
         location.reload();
     } catch (e) {
         handleError(e);

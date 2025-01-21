@@ -1,12 +1,13 @@
 package com.weblibrary.domain.book.model.dto;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@RequiredArgsConstructor
-@Getter @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class NewBookDto {
-    private final String bookName;
-    private final String isbn;
+    private String bookName;
+    private String isbn;
 }

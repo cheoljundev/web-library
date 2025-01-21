@@ -1,5 +1,7 @@
 package com.weblibrary.domain.user.controller;
 
+import com.weblibrary.core.dto.response.ErrorResponse;
+import com.weblibrary.core.dto.response.JsonResponse;
 import com.weblibrary.domain.user.model.JoinUserDto;
 import com.weblibrary.domain.user.model.LoginUserDto;
 import com.weblibrary.domain.user.model.User;
@@ -15,9 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -89,19 +89,25 @@ public class AccountController {
     }
 
     @PostMapping("/signout")
-    public ResponseEntity<String> signOut(HttpSession session) {
+    public ResponseEntity<JsonResponse> signOut(HttpSession session) {
 
         User user = (User) session.getAttribute("user");
 
         log.debug("login user={}", user);
 
         if (user == null) {
-            return new ResponseEntity<>("로그인되지 않았습니다.", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(
+                    ErrorResponse.builder()
+                            .message("로그인되지 않았습니다.")
+                            .build()
+                    , HttpStatus.BAD_REQUEST);
         }
 
         session.setAttribute("user", null);
 
-        return new ResponseEntity<>("로그아웃 되었습니다.", HttpStatus.OK);
+        return new ResponseEntity<>(JsonResponse.builder()
+                .message("로그아웃 되었습니다.")
+                .build(), HttpStatus.OK);
     }
 
 }

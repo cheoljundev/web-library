@@ -1,9 +1,9 @@
-import {fetchTextRequest, handleError} from "./util.js";
+import {fetchRequest, handleError} from "./util.js";
 
 export const rent = async id => {
     try {
-        const data = await fetchTextRequest(`/books/${id}/rent`, "POST");
-        alert("결과 : " + data);
+        const data = await fetchRequest(`/books/${id}/rent`, "POST");
+        alert("결과 : " + data.message);
     } catch (e) {
         handleError(e);
     }
@@ -11,8 +11,8 @@ export const rent = async id => {
 
 export const unRent = async id => {
     try {
-        const data = await fetchTextRequest(`/books/${id}/unrent`, "POST");
-        alert("결과 : " + data);
+        const data = await fetchRequest(`/books/${id}/unrent`, "POST");
+        alert("결과 : " + data.message);
     } catch (e) {
         handleError(e);
     }
