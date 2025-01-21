@@ -1,3 +1,22 @@
+const handleValidationError = error => {
+    const errors = error.response.errors;
+    const errorFieldErrors = document.querySelectorAll(".field-error");
+
+    // 모든 .field-error 요소를 숨김 처리
+    errorFieldErrors.forEach((el) => {
+        el.style.display = "none";
+    });
+
+    // errors 객체에 해당하는 클래스만 표시
+    Object.keys(errors).forEach((field) => {
+        const fieldErrorElement = document.querySelector(`.field-error.${field}`);
+        if (fieldErrorElement) {
+            fieldErrorElement.style.display = "block";
+            fieldErrorElement.textContent = errors[field]; // 에러 메시지 추가
+        }
+    });
+}
+
 // 공통 fetch 요청 함수
 export const fetchRequest = async (url, method, body = null) => {
     const options = {
@@ -30,23 +49,7 @@ export const handleError = (error) => {
         location.href = "/access-denied"
     } else if (error.status == 400) {
         if (error.response.code == "validation") {
-            const errors = error.response.errors;
-
-            const errorFieldErrors = document.querySelectorAll(".field-error");
-
-            // 모든 .field-error 요소를 숨김 처리
-            errorFieldErrors.forEach((el) => {
-                el.style.display = "none";
-            });
-
-            // errors 객체에 해당하는 클래스만 표시
-            Object.keys(errors).forEach((field) => {
-                const fieldErrorElement = document.querySelector(`.field-error.${field}`);
-                if (fieldErrorElement) {
-                    fieldErrorElement.style.display = "block";
-                    fieldErrorElement.textContent = errors[field]; // 에러 메시지 추가
-                }
-            });
+            handleValidationError(error);
         } else {
             alert(error.response.message);
         }
