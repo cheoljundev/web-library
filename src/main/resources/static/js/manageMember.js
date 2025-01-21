@@ -1,6 +1,6 @@
 import { fetchRequest, handleError } from "./util.js";
 
-export const setRole = async btn => {
+const setRole = async btn => {
     const id = btn.value;
 
     // id가 roleType + id인 select의 선택값을 가지고 온다.
@@ -19,7 +19,7 @@ export const setRole = async btn => {
     }
 };
 
-export const deleteUser = async (id) => {
+const deleteUser = async (id) => {
     try {
         const data = await fetchRequest(`/users/${id}`, "DELETE");
         alert("결과 : " + data.message);
@@ -28,3 +28,6 @@ export const deleteUser = async (id) => {
         handleError(error);
     }
 };
+
+window.setRole = setRole;
+window.deleteUser = deleteUser;

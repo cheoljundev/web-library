@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/admin :: admin_layout(~{::title}, ~{::link ?: null}, ~{::script ?: null}, ~{::#content})}">
+<head>
+    <title th:text="|#{site.name} - #{admin.title} - #{admin.manage.member.title}|">온라인 도서관 - 관리자 페이지 - 회원 관리</title>
+    <script type="module" src="../js/manageMember.js" th:src="@{/js/manageMember.js}"></script>
+</head>
+<body>
+<div id="content">
+    <!-- 회원 관리 -->
+    <section class="section">
+        <h2 th:text="#{admin.manage.member.title}">회원 관리</h2>
+        <ul class="list-group">
+            <li class="list-group-item" th:each="user : ${users}" th:object="${user}">
+                <span th:text="*{username}">username</span>
+                <select class="form-select w-auto d-inline-block" th:id="|roleType*{id}|">
+                    <option th:each="roleType : ${roleTypes}"
+                            th:value="${roleType.name()}"
+                            th:selected="${roleType.name()} == *{roleTypeName}"
+                            th:text="${roleType.description}">일반 유저</option>
+                </select>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" th:value="*{id}" onclick="setRole(this)" th:text="#{button.admin.set-role}">권한 변경</button>
+                    <button class="btn btn-danger" th:value="*{id}" onclick="deleteUser(this.value)" th:text="#{button.delete}">삭제</button>
+                </div>
+            </li>
+        </ul>
+    </section>
+</div>
+</body>
+</html>

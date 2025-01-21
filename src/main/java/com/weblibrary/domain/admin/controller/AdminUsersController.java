@@ -4,6 +4,7 @@ import com.weblibrary.core.dto.response.ErrorResponse;
 import com.weblibrary.core.dto.response.JsonResponse;
 import com.weblibrary.domain.admin.model.RoleType;
 import com.weblibrary.domain.admin.service.AdminService;
+import com.weblibrary.domain.user.model.SetUserDto;
 import com.weblibrary.domain.user.model.User;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -13,16 +14,64 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Controller
-@RestController
-@RequestMapping("/users")
 @RequiredArgsConstructor
 public class AdminUsersController {
 
     private final AdminService adminService;
 
-    @PatchMapping("/{id}/role")
+    @ModelAttribute("roleTypes")
+    public RoleType[] roleTypes() {
+        return RoleType.values();
+    }
+
+    @ModelAttribute("users")
+    public List<SetUserDto> users() {
+        /* 모든 유저를 가지고 온다 */
+        List<User> findUsers = adminService.findAllUsers();
+
+        /* dto를 담을 list */
+        List<SetUserDto> dtos = new ArrayList<>();
+
+        /* 찾은 유저 반복문 */
+        for (User user : findUsers) {
+            log.debug("user={}", user);
+
+            /* 찾은 유저의 가장 높은 RoleType 가져오기 */
+            RoleType roleType = adminService.findUserRoleType(user.getId());
+
+            log.debug("roleType={}", roleType);
+            log.debug("roleType.name()={}", roleType.name());
+
+            SetUserDto userDto = SetUserDto.builder()
+                    .id(user.getId())
+                    .username(user.getUsername())
+                    .roleTypeName(roleType.name())
+                    .build();
+
+            log.debug("userDto={}", userDto);
+
+            dtos.add(userDto);
+        }
+        return dtos;
+    }
+
+    @GetMapping("/admin/user")
+    public String adminUserPage(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+
+        if (user == null || !adminService.isAdmin(user.getId())) {
+            return "redirect:/access-denied";
+        }
+        return "admin/user";
+    }
+
+    @ResponseBody
+    @PatchMapping("/users/{id}/role")
     public ResponseEntity<JsonResponse> setRole(HttpSession session, @PathVariable("id") Long id, @RequestBody RoleType roleType) {
 
 
@@ -30,7 +79,8 @@ public class AdminUsersController {
             return new ResponseEntity<>(ErrorResponse.builder()
                     .code("roleError")
                     .message("권한이 없습니다.")
-                    .build(), HttpStatus.FORBIDDEN);        }
+                    .build(), HttpStatus.FORBIDDEN);
+        }
 
         log.debug("roleType={}", roleType);
 
@@ -53,13 +103,15 @@ public class AdminUsersController {
                 .build(), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @ResponseBody
+    @DeleteMapping("/users/{id}")
     public ResponseEntity<JsonResponse> deleteUser(HttpSession session, @PathVariable("id") Long id) {
         if (isDefault(session)) {
             return new ResponseEntity<>(ErrorResponse.builder()
                     .code("roleError")
                     .message("권한이 없습니다.")
-                    .build(), HttpStatus.FORBIDDEN);        }
+                    .build(), HttpStatus.FORBIDDEN);
+        }
         User removed = adminService.deleteUser(id);
 
         if (removed == null) {

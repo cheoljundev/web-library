@@ -1,6 +1,6 @@
 import {fetchRequest, handleError} from "./util.js";
 
-export const addBook = async errorContainer => {
+const addBook = async errorContainer => {
     const bookName = document.getElementById("addBookName").value;
     const isbn = document.getElementById("addBookIsbn").value;
 
@@ -13,7 +13,7 @@ export const addBook = async errorContainer => {
     }
 };
 
-export const deleteBook = async id => {
+const deleteBook = async id => {
 
     try {
         const data = await fetchRequest(`/books/${id}`, "DELETE");
@@ -25,7 +25,7 @@ export const deleteBook = async id => {
 
 };
 
-export const setModifySection = btn => {
+const setModifySection = btn => {
     const idInput = document.getElementById("modifyBookId");
     const bookNameInput = document.getElementById("modifyBookName");
     const isbnInput = document.getElementById("modifyIsbn");
@@ -35,7 +35,7 @@ export const setModifySection = btn => {
     idInput.value = btn.dataset.id;
 };
 
-export const modifyBook = async errorContainer => {
+const modifyBook = async errorContainer => {
     const id = document.getElementById("modifyBookId").value;
     const bookName = document.getElementById("modifyBookName").value;
     const isbn = document.getElementById("modifyIsbn").value;
@@ -48,3 +48,8 @@ export const modifyBook = async errorContainer => {
         handleError(e, errorContainer);
     }
 };
+
+window.addBook = addBook;
+window.deleteBook = deleteBook;
+window.setModifySection = setModifySection;
+window.modifyBook = modifyBook;

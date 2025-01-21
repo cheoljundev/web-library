@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/admin :: admin_layout(~{::title}, ~{::link ?: null}, ~{::script ?: null}, ~{::#content})}">
+<head>
+    <title th:text="|#{site.name} - #{admin.title} - #{admin.manage.book.title}|">온라인 도서관 - 관리자 페이지 - 도서 관리</title>
+    <script type="module" src="../js/manageBook.js" th:src="@{/js/manageBook.js}"></script>
+</head>
+<body>
+<div id="content">
+    <!-- 도서 관리 -->
+    <section class="section">
+        <h2 th:text="#{admin.manage.book.title}">도서 관리</h2>
+        <div class="mb-3" th:object="${addBook}" id="addBook">
+            <div class="field-error global">
+                <p>책 등록 글로벌 오류</p>
+            </div>
+            <input type="text" class="form-control mb-2" id="addBookName" th:field="*{bookName}" th:placeholder="#{placeholder.bookName}" placeholder="도서 이름 입력">
+            <div class="field-error bookName">
+                <p>책 이름 오류</p>
+            </div>
+            <input type="text" class="form-control mb-2" id="addBookIsbn" th:field="*{isbn}" th:placeholder="#{placeholder.isbn}" placeholder="ISBN 입력">
+            <div class="field-error isbn">
+                <p>isbn 오류</p>
+            </div>
+            <button class="btn btn-success" onclick="addBook('addBook')" th:text="#{button.add}">등록</button>
+        </div>
+        <ul class="list-group" th:if="${books != null}">
+            <li class="list-group-item" th:each="book : ${books}">
+                <div>
+                    <span th:text="|#{book.name} ${book.name}|">책 이름</span>
+                    <small class="text-muted ms-2" th:text="|#{book.isbn} ${book.isbn}|">isbn</small>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-warning" th:data-id="${book.id}" th:data-name="${book.name}" th:data-isbn="${book.isbn}" onclick="setModifySection(this)" th:text="#{button.edit}">수정</button>
+                    <button class="btn btn-danger" th:onclick="'deleteBook(' + ${book.id} + ')'" th:text="#{button.delete}">삭제</button>
+                </div>
+            </li>
+        </ul>
+        <div id="modifyBook" class="mt-3 p-3 border rounded" th:object="${modifyBook}">
+            <h3 th:text="#{admin.manage.book.modify.title}">도서 수정</h3>
+            <div class="field-error global">
+                <p>책 수정 글로벌 오류</p>
+            </div>
+            <input type="hidden" id="modifyBookId">
+            <input type="text" class="form-control mb-2" th:field="*{bookName}" id="modifyBookName" th:placeholder="#{placeholder.bookName}" placeholder="도서 이름 수정">
+            <div class="field-error bookName">
+                <p>책 이름 오류</p>
+            </div>
+            <input type="text" class="form-control mb-2" id="modifyIsbn" data-th-field="*{isbn}" th:field="*{isbn}" th:placeholder="#{placeholder.isbn}" placeholder="ISBN 수정">
+            <div class="field-error isbn">
+                <p>isbn 오류</p>
+            </div>
+            <button class="btn btn-primary" onclick="modifyBook('modifyBook')" th:text="#{button.edit-final}">최종 수정</button>
+        </div>
+    </section>
+</div>
+</body>
+</html>

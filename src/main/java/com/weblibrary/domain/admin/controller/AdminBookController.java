@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
@@ -27,8 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-@RestController
-@RequestMapping("/books")
+@Controller
 @RequiredArgsConstructor
 public class AdminBookController {
 
@@ -37,7 +37,33 @@ public class AdminBookController {
     private final BookModifyValidator bookModifyValidator;
     private final BookService bookService;
 
-    @PostMapping("/add")
+    @ModelAttribute("books")
+    public List<Book> books() {
+        return bookService.findAll();
+    }
+
+    @ModelAttribute("addBook")
+    public NewBookDto newBookModel() {
+        return new NewBookDto();
+    }
+
+    @ModelAttribute("modifyBook")
+    public ModifyBookDto modifyBookDto() {
+        return new ModifyBookDto();
+    }
+
+    @GetMapping("/admin/book")
+    public String adminBookPage(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+
+        if (user == null || !adminService.isAdmin(user.getId())) {
+            return "redirect:/access-denied";
+        }
+        return "admin/book";
+    }
+
+    @ResponseBody
+    @PostMapping("/books/add")
     public ResponseEntity<JsonResponse> addBook(HttpSession session, @Validated @RequestBody NewBookDto book, BindingResult bindingResult) {
 
         if (isDefault(session)) {
@@ -69,7 +95,8 @@ public class AdminBookController {
                 .build(), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{bookId}")
+    @ResponseBody
+    @DeleteMapping("/books/{bookId}")
     public ResponseEntity<JsonResponse> deleteBook(HttpSession session, @PathVariable("bookId") Long bookId) {
         if (isDefault(session)) {
             return new ResponseEntity<>(ErrorResponse.builder()
@@ -92,7 +119,8 @@ public class AdminBookController {
 
     }
 
-    @PutMapping("/{bookId}")
+    @ResponseBody
+    @PutMapping("/books/{bookId}")
     public ResponseEntity<JsonResponse> modifyBook(HttpSession session, @PathVariable("bookId") Long bookId, @RequestBody ModifyBookDto modifyBookDto, BindingResult bindingResult) {
 
         if (isDefault(session)) {
