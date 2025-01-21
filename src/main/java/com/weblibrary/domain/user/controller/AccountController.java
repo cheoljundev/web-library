@@ -49,12 +49,17 @@ public class AccountController {
 
         log.debug("Input User DTO: {}", user);
 
+        /* 검증 실행 */
         joinValidator.validate(user, bindingResult);
 
+        /* 검증에 에러가 발견되면, 폼을 보여줌. */
         if (bindingResult.hasErrors()) {
             log.debug("errors={}", bindingResult);
             return "home/join";
         }
+
+        /* 검증이 끝나면, 컨트롤러에서 회원가입 처리 */
+        userService.join(user);
 
         // 회원가입 후에 홈으로 리다이렉트
         return "redirect:/";
@@ -68,22 +73,26 @@ public class AccountController {
 
     /* 로그인 처리하기 */
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute("user") LoginUserDto user, BindingResult bindingResult) {
+    public String login(HttpSession session, @Validated @ModelAttribute("user") LoginUserDto user, BindingResult bindingResult) {
 
         log.debug("objectName={}", bindingResult.getObjectName()); // loginUserDto로 나오고 있었다. @ModelAttribute("user")로 해결
         log.debug("target={}", bindingResult.getTarget()); // 정상적으로 LoginUserDto 인스턴스를 찾아옴.
 
         log.debug("Input User DTO: {}", user);
 
+        /* 검증 실행 */
         loginValidator.validate(user, bindingResult);
 
+        /* 검증에 에러가 발견되면, 폼을 보여줌. */
         if (bindingResult.hasErrors()) {
             log.debug("errors={}", bindingResult);
             return "home/login";
         }
 
-        // 로그인 후에 홈으로 리다이렉트
+        /* 검증이 끝나면, 컨트롤러에서 로그인 처리 */
+        userService.login(session, user);
 
+        /* 로그인 후에 홈으로 리다이렉트 */
         return "redirect:/";
 
     }

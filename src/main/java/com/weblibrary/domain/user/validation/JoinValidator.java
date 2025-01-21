@@ -1,9 +1,7 @@
 package com.weblibrary.domain.user.validation;
 
 import com.weblibrary.domain.user.model.JoinUserDto;
-import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -63,16 +61,14 @@ public class JoinValidator implements Validator {
         }
 
         // 중복 계정 검증 검증
-        if (isUniqueUsername(username)) {
-            userService.join(username, password);
-        } else {
+        if (isNotUniqueUsername(username)) {
             errors.rejectValue("username", DUPLICATED_FIELD);
         }
 
 
     }
 
-    private boolean isUniqueUsername(String username) {
-        return userService.findByUsername(username) == null;
+    private boolean isNotUniqueUsername(String username) {
+        return userService.findByUsername(username) != null;
     }
 }

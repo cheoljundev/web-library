@@ -2,6 +2,7 @@ package com.weblibrary;
 
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.book.model.dto.NewBookDto;
+import com.weblibrary.domain.user.model.JoinUserDto;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
 import com.weblibrary.domain.user.service.UserService;
@@ -26,8 +27,8 @@ public class WebLibraryApplication {
 
     @PostConstruct
     private void initUser() {
-        userService.join("admin", "1111");
-        userService.join("user", "1111");
+        userService.join(new JoinUserDto("admin", "1111"));
+        userService.join(new JoinUserDto("user", "1111"));
         User admin = userRepository.findByUsername("admin");
         adminService.setUserAsAdmin(admin.getId());
     }

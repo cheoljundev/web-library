@@ -3,6 +3,8 @@ package com.weblibrary.domain.user.service;
 import com.weblibrary.domain.admin.model.Role;
 import com.weblibrary.domain.admin.repository.MemoryUserRoleRepository;
 import com.weblibrary.domain.admin.repository.UserRoleRepository;
+import com.weblibrary.domain.user.model.JoinUserDto;
+import com.weblibrary.domain.user.model.LoginUserDto;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.MemoryUserRepository;
 import com.weblibrary.domain.user.repository.UserRepository;
@@ -21,7 +23,9 @@ public class UserService {
     /**
      * 가입 처리 서비스 계층 메서드
      */
-    public void join(String username, String password) {
+    public void join(JoinUserDto joinUserDto) {
+        String username = joinUserDto.getUsername();
+        String password = joinUserDto.getPassword();
         User user = new User(MemoryUserRepository.lastId++, username, password);
         Role role = new Role(MemoryUserRoleRepository.lastId++, user.getId(), DEFAULT);
         userRoleRepository.save(role);
@@ -33,10 +37,11 @@ public class UserService {
      * Validator에서 호출한다.
      *
      * @param session : 세션
-     * @param user    : Valitation에 성공한 유저
+     * @param loginUserDto : Valitation에 성공한 유저Dto
      */
 
-    public void login(HttpSession session, User user) {
+    public void login(HttpSession session, LoginUserDto loginUserDto) {
+        User user = findByUsername(loginUserDto.getUsername());
         session.setAttribute("user", user);
     }
 

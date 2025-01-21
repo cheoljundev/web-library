@@ -17,7 +17,6 @@ import org.springframework.validation.Validator;
 public class LoginValidator implements Validator {
 
     private final UserService userService;
-    private final HttpSession session;
 
     public static final String REQUIRED_FIELD = "required";
     public static final String LOGIN_ERROR = "loginGlobal";
@@ -51,11 +50,7 @@ public class LoginValidator implements Validator {
         // 로그인 검증
         User foundUser = getFoundUser(user);
 
-        boolean authenticated = authenticateUser(foundUser, password);
-
-        if (authenticated) {
-            userService.login(session, foundUser);
-        } else {
+        if (rejectAuthentication(foundUser, password)) {
             errors.reject(LOGIN_ERROR, null, null);
         }
 
@@ -66,19 +61,19 @@ public class LoginValidator implements Validator {
     }
 
     /**
-     * 받은 User 객체와 password 파라미터가 일치하는지 확인하고 유저 반환
+     * 받은 User 객체와 password 파라미터가 일치하는지 확인하고 실패할 시 결과 반환
      *
      * @param user     : User 객체
      * @param password : password
      * @return : 일치하다면 true, 일치하지 않으면 false
      */
-    private boolean authenticateUser(User user, String password) {
+    private boolean rejectAuthentication(User user, String password) {
 
         if (user == null) {
-            return false;
+            return true;
         }
 
-        return user.getPassword().equals(password);
+        return !user.getPassword().equals(password);
 
     }
 }
