@@ -9,7 +9,6 @@ import java.util.Map;
 @SuperBuilder
 public class ErrorResponse extends JsonResponse {
     private final String code;
-    private final String message;
     private final Map<String, String> errors;
 
 }
