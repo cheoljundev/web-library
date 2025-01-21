@@ -129,7 +129,7 @@ public class AdminBookController {
             errors.put(globalError.getCode(), globalError.getDefaultMessage());
         }
         for (FieldError error : fieldErrors) {
-            errors.put((StringUtils.hasText(error.getField()) ? error.getField() : error.getCode()), error.getDefaultMessage());
+            errors.put(error.getField(), error.getDefaultMessage());
         }
 
         return new ResponseEntity<>(ErrorResponse.builder()
