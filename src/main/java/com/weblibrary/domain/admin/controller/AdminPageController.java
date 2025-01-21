@@ -3,6 +3,8 @@ package com.weblibrary.domain.admin.controller;
 import com.weblibrary.domain.admin.model.RoleType;
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.book.model.Book;
+import com.weblibrary.domain.book.model.dto.ModifyBookDto;
+import com.weblibrary.domain.book.model.dto.NewBookDto;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.user.model.SetUserDto;
 import com.weblibrary.domain.user.model.User;
@@ -62,6 +64,16 @@ public class AdminPageController {
     @ModelAttribute("books")
     public List<Book> books() {
         return bookService.findAll();
+    }
+
+    @ModelAttribute("addBook")
+    public NewBookDto newBookModel() {
+        return new NewBookDto();
+    }
+
+    @ModelAttribute("modifyBook")
+    public ModifyBookDto modifyBookDto() {
+        return new ModifyBookDto();
     }
 
     @GetMapping("/admin")

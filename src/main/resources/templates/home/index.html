@@ -4,6 +4,7 @@
     <title th:text="#{site.name}">온라인 도서관</title>
     <script defer type="module" src="../js/book.js" th:src="@{/js/book.js}"></script>
     <link rel="stylesheet" href="../css/index.css" th:href="@{/css/index.css}">
+    <link rel="stylesheet" href="../css/error.css" th:href="@{/css/error.css}">
 </head>
 <body>
 <div id="content">
@@ -16,14 +17,17 @@
     <section id="book-list">
         <h2 class="mb-3" th:text="#{book.list.title}">도서 목록</h2>
         <ul class="book-list" th:if="${books != null}">
-            <li class="book-item" th:each="book : ${books}">
+            <li class="book-item" th:each="book : ${books}" th:object="${book}" th:id="|rent*{id}|">
+                <div class="field-error global">
+                    <p>책 등록 글로벌 오류</p>
+                </div>
                 <div>
-                    <span th:text="${book.name}">책 이름</span>
-                    <small class="text-muted ms-2">(ISBN: <span th:text="${book.isbn}">책 isbn</span>)</small>
+                    <span th:text="*{name}">책 이름</span>
+                    <small class="text-muted ms-2">(ISBN: <span th:text="*{isbn}">책 isbn</span>)</small>
                 </div>
                 <div class="btn-container">
-                    <button class="btn btn-primary" th:value="${book.id}" onclick="rent(this.value)" th:text="#{button.book.rent}">대출</button>
-                    <button class="btn btn-danger" th:value="${book.id}" onclick="unRent(this.value)" th:text="#{button.book.unrent}">반납</button>
+                    <button class="btn btn-primary" th:value="*{id}" onclick="rent(this.value, `rent${this.value}`)" th:text="#{button.book.rent}">대출</button>
+                    <button class="btn btn-danger" th:value="*{id}" onclick="unRent(this.value, `rent${this.value}`)" th:text="#{button.book.unrent}">반납</button>
                 </div>
             </li>
         </ul>

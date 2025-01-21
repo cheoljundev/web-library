@@ -1,8 +1,7 @@
 package com.weblibrary.domain.book.service;
 
 import com.weblibrary.domain.book.model.Book;
-import com.weblibrary.domain.book.model.dto.ModifyBookInfo;
-import com.weblibrary.domain.book.model.dto.NewBookInfo;
+import com.weblibrary.domain.book.model.dto.NewBookDto;
 import com.weblibrary.domain.book.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,7 @@ import java.util.List;
 public class BookService {
     private final BookRepository bookRepository;
 
-    public void addBook(NewBookInfo newBookDto) {
+    public void addBook(NewBookDto newBookDto) {
         bookRepository.save(newBookDto.getBookName(), newBookDto.getIsbn());
     }
 

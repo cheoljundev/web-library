@@ -1,15 +1,18 @@
 package com.weblibrary.domain.user.service;
 
+import com.weblibrary.domain.admin.model.Role;
 import com.weblibrary.domain.admin.repository.MemoryUserRoleRepository;
 import com.weblibrary.domain.admin.repository.UserRoleRepository;
-import com.weblibrary.domain.admin.model.Role;
+import com.weblibrary.domain.user.model.JoinUserDto;
+import com.weblibrary.domain.user.model.LoginUserDto;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.MemoryUserRepository;
 import com.weblibrary.domain.user.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import static com.weblibrary.domain.admin.model.RoleType.*;
+import static com.weblibrary.domain.admin.model.RoleType.DEFAULT;
 
 @RequiredArgsConstructor
 @Service
@@ -20,7 +23,9 @@ public class UserService {
     /**
      * 가입 처리 서비스 계층 메서드
      */
-    public void join(String username, String password) {
+    public void join(JoinUserDto joinUserDto) {
+        String username = joinUserDto.getUsername();
+        String password = joinUserDto.getPassword();
         User user = new User(MemoryUserRepository.lastId++, username, password);
         Role role = new Role(MemoryUserRoleRepository.lastId++, user.getId(), DEFAULT);
         userRoleRepository.save(role);
@@ -29,36 +34,28 @@ public class UserService {
 
     /**
      * 로그인 처리를 담은 서비스 계층 메서드
-     */
-    public User login(String username, String password) {
-
-        User foundUser = findByUsername(username);
-        return authenticateUser(foundUser, password);
-    }
-
-    /**
-     * 받은 User 객체와 password 파라미터가 일치하는지 확인하고 유저 반환
+     * Validator에서 호출한다.
      *
-     * @param user     : User 객체
-     * @param password : password
-     * @return : 일치하다면 유저 반환, 아니면 null 반환
+     * @param session : 세션
+     * @param loginUserDto : Valitation에 성공한 유저Dto
      */
-    private static User authenticateUser(User user, String password) {
-        if (user != null) {
-            if (user.getPassword().equals(password)) {
-                return user;
-            }
-        }
-        return null;
+
+    public void login(HttpSession session, LoginUserDto loginUserDto) {
+        User user = findByUsername(loginUserDto.getUsername());
+        session.setAttribute("user", user);
     }
 
     /**
      * username으로 유저를 찾음
+     *
      * @param username : String
      * @return : User
      */
-    private User findByUsername(String username) {
+    public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
+    public User findById(Long id) {
+        return userRepository.findById(id);
+    }
 }

@@ -1,23 +1,23 @@
-import {fetchTextRequest, handleError} from "./util.js";
+import {fetchRequest, handleError} from "./util.js";
 
-export const addBook = async () => {
+export const addBook = async errorContainer => {
     const bookName = document.getElementById("addBookName").value;
     const isbn = document.getElementById("addBookIsbn").value;
 
     try {
-        const data = await fetchTextRequest(`/books/add`, "POST", {bookName, isbn});
-        alert("결과 : " + data);
+        const data = await fetchRequest(`/books/add`, "POST", {bookName, isbn});
+        alert("결과 : " + data.message);
         location.reload();
     } catch (e) {
-        handleError(e);
+        handleError(e, errorContainer);
     }
 };
 
 export const deleteBook = async id => {
 
     try {
-        const data = await fetchTextRequest(`/books/${id}`, "DELETE");
-        alert("결과 : " + data);
+        const data = await fetchRequest(`/books/${id}`, "DELETE");
+        alert("결과 : " + data.message);
         location.reload();
     } catch(e) {
         handleError(e);
@@ -26,25 +26,25 @@ export const deleteBook = async id => {
 };
 
 export const setModifySection = btn => {
-    const idInput = document.getElementById("bookId");
-    const bookNameInput = document.getElementById("bookName");
-    const isbnInput = document.getElementById("isbn");
+    const idInput = document.getElementById("modifyBookId");
+    const bookNameInput = document.getElementById("modifyBookName");
+    const isbnInput = document.getElementById("modifyIsbn");
 
     bookNameInput.value = btn.dataset.name;
     isbnInput.value = btn.dataset.isbn;
     idInput.value = btn.dataset.id;
 };
 
-export const modifyBook = async () => {
-    const id = document.getElementById("bookId").value;
-    const bookName = document.getElementById("bookName").value;
-    const isbn = document.getElementById("isbn").value;
+export const modifyBook = async errorContainer => {
+    const id = document.getElementById("modifyBookId").value;
+    const bookName = document.getElementById("modifyBookName").value;
+    const isbn = document.getElementById("modifyIsbn").value;
 
     try {
-        const data = await fetchTextRequest(`/books/${id}`, "PUT", {bookName, isbn});
-        alert("결과 : " + data);
+        const data = await fetchRequest(`/books/${id}`, "PUT", {id, bookName, isbn});
+        alert("결과 : " + data.message);
         location.reload();
     } catch (e) {
-        handleError(e);
+        handleError(e, errorContainer);
     }
 };

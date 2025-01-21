@@ -1,4 +1,4 @@
-import { fetchTextRequest, handleError } from "./util.js";
+import { fetchRequest, handleError } from "./util.js";
 
 export const setRole = async btn => {
     const id = btn.value;
@@ -11,8 +11,8 @@ export const setRole = async btn => {
     }
 
     try {
-        const data = await fetchTextRequest(`/users/${id}/role`, "PATCH", roleType);
-        alert("결과 : " + data);
+        const data = await fetchRequest(`/users/${id}/role`, "PATCH", roleType);
+        alert("결과 : " + data.message);
         location.reload();
     } catch (error) {
         handleError(error);
@@ -21,8 +21,8 @@ export const setRole = async btn => {
 
 export const deleteUser = async (id) => {
     try {
-        const data = await fetchTextRequest(`/users/${id}`, "DELETE");
-        alert("결과 : " + data);
+        const data = await fetchRequest(`/users/${id}`, "DELETE");
+        alert("결과 : " + data.message);
         location.reload();
     } catch (error) {
         handleError(error);

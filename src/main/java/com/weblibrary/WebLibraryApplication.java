@@ -1,7 +1,10 @@
 package com.weblibrary;
 
 import com.weblibrary.domain.admin.service.AdminService;
-import com.weblibrary.domain.book.model.dto.NewBookInfo;
+import com.weblibrary.domain.book.model.Book;
+import com.weblibrary.domain.book.model.dto.NewBookDto;
+import com.weblibrary.domain.book.service.BookService;
+import com.weblibrary.domain.user.model.JoinUserDto;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
 import com.weblibrary.domain.user.service.UserService;
@@ -18,6 +21,7 @@ public class WebLibraryApplication {
     private final AdminService adminService;
     private final UserService userService;
     private final UserRepository userRepository;
+    private final BookService bookService;
 
     public static void main(String[] args) {
         SpringApplication.run(WebLibraryApplication.class, args);
@@ -26,8 +30,8 @@ public class WebLibraryApplication {
 
     @PostConstruct
     private void initUser() {
-        userService.join("admin", "1111");
-        userService.join("user", "1111");
+        userService.join(new JoinUserDto("admin", "1111"));
+        userService.join(new JoinUserDto("user", "1111"));
         User admin = userRepository.findByUsername("admin");
         adminService.setUserAsAdmin(admin.getId());
     }
@@ -37,9 +41,13 @@ public class WebLibraryApplication {
      */
     @PostConstruct
     private void initBook() {
-        NewBookInfo jpa = new NewBookInfo("JPA", "12345");
-        NewBookInfo spring = new NewBookInfo("SPRING", "45678");
+        NewBookDto jpa = new NewBookDto("JPA", "12345");
+        NewBookDto spring = new NewBookDto("SPRING", "45678");
+        NewBookDto kor = new NewBookDto("KOREAN", "72347982");
+        NewBookDto en = new NewBookDto("ENGLISH", "590328402");
         adminService.addBook(jpa);
         adminService.addBook(spring);
+        adminService.addBook(kor);
+        adminService.addBook(en);
     }
 }
