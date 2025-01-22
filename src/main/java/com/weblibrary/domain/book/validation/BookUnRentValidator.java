@@ -16,8 +16,8 @@ import org.springframework.validation.Validator;
 @RequiredArgsConstructor
 public class BookUnRentValidator implements Validator {
 
-    private final UserService userService;
-    private final BookService bookService;
+    public static final String INVALID_STATUS_FIELD = "invalid.status";
+    public static final String INVALID_RENTED_FIELD = "invalid.rented";
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -27,19 +27,14 @@ public class BookUnRentValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         BookRentDto bookRentDto = (BookRentDto) target;
-        Long userId = bookRentDto.getUserId();
-        Long bookId = bookRentDto.getBookId();
 
-        User user = userService.findById(userId);
-        Book book = bookService.findBookById(bookId);
-
-        log.debug("in validator user={}", user);
-        log.debug("in validator book={}", book);
+        User user = bookRentDto.getUser();
+        Book book = bookRentDto.getBook();
 
         if (!book.isRental()) {
-            errors.reject("global", "대출 상태가 아닌 도서입니다.");
+            errors.rejectValue("book", INVALID_STATUS_FIELD);
         } else if (!book.getRentedBy().equals(user)) {
-            errors.reject("global", "빌리지 않은 도서입니다.");
+            errors.reject("book", INVALID_RENTED_FIELD);
         }
 
     }

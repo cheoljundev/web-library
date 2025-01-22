@@ -10,9 +10,6 @@
     <section class="section">
         <h2 th:text="#{admin.manage.book.title}">도서 관리</h2>
         <div class="mb-3" th:object="${addBook}" id="addBook">
-            <div class="field-error global">
-                <p>책 등록 글로벌 오류</p>
-            </div>
             <input type="text" class="form-control mb-2" id="addBookName" th:field="*{bookName}" th:placeholder="#{placeholder.bookName}" placeholder="도서 이름 입력">
             <div class="field-error bookName">
                 <p>책 이름 오류</p>
@@ -37,8 +34,8 @@
         </ul>
         <div id="modifyBook" class="mt-3 p-3 border rounded" th:object="${modifyBook}">
             <h3 th:text="#{admin.manage.book.modify.title}">도서 수정</h3>
-            <div class="field-error global">
-                <p>책 수정 글로벌 오류</p>
+            <div class="field-error id">
+                <p>책 id 오류</p>
             </div>
             <input type="hidden" id="modifyBookId">
             <input type="text" class="form-control mb-2" th:field="*{bookName}" id="modifyBookName" th:placeholder="#{placeholder.bookName}" placeholder="도서 이름 수정">

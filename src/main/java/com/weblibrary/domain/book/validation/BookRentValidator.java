@@ -9,15 +9,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
+
+import java.util.List;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class BookRentValidator implements Validator {
 
-    private final UserService userService;
-    private final BookService bookService;
+    public static final String INVALID_REMAIN_FIELD = "invalid.remain";
+    public static final String INVALID_AVAILABLE_FIELD = "invalid.available";
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -27,22 +30,15 @@ public class BookRentValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         BookRentDto bookRentDto = (BookRentDto) target;
-        Long userId = bookRentDto.getUserId();
-        Long bookId = bookRentDto.getBookId();
 
-        User user = userService.findById(userId);
-        Book book = bookService.findBookById(bookId);
-
-        log.debug("in validator user={}", user);
-        log.debug("in validator book={}", book);
+        User user = bookRentDto.getUser();
+        Book book = bookRentDto.getBook();
 
         if (user.getRemainingRents() == 0) {
-            errors.reject("global", "대출 가능 횟수가 초과되었습니다.");
-            log.debug("user.getRemainingRents()={}", user.getRemainingRents());
-            log.debug("대출 가능 횟수 초과");
-        } else if (book.isRental()) {
-            errors.reject("global", "이미 대출중인 도서입니다.");
-            log.debug("이미 대출 중인 도서");
+            errors.rejectValue("user", INVALID_REMAIN_FIELD, new Object[]{user.getRemainingRents()}, null);
+        }
+        if (book.isRental()) {
+            errors.rejectValue("book", INVALID_AVAILABLE_FIELD, new Object[]{book.getRentedBy().getUsername()}, null);
         }
 
     }

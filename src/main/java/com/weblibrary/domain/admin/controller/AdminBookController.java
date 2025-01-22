@@ -2,6 +2,7 @@ package com.weblibrary.domain.admin.controller;
 
 import com.weblibrary.core.dto.response.ErrorResponse;
 import com.weblibrary.core.dto.response.JsonResponse;
+import com.weblibrary.core.validation.ValidationUtils;
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.dto.ModifyBookDto;
@@ -15,16 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Controller
@@ -36,6 +33,7 @@ public class AdminBookController {
     private final BookModifyValidator bookModifyValidator;
     private final BookService bookService;
     private final AdminUtils adminUtils;
+    private final ValidationUtils validationUtils;
 
     @ModelAttribute("books")
     public List<Book> books() {
@@ -62,7 +60,7 @@ public class AdminBookController {
 
     @ResponseBody
     @PostMapping("/books/add")
-    public ResponseEntity<JsonResponse> addBook(HttpSession session, @Validated @RequestBody NewBookDto book, BindingResult bindingResult) {
+    public ResponseEntity<JsonResponse> addBook(HttpSession session, @Validated @RequestBody NewBookDto book) {
 
         if (adminUtils.isDefault(session)) {
             return new ResponseEntity<>(ErrorResponse.builder()
@@ -70,6 +68,8 @@ public class AdminBookController {
                     .message("권한이 없습니다.")
                     .build(), HttpStatus.FORBIDDEN);
         }
+
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(book, "book");
 
         log.debug("bindingResult.objectName={}", bindingResult.getObjectName());
         log.debug("bindingResult.target={}", bindingResult.getTarget());
@@ -83,7 +83,7 @@ public class AdminBookController {
         if (bindingResult.hasErrors()) {
 
             log.debug("errors={}", bindingResult);
-            return handleValidationErrors(bindingResult);
+            return validationUtils.handleValidationErrors(bindingResult);
         }
 
         adminService.addBook(book);
@@ -119,7 +119,7 @@ public class AdminBookController {
 
     @ResponseBody
     @PutMapping("/books/{bookId}")
-    public ResponseEntity<JsonResponse> modifyBook(HttpSession session, @PathVariable("bookId") Long bookId, @RequestBody ModifyBookDto modifyBookDto, BindingResult bindingResult) {
+    public ResponseEntity<JsonResponse> modifyBook(HttpSession session, @PathVariable("bookId") Long bookId, @RequestBody ModifyBookDto book) {
 
         if (adminUtils.isDefault(session)) {
             return new ResponseEntity<>(ErrorResponse.builder()
@@ -128,38 +128,24 @@ public class AdminBookController {
                     .build(), HttpStatus.FORBIDDEN);
         }
 
-        bookModifyValidator.validate(modifyBookDto, bindingResult);
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(book, "book");
+
+        log.debug("bindingResult.objectName={}", bindingResult.getObjectName());
+        log.debug("bindingResult.target={}", bindingResult.getTarget());
+
+        bookModifyValidator.validate(book, bindingResult);
 
         if (bindingResult.hasErrors()) {
             log.debug("errors={}", bindingResult);
-            return handleValidationErrors(bindingResult);
+            return validationUtils.handleValidationErrors(bindingResult);
         }
 
-        adminService.modifyBook(bookId, modifyBookDto);
+        adminService.modifyBook(bookId, book);
 
         return new ResponseEntity<>(JsonResponse.builder()
                 .message("정상 수정되었습니다.")
                 .build(), HttpStatus.OK);
 
-    }
-
-    private static ResponseEntity<JsonResponse> handleValidationErrors(Errors bindingResult) {
-        Map<String, String> errors = new HashMap<>();
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        List<ObjectError> globalErrors = bindingResult.getGlobalErrors();
-
-        for (ObjectError globalError : globalErrors) {
-            errors.put(globalError.getCode(), globalError.getDefaultMessage());
-        }
-        for (FieldError error : fieldErrors) {
-            errors.put(error.getField(), error.getDefaultMessage());
-        }
-
-        return new ResponseEntity<>(ErrorResponse.builder()
-                .code("validation")
-                .message("validation 실패")
-                .errors(errors).build()
-                , HttpStatus.BAD_REQUEST);
     }
 
 }

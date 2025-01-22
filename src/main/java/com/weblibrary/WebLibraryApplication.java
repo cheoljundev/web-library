@@ -1,9 +1,7 @@
 package com.weblibrary;
 
 import com.weblibrary.domain.admin.service.AdminService;
-import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.dto.NewBookDto;
-import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.user.model.JoinUserDto;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
@@ -13,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-//@ServletComponentScan
 @SpringBootApplication
 @RequiredArgsConstructor
 public class WebLibraryApplication {
@@ -21,7 +18,6 @@ public class WebLibraryApplication {
     private final AdminService adminService;
     private final UserService userService;
     private final UserRepository userRepository;
-    private final BookService bookService;
 
     public static void main(String[] args) {
         SpringApplication.run(WebLibraryApplication.class, args);

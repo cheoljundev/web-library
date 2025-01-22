@@ -16,6 +16,10 @@ import org.springframework.validation.Validator;
 public class BookModifyValidator implements Validator {
 
     private final BookService bookService;
+    private static final String REQUIRED_FIELD = "required";
+    private static final String MIN_FIELD = "min";
+    private static final String DUPLICATED_FIELD = "duplicated";
+    private static final String NOT_FOUND_FIELD = "not.found";
     private static final int MIN_BOOKNAME_LENGTH = 5;
     private static final int MIN_ISBN_LENGTH = 5;
 
@@ -31,7 +35,9 @@ public class BookModifyValidator implements Validator {
         Book findOldBook = bookService.findBookById(book.getId());
 
         if (findOldBook == null) {
-            errors.reject("global", "책 수정에 실패했습니다. 기존에 없는 책입니다.");
+            errors.rejectValue("id", NOT_FOUND_FIELD);
+            return;
+            // 책 못 찾으면 여기서 종료
         }
 
         String bookName = book.getBookName();
@@ -45,22 +51,22 @@ public class BookModifyValidator implements Validator {
 
         if (isBookNameEmptyOrBlank || isIsbnEmptyOrBlank || isBookNameTooShort || isIsbnTooShort) {
             if (isBookNameEmptyOrBlank) {
-                errors.rejectValue("bookName", null, "책 이름은 필수 값입니다.");
+                errors.rejectValue("bookName", REQUIRED_FIELD, null);
             } else {
                 if (isNameToShortAndNotSame(isBookNameTooShort, findOldBook, bookName)) {
-                    errors.rejectValue("bookName", null, "최소 " + MIN_BOOKNAME_LENGTH + "자 이상 입력하세요.");
+                    errors.rejectValue("bookName", MIN_FIELD, new Object[]{MIN_BOOKNAME_LENGTH}, null);
                 }
             }
 
             if (isIsbnEmptyOrBlank) {
-                errors.rejectValue("isbn", null, "isbn은 필수 값입니다.");
+                errors.rejectValue("isbn", REQUIRED_FIELD, null);
             } else if (isIsbnToShortAndNotSame(isIsbnTooShort, findOldBook, isbn)) {
-                errors.rejectValue("isbn", null, null, "최소 " + MIN_ISBN_LENGTH + "자 이상 입력하세요.");
+                errors.rejectValue("isbn", MIN_FIELD, new Object[]{MIN_ISBN_LENGTH}, null);
             }
         }
 
         if (isDuplicated(findOldBook.getIsbn(), isbn)) {
-            errors.reject("global", "책 수정에 실패했습니다. 이미 등록된 책 isbn 입니다.");
+            errors.rejectValue("isbn", DUPLICATED_FIELD, null);
         }
 
     }
