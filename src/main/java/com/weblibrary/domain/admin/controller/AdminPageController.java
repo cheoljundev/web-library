@@ -12,13 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 @RequiredArgsConstructor
 public class AdminPageController {
-    private final AdminService adminService;
+    private final AdminUtils adminUtils;
 
     @GetMapping("/admin")
     public String adminPage(HttpSession session) {
-        User user = (User) session.getAttribute("user");
-
-        if (user == null || !adminService.isAdmin(user.getId())) {
+        if (adminUtils.isDefault(session)) {
             return "redirect:/access-denied";
         }
 

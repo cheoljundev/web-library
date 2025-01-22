@@ -23,6 +23,7 @@ import java.util.List;
 public class AdminUsersController {
 
     private final AdminService adminService;
+    private final AdminUtils adminUtils;
 
     @ModelAttribute("roleTypes")
     public RoleType[] roleTypes() {
@@ -62,10 +63,8 @@ public class AdminUsersController {
 
     @GetMapping("/admin/user")
     public String adminUserPage(HttpSession session) {
-        User user = (User) session.getAttribute("user");
-
-        if (user == null || !adminService.isAdmin(user.getId())) {
-            return "redirect:/access-denied";
+        if (adminUtils.isDefault(session)) {
+            return "access-denied";
         }
         return "admin/user";
     }
@@ -74,8 +73,7 @@ public class AdminUsersController {
     @PatchMapping("/users/{id}/role")
     public ResponseEntity<JsonResponse> setRole(HttpSession session, @PathVariable("id") Long id, @RequestBody RoleType roleType) {
 
-
-        if (isDefault(session)) {
+        if (adminUtils.isDefault(session)) {
             return new ResponseEntity<>(ErrorResponse.builder()
                     .code("roleError")
                     .message("권한이 없습니다.")
@@ -106,7 +104,7 @@ public class AdminUsersController {
     @ResponseBody
     @DeleteMapping("/users/{id}")
     public ResponseEntity<JsonResponse> deleteUser(HttpSession session, @PathVariable("id") Long id) {
-        if (isDefault(session)) {
+        if (adminUtils.isDefault(session)) {
             return new ResponseEntity<>(ErrorResponse.builder()
                     .code("roleError")
                     .message("권한이 없습니다.")
@@ -123,10 +121,5 @@ public class AdminUsersController {
         return new ResponseEntity<>(JsonResponse.builder()
                 .message("정상적으로 유저가 삭제되었습니다.")
                 .build(), HttpStatus.OK);
-    }
-
-    private boolean isDefault(HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        return !adminService.isAdmin(user.getId());
     }
 }
