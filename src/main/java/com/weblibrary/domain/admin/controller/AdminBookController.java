@@ -60,7 +60,7 @@ public class AdminBookController {
 
     @ResponseBody
     @PostMapping("/books/add")
-    public ResponseEntity<JsonResponse> addBook(HttpSession session, @Validated @RequestBody NewBookDto book) {
+    public ResponseEntity<JsonResponse> addBook(HttpSession session, @Validated @RequestBody NewBookDto book, BindingResult bindingResult) {
 
         if (adminUtils.isDefault(session)) {
             return new ResponseEntity<>(ErrorResponse.builder()
@@ -68,8 +68,6 @@ public class AdminBookController {
                     .message("권한이 없습니다.")
                     .build(), HttpStatus.FORBIDDEN);
         }
-
-        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(book, "book");
 
         log.debug("bindingResult.objectName={}", bindingResult.getObjectName());
         log.debug("bindingResult.target={}", bindingResult.getTarget());
@@ -119,7 +117,7 @@ public class AdminBookController {
 
     @ResponseBody
     @PutMapping("/books/{bookId}")
-    public ResponseEntity<JsonResponse> modifyBook(HttpSession session, @PathVariable("bookId") Long bookId, @RequestBody ModifyBookDto book) {
+    public ResponseEntity<JsonResponse> modifyBook(HttpSession session, @PathVariable("bookId") Long bookId, @Validated @RequestBody ModifyBookDto book, BindingResult bindingResult) {
 
         if (adminUtils.isDefault(session)) {
             return new ResponseEntity<>(ErrorResponse.builder()
@@ -127,8 +125,6 @@ public class AdminBookController {
                     .message("권한이 없습니다.")
                     .build(), HttpStatus.FORBIDDEN);
         }
-
-        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(book, "book");
 
         log.debug("bindingResult.objectName={}", bindingResult.getObjectName());
         log.debug("bindingResult.target={}", bindingResult.getTarget());

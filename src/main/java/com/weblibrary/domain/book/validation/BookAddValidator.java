@@ -16,12 +16,7 @@ import org.springframework.validation.Validator;
 public class BookAddValidator implements Validator {
 
     private final BookService bookService;
-    private static final String REQUIRED_FIELD = "required";
-    private static final String MIN_FIELD = "min";
     private static final String DUPLICATED_FIELD = "duplicated";
-    private static final int MIN_BOOKNAME_LENGTH = 5;
-    private static final int MIN_ISBN_LENGTH = 5;
-
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -32,30 +27,7 @@ public class BookAddValidator implements Validator {
     public void validate(Object target, Errors errors) {
         NewBookDto book = (NewBookDto) target;
 
-        String bookName = book.getBookName();
         String isbn = book.getIsbn();
-
-        boolean isBookNameEmptyOrBlank = !StringUtils.hasText(bookName);
-        boolean isIsbnEmptyOrBlank = !StringUtils.hasText(isbn);
-
-        boolean isBookNameTooShort = bookName.length() < MIN_BOOKNAME_LENGTH;
-        boolean isIsbnTooShort = isbn.length() < MIN_ISBN_LENGTH;
-
-        if (isBookNameEmptyOrBlank || isIsbnEmptyOrBlank || isBookNameTooShort || isIsbnTooShort) {
-            if (isBookNameEmptyOrBlank) {
-                errors.rejectValue("bookName", REQUIRED_FIELD, null);
-            } else {
-                if (isBookNameTooShort) {
-                    errors.rejectValue("bookName", MIN_FIELD, new Object[]{MIN_BOOKNAME_LENGTH}, null);
-                }
-            }
-
-            if (isIsbnEmptyOrBlank) {
-                errors.rejectValue("isbn", REQUIRED_FIELD, null);
-            } else if (isIsbnTooShort) {
-                errors.rejectValue("isbn", MIN_FIELD, new Object[]{MIN_ISBN_LENGTH}, null);
-            }
-        }
 
         if (isDuplicated(isbn)) {
             errors.rejectValue("isbn", DUPLICATED_FIELD, null);
