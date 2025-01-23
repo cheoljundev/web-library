@@ -1,20 +1,22 @@
-package com.weblibrary.domain.book.model.dto;
+package com.weblibrary.domain.user.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class NewBookDto {
+public class JoinUserDto {
 
     @NotBlank
     @Size(min = 5)
-    private String bookName;
+    private String username;
+
     @NotBlank
     @Size(min = 5)
-    private String isbn;
+    private String password;
 }

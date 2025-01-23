@@ -1,4 +1,4 @@
-package com.weblibrary.domain.user.model;
+package com.weblibrary.domain.user.dto;
 
 import lombok.Builder;
 import lombok.Getter;

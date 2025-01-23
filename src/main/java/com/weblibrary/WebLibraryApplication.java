@@ -2,7 +2,7 @@ package com.weblibrary;
 
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.book.model.dto.NewBookDto;
-import com.weblibrary.domain.user.model.JoinUserDto;
+import com.weblibrary.domain.user.dto.JoinUserDto;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
 import com.weblibrary.domain.user.service.UserService;

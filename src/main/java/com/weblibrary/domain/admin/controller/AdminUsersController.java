@@ -4,7 +4,7 @@ import com.weblibrary.core.dto.response.ErrorResponse;
 import com.weblibrary.core.dto.response.JsonResponse;
 import com.weblibrary.domain.admin.model.RoleType;
 import com.weblibrary.domain.admin.service.AdminService;
-import com.weblibrary.domain.user.model.SetUserDto;
+import com.weblibrary.domain.user.dto.SetUserDto;
 import com.weblibrary.domain.user.model.User;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
