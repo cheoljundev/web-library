@@ -2,8 +2,8 @@ package com.weblibrary.domain.user.controller;
 
 import com.weblibrary.core.dto.response.ErrorResponse;
 import com.weblibrary.core.dto.response.JsonResponse;
-import com.weblibrary.domain.user.model.JoinUserDto;
-import com.weblibrary.domain.user.model.LoginUserDto;
+import com.weblibrary.domain.user.dto.JoinUserDto;
+import com.weblibrary.domain.user.dto.LoginUserDto;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;
 import com.weblibrary.domain.user.validation.JoinValidator;
@@ -49,7 +49,6 @@ public class AccountController {
 
         log.debug("Input User DTO: {}", user);
 
-        /* 검증 실행 */
         joinValidator.validate(user, bindingResult);
 
         /* 검증에 에러가 발견되면, 폼을 보여줌. */

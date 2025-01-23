@@ -1,13 +1,11 @@
 package com.weblibrary.domain.user.validation;
 
-import com.weblibrary.domain.user.model.LoginUserDto;
+import com.weblibrary.domain.user.dto.LoginUserDto;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -17,8 +15,6 @@ import org.springframework.validation.Validator;
 public class LoginValidator implements Validator {
 
     private final UserService userService;
-
-    public static final String REQUIRED_FIELD = "required";
     public static final String LOGIN_ERROR = "loginGlobal";
 
     @Override
@@ -30,22 +26,7 @@ public class LoginValidator implements Validator {
     public void validate(Object target, Errors errors) {
         LoginUserDto user = (LoginUserDto) target;
 
-        String username = user.getUsername();
         String password = user.getPassword();
-
-        boolean isUsernameEmptyOrBlank = !StringUtils.hasText(username);
-        boolean isPasswordEmptyOrBlank = !StringUtils.hasText(password);
-
-        // 필수값 검증
-        if (isUsernameEmptyOrBlank || isPasswordEmptyOrBlank) {
-            if (isUsernameEmptyOrBlank) {
-                errors.rejectValue("username", REQUIRED_FIELD);
-            }
-            if (isPasswordEmptyOrBlank) {
-                errors.rejectValue("password", REQUIRED_FIELD);
-            }
-            return; // 이후 검증 불필요
-        }
 
         // 로그인 검증
         User foundUser = getFoundUser(user);
