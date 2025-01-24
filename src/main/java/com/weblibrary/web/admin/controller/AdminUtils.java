@@ -1,4 +1,4 @@
-package com.weblibrary.domain.admin.controller;
+package com.weblibrary.web.admin.controller;
 
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.user.model.User;

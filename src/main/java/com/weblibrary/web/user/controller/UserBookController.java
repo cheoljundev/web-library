@@ -1,13 +1,13 @@
-package com.weblibrary.domain.user.controller;
+package com.weblibrary.web.user.controller;
 
-import com.weblibrary.core.dto.response.ErrorResponse;
-import com.weblibrary.core.dto.response.JsonResponse;
-import com.weblibrary.core.validation.ValidationUtils;
+import com.weblibrary.web.core.dto.response.ErrorResponse;
+import com.weblibrary.web.core.dto.response.JsonResponse;
+import com.weblibrary.web.core.validation.ValidationUtils;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.dto.BookRentDto;
 import com.weblibrary.domain.book.service.BookService;
-import com.weblibrary.domain.book.validation.BookRentValidator;
-import com.weblibrary.domain.book.validation.BookUnRentValidator;
+import com.weblibrary.web.book.validation.BookRentValidator;
+import com.weblibrary.web.book.validation.BookUnRentValidator;
 import com.weblibrary.domain.user.model.User;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;

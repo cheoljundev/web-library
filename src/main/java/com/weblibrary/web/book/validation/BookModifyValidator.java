@@ -1,4 +1,4 @@
-package com.weblibrary.domain.book.validation;
+package com.weblibrary.web.book.validation;
 
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.dto.ModifyBookDto;

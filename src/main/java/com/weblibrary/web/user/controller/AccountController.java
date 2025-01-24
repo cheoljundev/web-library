@@ -1,13 +1,13 @@
-package com.weblibrary.domain.user.controller;
+package com.weblibrary.web.user.controller;
 
-import com.weblibrary.core.dto.response.ErrorResponse;
-import com.weblibrary.core.dto.response.JsonResponse;
+import com.weblibrary.web.core.dto.response.ErrorResponse;
+import com.weblibrary.web.core.dto.response.JsonResponse;
 import com.weblibrary.domain.user.dto.JoinUserDto;
 import com.weblibrary.domain.user.dto.LoginUserDto;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;
-import com.weblibrary.domain.user.validation.JoinValidator;
-import com.weblibrary.domain.user.validation.LoginValidator;
+import com.weblibrary.web.user.validation.JoinValidator;
+import com.weblibrary.web.user.validation.LoginValidator;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

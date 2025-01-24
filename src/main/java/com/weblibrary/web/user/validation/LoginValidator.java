@@ -1,4 +1,4 @@
-package com.weblibrary.domain.user.validation;
+package com.weblibrary.web.user.validation;
 
 import com.weblibrary.domain.user.dto.LoginUserDto;
 import com.weblibrary.domain.user.model.User;

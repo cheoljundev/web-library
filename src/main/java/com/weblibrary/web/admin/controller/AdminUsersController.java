@@ -1,7 +1,7 @@
-package com.weblibrary.domain.admin.controller;
+package com.weblibrary.web.admin.controller;
 
-import com.weblibrary.core.dto.response.ErrorResponse;
-import com.weblibrary.core.dto.response.JsonResponse;
+import com.weblibrary.web.core.dto.response.ErrorResponse;
+import com.weblibrary.web.core.dto.response.JsonResponse;
 import com.weblibrary.domain.admin.model.RoleType;
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.user.dto.SetUserDto;

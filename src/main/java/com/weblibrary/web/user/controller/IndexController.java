@@ -1,4 +1,4 @@
-package com.weblibrary.domain.user.controller;
+package com.weblibrary.web.user.controller;
 
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.service.BookService;

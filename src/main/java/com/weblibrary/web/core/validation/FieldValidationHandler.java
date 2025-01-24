@@ -1,6 +1,6 @@
-package com.weblibrary.core.validation;
+package com.weblibrary.web.core.validation;
 
-import com.weblibrary.core.dto.response.JsonResponse;
+import com.weblibrary.web.core.dto.response.JsonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
