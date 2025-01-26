@@ -1,12 +1,11 @@
 package com.weblibrary.web.admin.controller;
 
-import com.weblibrary.web.core.dto.response.ErrorResponse;
-import com.weblibrary.web.core.dto.response.JsonResponse;
 import com.weblibrary.domain.admin.model.RoleType;
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.user.dto.SetUserDto;
 import com.weblibrary.domain.user.model.User;
-import jakarta.servlet.http.HttpSession;
+import com.weblibrary.web.core.dto.response.ErrorResponse;
+import com.weblibrary.web.core.dto.response.JsonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -62,8 +61,8 @@ public class AdminUsersController {
     }
 
     @GetMapping("/admin/user")
-    public String adminUserPage(HttpSession session) {
-        if (adminUtils.isDefault(session)) {
+    public String adminUserPage(@SessionAttribute(name = "user", required = false) User user) {
+        if (adminUtils.isDefault(user)) {
             return "access-denied";
         }
         return "admin/user";
@@ -71,9 +70,9 @@ public class AdminUsersController {
 
     @ResponseBody
     @PatchMapping("/users/{id}/role")
-    public ResponseEntity<JsonResponse> setRole(HttpSession session, @PathVariable("id") Long id, @RequestBody RoleType roleType) {
+    public ResponseEntity<JsonResponse> setRole(@SessionAttribute(name = "user", required = false) User user, @PathVariable("id") Long id, @RequestBody RoleType roleType) {
 
-        if (adminUtils.isDefault(session)) {
+        if (adminUtils.isDefault(user)) {
             return new ResponseEntity<>(ErrorResponse.builder()
                     .code("roleError")
                     .message("권한이 없습니다.")
@@ -103,8 +102,8 @@ public class AdminUsersController {
 
     @ResponseBody
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<JsonResponse> deleteUser(HttpSession session, @PathVariable("id") Long id) {
-        if (adminUtils.isDefault(session)) {
+    public ResponseEntity<JsonResponse> deleteUser(@SessionAttribute(name = "user", required = false) User user, @PathVariable("id") Long id) {
+        if (adminUtils.isDefault(user)) {
             return new ResponseEntity<>(ErrorResponse.builder()
                     .code("roleError")
                     .message("권한이 없습니다.")

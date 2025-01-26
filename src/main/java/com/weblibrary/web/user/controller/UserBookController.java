@@ -17,10 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 도서 대출 컨트롤러
@@ -36,8 +33,7 @@ public class UserBookController {
     private final ValidationUtils validationUtils;
 
     @PostMapping("/{bookId}/rent")
-    public ResponseEntity<JsonResponse> rent(HttpSession session, @PathVariable("bookId") Long bookId) {
-        User user = (User) session.getAttribute("user");
+    public ResponseEntity<JsonResponse> rent(@SessionAttribute(name = "user", required = false) User user, @PathVariable("bookId") Long bookId) {
 
         // 로그인 체크
         if (user == null) {
@@ -74,8 +70,7 @@ public class UserBookController {
     }
 
     @PostMapping("/{bookId}/unrent")
-    public ResponseEntity<JsonResponse> unRent(HttpSession session, @PathVariable("bookId") Long bookId) {
-        User user = (User) session.getAttribute("user");
+    public ResponseEntity<JsonResponse> unRent(@SessionAttribute(name = "user", required = false) User user, @PathVariable("bookId") Long bookId) {
 
         if (user == null) {
             return new ResponseEntity<>(ErrorResponse.builder()

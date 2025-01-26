@@ -8,6 +8,7 @@ import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;
 import com.weblibrary.web.user.validation.JoinValidator;
 import com.weblibrary.web.user.validation.LoginValidator;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 /**
  * 유저 회원가입 컨트롤러, GET, POST에 따라 다르게 동작.
@@ -97,9 +99,8 @@ public class AccountController {
     }
 
     @PostMapping("/signout")
-    public ResponseEntity<JsonResponse> signOut(HttpSession session) {
-
-        User user = (User) session.getAttribute("user");
+    public ResponseEntity<JsonResponse> signOut(HttpServletRequest request, @SessionAttribute(name = "user", required = false) User user) {
+        HttpSession session = request.getSession(false);
 
         log.debug("login user={}", user);
 
@@ -111,7 +112,7 @@ public class AccountController {
                     , HttpStatus.BAD_REQUEST);
         }
 
-        session.setAttribute("user", null);
+        session.invalidate();
 
         return new ResponseEntity<>(JsonResponse.builder()
                 .message("로그아웃 되었습니다.")
