@@ -3,6 +3,7 @@ package com.weblibrary.domain.user.repository;
 import com.weblibrary.domain.user.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository {
     /**
@@ -16,7 +17,7 @@ public interface UserRepository {
      * @param id : Long id
      * @return User
      */
-    User findById(Long id);
+    Optional<User> findById(Long id);
 
     /**
      * username으로 회원 찾기

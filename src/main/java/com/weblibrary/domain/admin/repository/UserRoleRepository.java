@@ -4,11 +4,13 @@ import com.weblibrary.domain.admin.model.Role;
 import com.weblibrary.domain.admin.model.RoleType;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRoleRepository {
     void save(Role role);
-    Role findRoleByUserIdAndRoleType(Long userId, RoleType roleType);
+    Optional<Role> findRoleByUserIdAndRoleType(Long userId, RoleType roleType);
     List<Role> findByUserId(Long userId);
     List<Role> findRolesByUserId(Long userId);
-    Role remove(Long roleId);
+    List<Role> findAll();
+    Optional<Role> remove(Long roleId);
 }

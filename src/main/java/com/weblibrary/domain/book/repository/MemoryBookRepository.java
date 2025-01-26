@@ -14,8 +14,12 @@ public class MemoryBookRepository implements BookRepository {
 
     @Override
     public void save(String bookName, String isbn) {
-        Book book = new Book(lastId++, bookName, isbn);
+        Book book = new Book(incrementLastId(), bookName, isbn);
         store.put(book.getId(), book);
+    }
+
+    private Long incrementLastId() {
+        return ++lastId;
     }
 
     @Override

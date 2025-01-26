@@ -23,7 +23,7 @@ public class User {
      */
     public void rent(Book book) {
         book.rent(this);
-        remainingRents--;
+        decrementRemainingRents();
     }
 
     /**
@@ -34,7 +34,15 @@ public class User {
      */
     public void unRent(Book book) {
         book.unRent(this);
-        remainingRents++;
+        incrementRemainingRents();
+    }
+
+    private void decrementRemainingRents() {
+        remainingRents--;
+    }
+
+    private void incrementRemainingRents() {
+        remainingRents--;
     }
 
     @Override

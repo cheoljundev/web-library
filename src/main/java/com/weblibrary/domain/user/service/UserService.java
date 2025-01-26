@@ -12,6 +12,8 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 import static com.weblibrary.domain.admin.model.RoleType.DEFAULT;
 
 @RequiredArgsConstructor
@@ -26,8 +28,8 @@ public class UserService {
     public void join(JoinUserDto joinUserDto) {
         String username = joinUserDto.getUsername();
         String password = joinUserDto.getPassword();
-        User user = new User(MemoryUserRepository.lastId++, username, password);
-        Role role = new Role(MemoryUserRoleRepository.lastId++, user.getId(), DEFAULT);
+        User user = new User(MemoryUserRepository.incrementLastId(), username, password);
+        Role role = new Role(MemoryUserRoleRepository.incrementLastId(), user.getId(), DEFAULT);
         userRoleRepository.save(role);
         userRepository.save(user);
     }
@@ -55,7 +57,7 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public User findById(Long id) {
+    public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
 }

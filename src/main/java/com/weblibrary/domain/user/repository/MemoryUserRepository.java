@@ -3,10 +3,7 @@ package com.weblibrary.domain.user.repository;
 import com.weblibrary.domain.user.model.User;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class MemoryUserRepository implements UserRepository {
@@ -15,14 +12,18 @@ public class MemoryUserRepository implements UserRepository {
 
     public static Long lastId = 0L;
 
+    public static Long incrementLastId() {
+        return ++lastId;
+    }
+
     @Override
     public void save(User user) {
         store.put(user.getId(), user);
     }
 
     @Override
-    public User findById(Long id) {
-        return store.get(id);
+    public Optional<User> findById(Long id) {
+        return Optional.ofNullable(store.get(id));
     }
 
     @Override
@@ -42,9 +43,12 @@ public class MemoryUserRepository implements UserRepository {
 
     @Override
     public User remove(Long userId) {
-        User removed = findById(userId);
-        store.remove(userId);
-        return removed;
+        return findById(userId)
+                .map(user -> {
+                    store.remove(userId);  // 사용자 제거
+                    return user;  // 제거된 사용자 반환
+                })
+                .orElse(null);
     }
 
     @Override
