@@ -73,4 +73,4 @@
   - [x] 도서 대출/반납
   - [x] BeanValidation 적용
 - [x] 관리자 페이지 세분화 (도서관리, 회원관리 나눔)
-- [ ] Optional 도입
+- [x] Optional 도입
