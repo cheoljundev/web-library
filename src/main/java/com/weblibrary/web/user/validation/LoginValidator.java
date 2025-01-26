@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.util.Optional;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -29,15 +31,15 @@ public class LoginValidator implements Validator {
         String password = user.getPassword();
 
         // 로그인 검증
-        User foundUser = getFoundUser(user);
-
-        if (rejectAuthentication(foundUser, password)) {
-            errors.reject(LOGIN_ERROR, null, null);
-        }
-
+        getFoundUser(user)
+                .ifPresent(foundUser -> {
+                    if (isInvalidPassword(foundUser, password)) {
+                        errors.reject(LOGIN_ERROR, null, null);
+                    }
+                });
     }
 
-    private User getFoundUser(LoginUserDto user) {
+    private Optional<User> getFoundUser(LoginUserDto user) {
         return userService.findByUsername(user.getUsername());
     }
 
@@ -48,7 +50,7 @@ public class LoginValidator implements Validator {
      * @param password : password
      * @return : 일치하다면 true, 일치하지 않으면 false
      */
-    private boolean rejectAuthentication(User user, String password) {
+    private boolean isInvalidPassword(User user, String password) {
 
         if (user == null) {
             return true;

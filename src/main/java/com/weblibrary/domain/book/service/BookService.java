@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -17,19 +18,19 @@ public class BookService {
         bookRepository.save(newBookDto.getBookName(), newBookDto.getIsbn());
     }
 
-    public Book deleteBook(Long bookId) {
+    public Optional<Book> deleteBook(Long bookId) {
         return bookRepository.remove(bookId);
     }
 
-    public Book findBookById(Long id) {
+    public Optional<Book> findBookById(Long id) {
         return bookRepository.findById(id);
     }
 
-    public Book findBookByName(String name) {
+    public Optional<Book> findBookByName(String name) {
         return bookRepository.findByName(name);
     }
 
-    public Book findBookByIsbn(String isbn) {
+    public Optional<Book> findBookByIsbn(String isbn) {
         return bookRepository.findByIsbn(isbn);
     }
 

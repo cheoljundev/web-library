@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.weblibrary.domain.admin.model.RoleType.ADMIN;
 
@@ -29,16 +30,12 @@ public class AdminService {
     private final BookService bookService;
 
     public boolean setUserAsAdmin(Long userId) {
-        // 이미 관리자 일 경우에는 실패
         if (isAdmin(userId)) {
-            return false;
+            return false; // 이미 관리자인 경우
         }
-
-        // 관리자 권한 생성해서 추가하기
-        Role newRole = new Role(MemoryUserRoleRepository.lastId++, userId, ADMIN);
-        userRoleRepository.save(newRole);
-        return true;
+        return addAdminRole(userId); // 관리자가 아닌 경우에만 권한 추가
     }
+
 
     public RoleType findUserRoleType(Long userId) {
         List<Role> roles = userRoleRepository.findByUserId(userId);
@@ -56,14 +53,32 @@ public class AdminService {
             return false;
         }
 
-        // 관리자일 경우에는 관리자 권한을 삭제
-        Role findAdminRole = userRoleRepository.findRoleByUserIdAndRoleType(userId, ADMIN);
-        userRoleRepository.remove(findAdminRole.getId());
-
-        return true;
+        return removeAdminRole(userId);
     }
 
-    public User deleteUser(Long userId) {
+    private boolean removeAdminRole(Long userId) {
+        return userRoleRepository.findRoleByUserIdAndRoleType(userId, ADMIN)
+                .map(role -> {
+                    userRoleRepository.remove(role.getId());
+                    return true;
+                }).orElse(false);
+    }
+
+    private boolean addAdminRole(Long userId) {
+        return userRepository.findById(userId)
+                .map(user -> {
+                    Role adminRole = new Role(
+                            MemoryUserRoleRepository.incrementLastId(),
+                            user.getId(),
+                            ADMIN
+                    );
+                    userRoleRepository.save(adminRole);
+                    return true;
+                })
+                .orElse(false); // userId에 해당하는 사용자가 없으면 false 반환
+    }
+
+    public Optional<User> deleteUser(Long userId) {
         return userRepository.remove(userId);
     }
 
@@ -75,16 +90,11 @@ public class AdminService {
         bookService.addBook(newBookDto);
     }
 
-    public Book deleteBook(Long bookId) {
-        return bookService.deleteBook(bookId);
-    }
-
-    public Book modifyBook(Long bookId, ModifyBookDto modifyBookDto) {
-        return bookService.findBookById(bookId).modify(modifyBookDto);
+    public Optional<Book> modifyBook(Long bookId, ModifyBookDto modifyBookDto) {
+        return bookService.findBookById(bookId).map(book -> book.modify(modifyBookDto));
     }
 
     public boolean isAdmin(Long userId) {
-        Role adminRole = userRoleRepository.findRoleByUserIdAndRoleType(userId, ADMIN);
-        return adminRole != null;
+        return userRoleRepository.findRoleByUserIdAndRoleType(userId, ADMIN).isPresent();
     }
 }

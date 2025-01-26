@@ -1,16 +1,16 @@
 package com.weblibrary.web.admin.controller;
 
-import com.weblibrary.web.core.dto.response.ErrorResponse;
-import com.weblibrary.web.core.dto.response.JsonResponse;
-import com.weblibrary.web.core.validation.ValidationUtils;
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.dto.ModifyBookDto;
 import com.weblibrary.domain.book.model.dto.NewBookDto;
 import com.weblibrary.domain.book.service.BookService;
+import com.weblibrary.domain.user.model.User;
 import com.weblibrary.web.book.validation.BookAddValidator;
 import com.weblibrary.web.book.validation.BookModifyValidator;
-import jakarta.servlet.http.HttpSession;
+import com.weblibrary.web.core.dto.response.ErrorResponse;
+import com.weblibrary.web.core.dto.response.JsonResponse;
+import com.weblibrary.web.core.validation.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -50,8 +50,8 @@ public class AdminBookController {
     }
 
     @GetMapping("/admin/book")
-    public String adminBookPage(HttpSession session) {
-        if (adminUtils.isDefault(session)) {
+    public String adminBookPage(@SessionAttribute(name = "user", required = false) User user) {
+        if (adminUtils.isDefault(user)) {
             return "redirect:/access-denied";
         }
         return "admin/book";
@@ -59,9 +59,9 @@ public class AdminBookController {
 
     @ResponseBody
     @PostMapping("/books/add")
-    public ResponseEntity<JsonResponse> addBook(HttpSession session, @Validated @RequestBody NewBookDto book, BindingResult bindingResult) {
+    public ResponseEntity<JsonResponse> addBook(@SessionAttribute(name = "user", required = false) User user, @Validated @RequestBody NewBookDto book, BindingResult bindingResult) {
 
-        if (adminUtils.isDefault(session)) {
+        if (adminUtils.isDefault(user)) {
             return new ResponseEntity<>(ErrorResponse.builder()
                     .code("roleError")
                     .message("권한이 없습니다.")
@@ -92,33 +92,30 @@ public class AdminBookController {
 
     @ResponseBody
     @DeleteMapping("/books/{bookId}")
-    public ResponseEntity<JsonResponse> deleteBook(HttpSession session, @PathVariable("bookId") Long bookId) {
-        if (adminUtils.isDefault(session)) {
+    public ResponseEntity<JsonResponse> deleteBook(@SessionAttribute(name = "user", required = false) User user, @PathVariable("bookId") Long bookId) {
+        if (adminUtils.isDefault(user)) {
             return new ResponseEntity<>(ErrorResponse.builder()
                     .code("roleError")
                     .message("권한이 없습니다.")
                     .build(), HttpStatus.FORBIDDEN);
         }
 
-        Book removed = adminService.deleteBook(bookId);
+        return bookService.deleteBook(bookId)
+                .map(removed -> new ResponseEntity<JsonResponse>(JsonResponse.builder()
+                        .message("정상 삭제되었습니다.")
+                        .build(), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<JsonResponse>(ErrorResponse.builder()
+                        .message("삭제되지 않았습니다.")
+                        .build(), HttpStatus.FORBIDDEN));
 
-        if (removed == null) {
-            return new ResponseEntity<>(ErrorResponse.builder()
-                    .message("삭제되지 않았습니다.")
-                    .build(), HttpStatus.FORBIDDEN);
-        }
-
-        return new ResponseEntity<>(JsonResponse.builder()
-                .message("정상 삭제되었습니다.")
-                .build(), HttpStatus.OK);
 
     }
 
     @ResponseBody
     @PutMapping("/books/{bookId}")
-    public ResponseEntity<JsonResponse> modifyBook(HttpSession session, @PathVariable("bookId") Long bookId, @Validated @RequestBody ModifyBookDto book, BindingResult bindingResult) {
+    public ResponseEntity<JsonResponse> modifyBook(@SessionAttribute(name = "user", required = false) User user, @PathVariable("bookId") Long bookId, @Validated @RequestBody ModifyBookDto book, BindingResult bindingResult) {
 
-        if (adminUtils.isDefault(session)) {
+        if (adminUtils.isDefault(user)) {
             return new ResponseEntity<>(ErrorResponse.builder()
                     .code("roleError")
                     .message("권한이 없습니다.")
@@ -135,11 +132,12 @@ public class AdminBookController {
             return validationUtils.handleValidationErrors(bindingResult);
         }
 
-        adminService.modifyBook(bookId, book);
-
-        return new ResponseEntity<>(JsonResponse.builder()
-                .message("정상 수정되었습니다.")
-                .build(), HttpStatus.OK);
+        return adminService.modifyBook(bookId, book).map(book1 -> new ResponseEntity<JsonResponse>(JsonResponse.builder()
+                        .message("정상 수정되었습니다.")
+                        .build(), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<JsonResponse>(ErrorResponse.builder()
+                        .message("정상 수정되지 않았습니다.")
+                        .build(), HttpStatus.FORBIDDEN));
 
     }
 

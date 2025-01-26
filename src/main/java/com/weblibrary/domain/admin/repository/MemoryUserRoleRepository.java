@@ -4,10 +4,7 @@ import com.weblibrary.domain.admin.model.Role;
 import com.weblibrary.domain.admin.model.RoleType;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class MemoryUserRoleRepository implements UserRoleRepository {
@@ -15,22 +12,22 @@ public class MemoryUserRoleRepository implements UserRoleRepository {
     private static final Map<Long, Role> store = new HashMap<>();
     public static Long lastId = 0L;
 
+    public static Long incrementLastId() {
+        return ++lastId;
+    }
+
     @Override
     public void save(Role role) {
         store.put(role.getId(), role);
     }
 
     @Override
-    public Role findRoleByUserIdAndRoleType(Long userId, RoleType roleType) {
-        for (Role role : store.values()) {
-            if (role.getUserId().equals(userId)) {
-                if (role.getRoleType() == roleType) {
-                    return role;
-                }
-            }
-        }
+    public Optional<Role> findRoleByUserIdAndRoleType(Long userId, RoleType roleType) {
 
-        return null;
+        return findAll().stream().
+                filter(role -> role.getUserId().equals(userId))
+                .filter(role -> role.getRoleType().equals(roleType))
+                .findFirst();
     }
 
     @Override
@@ -58,7 +55,12 @@ public class MemoryUserRoleRepository implements UserRoleRepository {
     }
 
     @Override
-    public Role remove(Long roleId) {
-        return store.remove(roleId);
+    public List<Role> findAll() {
+        return new ArrayList<>(store.values());
+    }
+
+    @Override
+    public Optional<Role> remove(Long roleId) {
+        return Optional.of(store.remove(roleId));
     }
 }

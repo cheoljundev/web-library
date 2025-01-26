@@ -4,6 +4,7 @@ import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.user.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BookRepository {
     /**
@@ -18,14 +19,16 @@ public interface BookRepository {
      * @param id : 책 id
      * @return Book
      */
-    Book findById(Long id);
+    Optional<Book> findById(Long id);
 
     /**
      * 이름으로 책을 찾음
      * @param name : 책 이름
      * @return Book
      */
-    Book findByName(String name);
+    Optional<Book> findByName(String name);
+
+    Optional<Book> findByIsbn(String isbn);
 
     /**
      * 모든 책 리턴
@@ -38,12 +41,10 @@ public interface BookRepository {
      * @param bookId : 삭제할 책 id
      * @return 삭제한 책 리턴
      */
-    Book remove(Long bookId);
+    Optional<Book> remove(Long bookId);
 
     /**
      * 모든 내용 삭제
      */
     void clearAll();
-
-    Book findByIsbn(String isbn);
 }

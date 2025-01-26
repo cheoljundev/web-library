@@ -3,6 +3,7 @@ package com.weblibrary.domain.user.repository;
 import com.weblibrary.domain.user.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository {
     /**
@@ -16,14 +17,14 @@ public interface UserRepository {
      * @param id : Long id
      * @return User
      */
-    User findById(Long id);
+    Optional<User> findById(Long id);
 
     /**
      * username으로 회원 찾기
      * @param username : String username
      * @return User
      */
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
     /**
      * 모든 유저 반환
@@ -36,7 +37,7 @@ public interface UserRepository {
      * @param userId : 삭제할 유저 id
      * @return 삭제한 유저 반환
      */
-    User remove(Long userId);
+    Optional<User> remove(Long userId);
 
     /**
      * 저장소 비우기
