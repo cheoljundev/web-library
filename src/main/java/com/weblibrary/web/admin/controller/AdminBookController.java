@@ -92,7 +92,7 @@ public class AdminBookController {
 
     @ResponseBody
     @DeleteMapping("/books/{bookId}")
-    public ResponseEntity<? extends JsonResponse> deleteBook(@SessionAttribute(name = "user", required = false) User user, @PathVariable("bookId") Long bookId) {
+    public ResponseEntity<JsonResponse> deleteBook(@SessionAttribute(name = "user", required = false) User user, @PathVariable("bookId") Long bookId) {
         if (adminUtils.isDefault(user)) {
             return new ResponseEntity<>(ErrorResponse.builder()
                     .code("roleError")
@@ -100,7 +100,7 @@ public class AdminBookController {
                     .build(), HttpStatus.FORBIDDEN);
         }
 
-        ResponseEntity<? extends JsonResponse> responseEntity = bookService.deleteBook(bookId)
+        return bookService.deleteBook(bookId)
                 .map(removed -> new ResponseEntity<JsonResponse>(JsonResponse.builder()
                         .message("정상 삭제되었습니다.")
                         .build(), HttpStatus.OK))
@@ -108,7 +108,6 @@ public class AdminBookController {
                         .message("삭제되지 않았습니다.")
                         .build(), HttpStatus.FORBIDDEN));
 
-        return responseEntity;
 
     }
 
@@ -133,14 +132,12 @@ public class AdminBookController {
             return validationUtils.handleValidationErrors(bindingResult);
         }
 
-        ResponseEntity<JsonResponse> responseEntity = adminService.modifyBook(bookId, book).map(book1 -> new ResponseEntity<JsonResponse>(JsonResponse.builder()
+        return adminService.modifyBook(bookId, book).map(book1 -> new ResponseEntity<JsonResponse>(JsonResponse.builder()
                         .message("정상 수정되었습니다.")
                         .build(), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<JsonResponse>(ErrorResponse.builder()
                         .message("정상 수정되지 않았습니다.")
                         .build(), HttpStatus.FORBIDDEN));
-
-        return responseEntity;
 
     }
 

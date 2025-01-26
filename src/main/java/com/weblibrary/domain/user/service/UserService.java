@@ -43,8 +43,10 @@ public class UserService {
      */
 
     public void login(HttpSession session, LoginUserDto loginUserDto) {
-        User user = findByUsername(loginUserDto.getUsername());
-        session.setAttribute("user", user);
+        findByUsername(loginUserDto.getUsername())
+                .ifPresent(user -> {
+                    session.setAttribute("user", user);
+                });
     }
 
     /**
@@ -53,7 +55,7 @@ public class UserService {
      * @param username : String
      * @return : User
      */
-    public User findByUsername(String username) {
+    public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 

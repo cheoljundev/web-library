@@ -102,23 +102,21 @@ public class AdminUsersController {
 
     @ResponseBody
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<JsonResponse> deleteUser(@SessionAttribute(name = "user", required = false) User user, @PathVariable("id") Long id) {
+    public ResponseEntity<? extends JsonResponse> deleteUser(@SessionAttribute(name = "user", required = false) User user, @PathVariable("id") Long id) {
         if (adminUtils.isDefault(user)) {
             return new ResponseEntity<>(ErrorResponse.builder()
                     .code("roleError")
                     .message("권한이 없습니다.")
                     .build(), HttpStatus.FORBIDDEN);
         }
-        User removed = adminService.deleteUser(id);
 
-        if (removed == null) {
-            return new ResponseEntity<>(ErrorResponse.builder()
-                    .message("찾을 수 없는 유저입니다.")
-                    .build(), HttpStatus.BAD_REQUEST);
-        }
+        return adminService.deleteUser(id)
+                .map(removed -> new ResponseEntity<JsonResponse>(JsonResponse.builder()
+                        .message("정상적으로 유저가 삭제되었습니다.")
+                        .build(), HttpStatus.OK)
+                ).orElseGet(() -> new ResponseEntity<JsonResponse>(ErrorResponse.builder()
+                        .message("찾을 수 없는 유저입니다.")
+                        .build(), HttpStatus.BAD_REQUEST));
 
-        return new ResponseEntity<>(JsonResponse.builder()
-                .message("정상적으로 유저가 삭제되었습니다.")
-                .build(), HttpStatus.OK);
     }
 }

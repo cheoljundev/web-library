@@ -78,7 +78,7 @@ public class AdminService {
                 .orElse(false); // userId에 해당하는 사용자가 없으면 false 반환
     }
 
-    public User deleteUser(Long userId) {
+    public Optional<User> deleteUser(Long userId) {
         return userRepository.remove(userId);
     }
 

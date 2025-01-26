@@ -27,13 +27,10 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User findByUsername(String username) {
-        for (User user : store.values()) {
-            if (user.getUsername().equals(username)) {
-                return user;
-            }
-        }
-        return null;
+    public Optional<User> findByUsername(String username) {
+        return findAll().stream()
+                .filter(user -> user.getUsername().equals(username))
+                .findFirst();
     }
 
     @Override
@@ -42,13 +39,8 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User remove(Long userId) {
-        return findById(userId)
-                .map(user -> {
-                    store.remove(userId);  // 사용자 제거
-                    return user;  // 제거된 사용자 반환
-                })
-                .orElse(null);
+    public Optional<User> remove(Long userId) {
+        return Optional.ofNullable(store.remove(userId));
     }
 
     @Override

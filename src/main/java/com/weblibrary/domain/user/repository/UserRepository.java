@@ -24,7 +24,7 @@ public interface UserRepository {
      * @param username : String username
      * @return User
      */
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
     /**
      * 모든 유저 반환
@@ -37,7 +37,7 @@ public interface UserRepository {
      * @param userId : 삭제할 유저 id
      * @return 삭제한 유저 반환
      */
-    User remove(Long userId);
+    Optional<User> remove(Long userId);
 
     /**
      * 저장소 비우기
