@@ -37,8 +37,7 @@ public class AdminUsersController {
         /* dto를 담을 list */
         List<SetUserDto> dtos = new ArrayList<>();
 
-        /* 찾은 유저 반복문 */
-        for (User user : findUsers) {
+        findUsers.forEach(user -> {
             log.debug("user={}", user);
 
             /* 찾은 유저의 가장 높은 RoleType 가져오기 */
@@ -56,7 +55,8 @@ public class AdminUsersController {
             log.debug("userDto={}", userDto);
 
             dtos.add(userDto);
-        }
+        });
+
         return dtos;
     }
 
