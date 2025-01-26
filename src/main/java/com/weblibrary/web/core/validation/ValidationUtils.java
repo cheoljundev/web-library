@@ -59,7 +59,7 @@ public class ValidationUtils {
         Map<String, String> errors = new HashMap<>();
 
         String errorMessage = messageSource.getMessage(
-                "not.found.book",
+                "not.found." + object,
                 null,
                 Locale.getDefault());
 
