@@ -8,7 +8,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +47,23 @@ public class ValidationUtils {
                     Locale.getDefault());
             errors.put(fieldError.getField(), errorMessage);
         }
+
+        return new ResponseEntity<>(ErrorResponse.builder()
+                .code("validation")
+                .message("validation 실패")
+                .errors(errors).build()
+                , HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseEntity<ErrorResponse> handleNotFoundErrors(String object) {
+        Map<String, String> errors = new HashMap<>();
+
+        String errorMessage = messageSource.getMessage(
+                "not.found.book",
+                null,
+                Locale.getDefault());
+
+        errors.put(object, errorMessage);
 
         return new ResponseEntity<>(ErrorResponse.builder()
                 .code("validation")

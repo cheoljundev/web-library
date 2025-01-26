@@ -1,5 +1,6 @@
 package com.weblibrary.web.user.controller;
 
+import com.weblibrary.domain.book.exception.NotFoundBookException;
 import com.weblibrary.web.core.dto.response.ErrorResponse;
 import com.weblibrary.web.core.dto.response.JsonResponse;
 import com.weblibrary.web.core.validation.ValidationUtils;
@@ -38,14 +39,16 @@ public class UserBookController {
     public ResponseEntity<JsonResponse> rent(HttpSession session, @PathVariable("bookId") Long bookId) {
         User user = (User) session.getAttribute("user");
 
-
+        // 로그인 체크
         if (user == null) {
             return new ResponseEntity<>(ErrorResponse.builder()
                     .message("로그인 해주세요.")
                     .build(), HttpStatus.FORBIDDEN);
         }
 
-        Book findBook = bookService.findBookById(bookId);
+        // Optional로 Book을 안전하게 처리
+        Book findBook = bookService.findBookById(bookId)
+                .orElseThrow(NotFoundBookException::new);
 
         log.debug("rent by user={}", user);
         log.debug("rent findBook={}", findBook);
@@ -80,7 +83,8 @@ public class UserBookController {
                     .build(), HttpStatus.FORBIDDEN);
         }
 
-        Book findBook = bookService.findBookById(bookId);
+        Book findBook = bookService.findBookById(bookId)
+                .orElseThrow(NotFoundBookException::new);
 
         log.debug("unRent by user={}", user);
         log.debug("unRent findBook={}", findBook);

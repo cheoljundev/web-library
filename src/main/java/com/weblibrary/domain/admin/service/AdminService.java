@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.weblibrary.domain.admin.model.RoleType.ADMIN;
 
@@ -75,12 +76,8 @@ public class AdminService {
         bookService.addBook(newBookDto);
     }
 
-    public Book deleteBook(Long bookId) {
-        return bookService.deleteBook(bookId);
-    }
-
-    public Book modifyBook(Long bookId, ModifyBookDto modifyBookDto) {
-        return bookService.findBookById(bookId).modify(modifyBookDto);
+    public Optional<Book> modifyBook(Long bookId, ModifyBookDto modifyBookDto) {
+        return bookService.findBookById(bookId).map(book -> book.modify(modifyBookDto));
     }
 
     public boolean isAdmin(Long userId) {
