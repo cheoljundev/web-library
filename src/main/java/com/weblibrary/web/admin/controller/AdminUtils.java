@@ -15,6 +15,6 @@ public class AdminUtils {
 
     public boolean isDefault(User user) {
         log.debug("user={}", user);
-        return user == null || !adminService.isAdmin(user.getId());
+        return !adminService.isAdmin(user.getId());
     }
 }

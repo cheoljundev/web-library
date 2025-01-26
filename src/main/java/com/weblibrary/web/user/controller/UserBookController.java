@@ -1,16 +1,14 @@
 package com.weblibrary.web.user.controller;
 
 import com.weblibrary.domain.book.exception.NotFoundBookException;
-import com.weblibrary.web.core.dto.response.ErrorResponse;
-import com.weblibrary.web.core.dto.response.JsonResponse;
-import com.weblibrary.web.core.validation.ValidationUtils;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.dto.BookRentDto;
 import com.weblibrary.domain.book.service.BookService;
+import com.weblibrary.domain.user.model.User;
 import com.weblibrary.web.book.validation.BookRentValidator;
 import com.weblibrary.web.book.validation.BookUnRentValidator;
-import com.weblibrary.domain.user.model.User;
-import jakarta.servlet.http.HttpSession;
+import com.weblibrary.web.core.dto.response.JsonResponse;
+import com.weblibrary.web.core.validation.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -34,13 +32,6 @@ public class UserBookController {
 
     @PostMapping("/{bookId}/rent")
     public ResponseEntity<JsonResponse> rent(@SessionAttribute(name = "user", required = false) User user, @PathVariable("bookId") Long bookId) {
-
-        // 로그인 체크
-        if (user == null) {
-            return new ResponseEntity<>(ErrorResponse.builder()
-                    .message("로그인 해주세요.")
-                    .build(), HttpStatus.FORBIDDEN);
-        }
 
         // Optional로 Book을 안전하게 처리
         Book findBook = bookService.findBookById(bookId)
@@ -71,12 +62,6 @@ public class UserBookController {
 
     @PostMapping("/{bookId}/unrent")
     public ResponseEntity<JsonResponse> unRent(@SessionAttribute(name = "user", required = false) User user, @PathVariable("bookId") Long bookId) {
-
-        if (user == null) {
-            return new ResponseEntity<>(ErrorResponse.builder()
-                    .message("로그인 해주세요.")
-                    .build(), HttpStatus.FORBIDDEN);
-        }
 
         Book findBook = bookService.findBookById(bookId)
                 .orElseThrow(NotFoundBookException::new);

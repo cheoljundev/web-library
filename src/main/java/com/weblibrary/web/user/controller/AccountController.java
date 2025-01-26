@@ -18,10 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 유저 회원가입 컨트롤러, GET, POST에 따라 다르게 동작.
@@ -74,7 +71,8 @@ public class AccountController {
 
     /* 로그인 처리하기 */
     @PostMapping("/login")
-    public String login(HttpSession session, @Validated @ModelAttribute("user") LoginUserDto user, BindingResult bindingResult) {
+    public String login(HttpSession session, @Validated @ModelAttribute("user") LoginUserDto user, BindingResult bindingResult,
+                        @RequestParam(value = "redirectUrl", defaultValue = "/") String redirectUrl) {
 
         log.debug("objectName={}", bindingResult.getObjectName()); // loginUserDto로 나오고 있었다. @ModelAttribute("user")로 해결
         log.debug("target={}", bindingResult.getTarget()); // 정상적으로 LoginUserDto 인스턴스를 찾아옴.
@@ -94,7 +92,7 @@ public class AccountController {
         userService.login(session, user);
 
         /* 로그인 후에 홈으로 리다이렉트 */
-        return "redirect:/";
+        return "redirect:" + redirectUrl;
 
     }
 
