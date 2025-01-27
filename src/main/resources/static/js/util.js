@@ -28,6 +28,7 @@ export const fetchRequest = async (url, method, body = null) => {
         headers: {
             "Content-Type": "application/json",
         },
+        redirect : "m"
     };
 
     if (body) {
@@ -40,15 +41,6 @@ export const fetchRequest = async (url, method, body = null) => {
     const contentType = response.headers.get("Content-Type");
     if (contentType.startsWith("text/html")) {
         location.href = response.url;
-    }
-
-    // 3xx 상태 코드를 확인하고, 리디렉션을 수동으로 처리
-    if (response.status >= 300 && response.status < 400) {
-        const redirectUrl = response.headers.get("Location");
-        if (redirectUrl) {
-            window.location.href = redirectUrl;  // 리디렉션 URL로 이동
-        }
-        return;  // 리디렉션 후 종료
     }
 
     // 리디렉션이 아닌 다른 응답 처리
