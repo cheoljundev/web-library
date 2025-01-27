@@ -9,7 +9,7 @@
 <body>
 <div id="content">
     <section id="user-info" class="mb-4">
-        <p th:if="${session.user != null}" class="welcome-message" th:text="#{user.welcome(${session.user.username})}">
+        <p th:if="${session.loginUser != null}" class="welcome-message" th:text="#{user.welcome(${session.loginUser.username})}">
             안녕하세요, username님!
         </p>
     </section>

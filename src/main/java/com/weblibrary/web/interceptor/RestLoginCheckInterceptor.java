@@ -1,6 +1,7 @@
 package com.weblibrary.web.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.weblibrary.web.SessionConst;
 import com.weblibrary.web.exception.UnauthorizedAccessException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,7 +14,7 @@ public class RestLoginCheckInterceptor implements HandlerInterceptor {
         ObjectMapper mapper = new ObjectMapper();
 
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user") == null) {
+        if (session == null || session.getAttribute(SessionConst.LOGIN_USER) == null) {
             throw new UnauthorizedAccessException("로그인해주세요.");
         }
         return true;

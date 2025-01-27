@@ -5,6 +5,7 @@ import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.dto.BookRentDto;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.user.model.User;
+import com.weblibrary.web.argumentresolver.Login;
 import com.weblibrary.web.book.validation.BookRentValidator;
 import com.weblibrary.web.book.validation.BookUnRentValidator;
 import com.weblibrary.web.response.JsonResponse;
@@ -31,7 +32,7 @@ public class UserBookController {
     private final ValidationUtils validationUtils;
 
     @PostMapping("/{bookId}/rent")
-    public ResponseEntity<JsonResponse> rent(@SessionAttribute(name = "user", required = false) User user, @PathVariable("bookId") Long bookId) {
+    public ResponseEntity<JsonResponse> rent(@Login User user, @PathVariable("bookId") Long bookId) {
 
         // Optional로 Book을 안전하게 처리
         Book findBook = bookService.findBookById(bookId)
@@ -61,7 +62,7 @@ public class UserBookController {
     }
 
     @PostMapping("/{bookId}/unrent")
-    public ResponseEntity<JsonResponse> unRent(@SessionAttribute(name = "user", required = false) User user, @PathVariable("bookId") Long bookId) {
+    public ResponseEntity<JsonResponse> unRent(@Login User user, @PathVariable("bookId") Long bookId) {
 
         Book findBook = bookService.findBookById(bookId)
                 .orElseThrow(NotFoundBookException::new);

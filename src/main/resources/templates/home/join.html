@@ -7,7 +7,7 @@
 </head>
 <body>
 <div id="content" class="w-25 mx-auto">
-    <section id="login" th:if="${session.user == null}">
+    <section id="login" th:if="${session.loginUser == null}">
         <form action="join" th:action method="post" th:object="${user}">
             <legend th:text="#{menu.login}">로그인</legend>
             <div th:if="${#fields.hasGlobalErrors()}">
@@ -34,7 +34,7 @@
             <button type="submit" class="btn btn-primary" th:text="#{menu.join}">Join</button>
         </form>
     </section>
-    <section id="already" th:if="${session.user != null}">
+    <section id="already" th:if="${session.loginUser != null}">
         <div class="error-container">
             <p class="error-message" th:text="#{user.already.title}">이미 로그인한 유저입니다.</p>
             <p th:text="#{user.already.message}">이미 로그인한 유저입니다. 홈으로 이동하세요.</p>

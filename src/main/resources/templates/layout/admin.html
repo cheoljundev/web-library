@@ -53,7 +53,7 @@
 <main class="container-sm my-5">
     <header class="mb-4">
         <h1 th:text="#{admin.title}">관리자 페이지</h1>
-        <p th:text="#{admin.welcome(${session.user.username})}">안녕하세요, 관리자 관리자명님!</p>
+        <p th:text="#{admin.welcome(${session.loginUser.username})}">안녕하세요, 관리자 관리자명님!</p>
     </header>
     <section id="content" th:replace="${content}">
     </section>
