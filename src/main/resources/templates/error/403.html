@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/common :: common_header(~{::title}, ~{::link ?: null}, ~{::script ?: null}, ~{::#content})}">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title th:text="#{error.title}">oops</title>
+    <link rel="stylesheet" href="css/access-denied.css" th:href="@{/css/access-denied.css}">
+</head>
+<body>
+<div id="content">
+    <div class="error-container">
+        <div class="error-code">403</div>
+        <p class="error-message" th:text="#{error.title}">oops</p>
+        <p th:text="#{error.description.403}">오류 설명</p>
+        <a href="/" th:href="@{/login(redirectUrl=${redirectUrl})}" class="btn btn-primary mt-3" th:text="#{button.user.login}">로그인으로 이동</a>
+    </div>
+</div>
+</body>
+</html>

@@ -13,6 +13,7 @@ public class AccessDeniedController {
     @GetMapping("/access-denied")
     public String accessDenied(@RequestParam(name = "redirectUrl", defaultValue = "/") String redirectUrl, Model model) {
         model.addAttribute("redirectUrl", redirectUrl);
-        return "access-denied";
+        return "error/403";
     }
+
 }
