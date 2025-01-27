@@ -29,9 +29,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new SsrLoginCheckInterceptor())
                 .order(1)
-                .addPathPatterns("/**")
-                .excludePathPatterns("/", "/login", "/join", "/signout", "/css/*", "/js/*", "/access-denied", "/*.ico", "/error")
-                .excludePathPatterns("/books/**", "/users/**");
+                .addPathPatterns("/admin/**");
 
         registry.addInterceptor(new RestLoginCheckInterceptor())
                 .order(2)
