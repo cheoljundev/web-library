@@ -1,5 +1,6 @@
 package com.weblibrary.web.user.controller;
 
+import com.weblibrary.web.argumentresolver.Login;
 import com.weblibrary.web.response.ErrorResponse;
 import com.weblibrary.web.response.JsonResponse;
 import com.weblibrary.domain.user.dto.JoinUserDto;
@@ -97,7 +98,7 @@ public class AccountController {
     }
 
     @PostMapping("/signout")
-    public ResponseEntity<JsonResponse> signOut(HttpServletRequest request, @SessionAttribute(name = "user", required = false) User user) {
+    public ResponseEntity<JsonResponse> signOut(HttpServletRequest request, @Login User user) {
         HttpSession session = request.getSession(false);
 
         log.debug("login user={}", user);

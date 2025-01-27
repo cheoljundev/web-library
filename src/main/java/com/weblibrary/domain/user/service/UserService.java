@@ -8,6 +8,7 @@ import com.weblibrary.domain.user.dto.LoginUserDto;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.MemoryUserRepository;
 import com.weblibrary.domain.user.repository.UserRepository;
+import com.weblibrary.web.SessionConst;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,7 @@ public class UserService {
     public void login(HttpSession session, LoginUserDto loginUserDto) {
         findByUsername(loginUserDto.getUsername())
                 .ifPresent(user -> {
-                    session.setAttribute("user", user);
+                    session.setAttribute(SessionConst.LOGIN_USER, user);
                 });
     }
 
