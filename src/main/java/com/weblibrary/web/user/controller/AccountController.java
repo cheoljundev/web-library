@@ -1,7 +1,7 @@
 package com.weblibrary.web.user.controller;
 
-import com.weblibrary.web.core.dto.response.ErrorResponse;
-import com.weblibrary.web.core.dto.response.JsonResponse;
+import com.weblibrary.web.response.ErrorResponse;
+import com.weblibrary.web.response.JsonResponse;
 import com.weblibrary.domain.user.dto.JoinUserDto;
 import com.weblibrary.domain.user.dto.LoginUserDto;
 import com.weblibrary.domain.user.model.User;

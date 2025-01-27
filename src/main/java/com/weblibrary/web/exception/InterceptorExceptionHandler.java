@@ -1,6 +1,6 @@
 package com.weblibrary.web.exception;
 
-import com.weblibrary.web.core.dto.response.ErrorResponse;
+import com.weblibrary.web.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

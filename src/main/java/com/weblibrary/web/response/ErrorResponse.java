@@ -1,4 +1,4 @@
-package com.weblibrary.web.core.dto.response;
+package com.weblibrary.web.response;
 
 import lombok.Data;
 import lombok.experimental.SuperBuilder;

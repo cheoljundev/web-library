@@ -1,7 +1,6 @@
 package com.weblibrary.web.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.weblibrary.web.core.dto.response.ErrorResponse;
 import com.weblibrary.web.exception.UnauthorizedAccessException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

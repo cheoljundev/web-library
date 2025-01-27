@@ -1,7 +1,7 @@
-package com.weblibrary.web.core.validation;
+package com.weblibrary.web.validation;
 
-import com.weblibrary.web.core.dto.response.ErrorResponse;
-import com.weblibrary.web.core.dto.response.JsonResponse;
+import com.weblibrary.web.response.ErrorResponse;
+import com.weblibrary.web.response.JsonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;

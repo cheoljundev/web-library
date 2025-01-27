@@ -1,8 +1,8 @@
-package com.weblibrary.web.core.validation;
+package com.weblibrary.web.validation;
 
 import com.weblibrary.domain.book.exception.NotFoundBookException;
-import com.weblibrary.web.core.dto.response.ErrorResponse;
-import com.weblibrary.web.core.dto.response.JsonResponse;
+import com.weblibrary.web.response.ErrorResponse;
+import com.weblibrary.web.response.JsonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
