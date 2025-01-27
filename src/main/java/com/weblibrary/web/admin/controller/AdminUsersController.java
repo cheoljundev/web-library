@@ -22,7 +22,6 @@ import java.util.List;
 public class AdminUsersController {
 
     private final AdminService adminService;
-    private final AdminUtils adminUtils;
 
     @ModelAttribute("roleTypes")
     public RoleType[] roleTypes() {
@@ -61,23 +60,13 @@ public class AdminUsersController {
     }
 
     @GetMapping("/admin/user")
-    public String adminUserPage(@SessionAttribute(name = "user", required = false) User user) {
-        if (adminUtils.isDefault(user)) {
-            return "access-denied";
-        }
+    public String adminUserPage() {
         return "admin/user";
     }
 
     @ResponseBody
     @PatchMapping("/users/{id}/role")
-    public ResponseEntity<JsonResponse> setRole(@SessionAttribute(name = "user", required = false) User user, @PathVariable("id") Long id, @RequestBody RoleType roleType) {
-
-        if (adminUtils.isDefault(user)) {
-            return new ResponseEntity<>(ErrorResponse.builder()
-                    .code("roleError")
-                    .message("권한이 없습니다.")
-                    .build(), HttpStatus.FORBIDDEN);
-        }
+    public ResponseEntity<JsonResponse> setRole(@PathVariable("id") Long id, @RequestBody RoleType roleType) {
 
         log.debug("roleType={}", roleType);
 
@@ -102,13 +91,7 @@ public class AdminUsersController {
 
     @ResponseBody
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<? extends JsonResponse> deleteUser(@SessionAttribute(name = "user", required = false) User user, @PathVariable("id") Long id) {
-        if (adminUtils.isDefault(user)) {
-            return new ResponseEntity<>(ErrorResponse.builder()
-                    .code("roleError")
-                    .message("권한이 없습니다.")
-                    .build(), HttpStatus.FORBIDDEN);
-        }
+    public ResponseEntity<JsonResponse> deleteUser(@PathVariable("id") Long id) {
 
         return adminService.deleteUser(id)
                 .map(removed -> new ResponseEntity<JsonResponse>(JsonResponse.builder()
