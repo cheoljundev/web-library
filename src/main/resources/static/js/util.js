@@ -28,7 +28,6 @@ export const fetchRequest = async (url, method, body = null) => {
         headers: {
             "Content-Type": "application/json",
         },
-        redirect : "m"
     };
 
     if (body) {
@@ -41,6 +40,7 @@ export const fetchRequest = async (url, method, body = null) => {
     const contentType = response.headers.get("Content-Type");
     if (contentType.startsWith("text/html")) {
         location.href = response.url;
+        return { redirected: true }; // 리다이렉트를 명시적으로 반환
     }
 
     // 리디렉션이 아닌 다른 응답 처리
@@ -67,6 +67,6 @@ export const handleError = (error, errorContainer) => {
             alert(error.response.message);
         }
     } else {
-        console.log(error.message);
+        console.log(error);
     }
 };
