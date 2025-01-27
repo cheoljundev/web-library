@@ -91,7 +91,7 @@ public class AccountController {
         /* 검증이 끝나면, 컨트롤러에서 로그인 처리 */
         userService.login(session, user);
 
-        /* 로그인 후에 홈으로 리다이렉트 */
+        /* 로그인 후에 redirectUrl로 리다이렉트 */
         return "redirect:" + redirectUrl;
 
     }
