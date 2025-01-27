@@ -12,6 +12,10 @@ const setRole = async btn => {
 
     try {
         const data = await fetchRequest(`/users/${id}/role`, "PATCH", roleType);
+        if (data.redirected) {
+            console.log("페이지가 리다이렉트되었습니다.");
+            return;
+        }
         alert("결과 : " + data.message);
         location.reload();
     } catch (error) {
@@ -22,6 +26,10 @@ const setRole = async btn => {
 const deleteUser = async (id) => {
     try {
         const data = await fetchRequest(`/users/${id}`, "DELETE");
+        if (data.redirected) {
+            console.log("페이지가 리다이렉트되었습니다.");
+            return;
+        }
         alert("결과 : " + data.message);
         location.reload();
     } catch (error) {

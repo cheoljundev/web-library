@@ -14,7 +14,7 @@
         <div class="error-code">403</div>
         <p class="error-message" th:text="#{access-denied.title}">권한이 없습니다</p>
         <p th:text="#{access-denied.message}">이 페이지에 접근할 수 있는 권한이 없습니다.</p>
-        <a href="/" class="btn btn-primary mt-3" th:text="#{button.user.home}">홈으로 이동</a>
+        <a href="/" th:href="@{/login(redirectUrl=${redirectUrl})}" class="btn btn-primary mt-3" th:text="#{button.user.login}">홈으로 이동</a>
     </div>
 </div>
 </body>

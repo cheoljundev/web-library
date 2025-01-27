@@ -20,7 +20,6 @@ const handleValidationError = (error, errorContainer) => {
     });
 }
 
-// 공통 fetch 요청 함수
 export const fetchRequest = async (url, method, body = null) => {
     resetErrorFields();
 
@@ -37,6 +36,14 @@ export const fetchRequest = async (url, method, body = null) => {
 
     const response = await fetch(url, options);
 
+    // 페이지가 리다이렉트된 경우 페이지 이동
+    const contentType = response.headers.get("Content-Type");
+    if (contentType.startsWith("text/html")) {
+        location.href = response.url;
+        return { redirected: true }; // 리다이렉트를 명시적으로 반환
+    }
+
+    // 리디렉션이 아닌 다른 응답 처리
     if (!response.ok) {
         const responseJson = await response.json();
         const error = new Error(`HTTP Error! status: ${response.status}, message: ${responseJson}`);
@@ -47,6 +54,7 @@ export const fetchRequest = async (url, method, body = null) => {
 
     return await response.json();
 };
+
 
 // 공통 에러 처리 함수
 export const handleError = (error, errorContainer) => {
@@ -59,6 +67,6 @@ export const handleError = (error, errorContainer) => {
             alert(error.response.message);
         }
     } else {
-        console.log(error.message)
+        console.log(error);
     }
 };

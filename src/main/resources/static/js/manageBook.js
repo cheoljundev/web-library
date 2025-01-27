@@ -6,6 +6,10 @@ const addBook = async errorContainer => {
 
     try {
         const data = await fetchRequest(`/books/add`, "POST", {bookName, isbn});
+        if (data.redirected) {
+            console.log("페이지가 리다이렉트되었습니다.");
+            return;
+        }
         alert("결과 : " + data.message);
         location.reload();
     } catch (e) {
@@ -17,6 +21,10 @@ const deleteBook = async id => {
 
     try {
         const data = await fetchRequest(`/books/${id}`, "DELETE");
+        if (data.redirected) {
+            console.log("페이지가 리다이렉트되었습니다.");
+            return;
+        }
         alert("결과 : " + data.message);
         location.reload();
     } catch(e) {
@@ -42,6 +50,10 @@ const modifyBook = async errorContainer => {
 
     try {
         const data = await fetchRequest(`/books/${id}`, "PUT", {id, bookName, isbn});
+        if (data.redirected) {
+            console.log("페이지가 리다이렉트되었습니다.");
+            return;
+        }
         alert("결과 : " + data.message);
         location.reload();
     } catch (e) {
