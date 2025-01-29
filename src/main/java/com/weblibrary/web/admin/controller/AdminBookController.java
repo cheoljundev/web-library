@@ -7,12 +7,10 @@ import com.weblibrary.domain.book.model.dto.NewBookDto;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.web.book.validation.BookAddValidator;
 import com.weblibrary.web.book.validation.BookModifyValidator;
-import com.weblibrary.web.response.ErrorResponse;
 import com.weblibrary.web.response.JsonResponse;
-import com.weblibrary.web.validation.ValidationUtils;
+import com.weblibrary.web.response.ErrorResponseUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -30,7 +28,7 @@ public class AdminBookController {
     private final BookAddValidator bookAddValidator;
     private final BookModifyValidator bookModifyValidator;
     private final BookService bookService;
-    private final ValidationUtils validationUtils;
+    private final ErrorResponseUtils errorResponseUtils;
 
     @ModelAttribute("books")
     public List<Book> books() {
@@ -68,29 +66,23 @@ public class AdminBookController {
         if (bindingResult.hasErrors()) {
 
             log.debug("errors={}", bindingResult);
-            return validationUtils.handleValidationErrors(bindingResult);
+            return errorResponseUtils.handleValidationErrors(bindingResult);
         }
 
         adminService.addBook(book);
 
-        return new ResponseEntity<>(JsonResponse.builder()
+        return ResponseEntity.ok().body(JsonResponse.builder()
                 .message("정상 등록되었습니다.")
-                .build(), HttpStatus.OK);
+                .build());
     }
 
     @ResponseBody
     @DeleteMapping("/books/{bookId}")
-    public ResponseEntity<JsonResponse> deleteBook(@PathVariable("bookId") Long bookId) {
-
-        return bookService.deleteBook(bookId)
-                .map(removed -> new ResponseEntity<JsonResponse>(JsonResponse.builder()
-                        .message("정상 삭제되었습니다.")
-                        .build(), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<JsonResponse>(ErrorResponse.builder()
-                        .message("삭제되지 않았습니다.")
-                        .build(), HttpStatus.FORBIDDEN));
-
-
+    public JsonResponse deleteBook(@PathVariable("bookId") Long bookId) {
+        bookService.deleteBook(bookId);
+        return JsonResponse.builder()
+                .message("정상 삭제되었습니다.")
+                .build();
     }
 
     @ResponseBody
@@ -104,16 +96,13 @@ public class AdminBookController {
 
         if (bindingResult.hasErrors()) {
             log.debug("errors={}", bindingResult);
-            return validationUtils.handleValidationErrors(bindingResult);
+            return errorResponseUtils.handleValidationErrors(bindingResult);
         }
 
-        return adminService.modifyBook(bookId, book).map(book1 -> new ResponseEntity<JsonResponse>(JsonResponse.builder()
-                        .message("정상 수정되었습니다.")
-                        .build(), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<JsonResponse>(ErrorResponse.builder()
-                        .message("정상 수정되지 않았습니다.")
-                        .build(), HttpStatus.FORBIDDEN));
+        adminService.modifyBook(bookId, book);
 
+        return ResponseEntity.ok().body(JsonResponse.builder()
+                .message("정상 수정되었습니다.")
+                .build());
     }
-
 }

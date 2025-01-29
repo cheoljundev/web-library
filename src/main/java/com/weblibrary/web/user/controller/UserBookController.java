@@ -9,14 +9,16 @@ import com.weblibrary.web.argumentresolver.Login;
 import com.weblibrary.web.book.validation.BookRentValidator;
 import com.weblibrary.web.book.validation.BookUnRentValidator;
 import com.weblibrary.web.response.JsonResponse;
-import com.weblibrary.web.validation.ValidationUtils;
+import com.weblibrary.web.response.ErrorResponseUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 도서 대출 컨트롤러
@@ -29,7 +31,7 @@ public class UserBookController {
     private final BookService bookService;
     private final BookRentValidator bookRentValidator;
     private final BookUnRentValidator bookUnRentValidator;
-    private final ValidationUtils validationUtils;
+    private final ErrorResponseUtils errorResponseUtils;
 
     @PostMapping("/{bookId}/rent")
     public ResponseEntity<JsonResponse> rent(@Login User user, @PathVariable("bookId") Long bookId) {
@@ -51,14 +53,14 @@ public class UserBookController {
 
         if (bindingResult.hasErrors()) {
             log.debug("errors={}", bindingResult);
-            return validationUtils.handleValidationErrors(bindingResult);
+            return errorResponseUtils.handleValidationErrors(bindingResult);
         }
 
         user.rent(findBook);
 
-        return new ResponseEntity<>(JsonResponse.builder()
+        return ResponseEntity.ok().body(JsonResponse.builder()
                 .message("정상 대출되었습니다.")
-                .build(), HttpStatus.OK);
+                .build());
     }
 
     @PostMapping("/{bookId}/unrent")
@@ -80,14 +82,14 @@ public class UserBookController {
 
         if (bindingResult.hasErrors()) {
             log.debug("errors={}", bindingResult);
-            return validationUtils.handleValidationErrors(bindingResult);
+            return errorResponseUtils.handleValidationErrors(bindingResult);
         }
 
         user.unRent(findBook);
 
-        return new ResponseEntity<>(JsonResponse.builder()
+        return ResponseEntity.ok().body(JsonResponse.builder()
                 .message("정상 반납되었습니다.")
-                .build(), HttpStatus.OK);
+                .build());
 
     }
 

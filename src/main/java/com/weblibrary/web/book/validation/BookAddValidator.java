@@ -36,6 +36,6 @@ public class BookAddValidator implements Validator {
     }
 
     private boolean isDuplicated(String isbn) {
-        return bookService.findBookByIsbn(isbn) != null;
+        return bookService.findBookByIsbn(isbn).isPresent();
     }
 }

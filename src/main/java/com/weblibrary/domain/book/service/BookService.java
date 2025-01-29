@@ -1,5 +1,6 @@
 package com.weblibrary.domain.book.service;
 
+import com.weblibrary.domain.book.exception.NotFoundBookException;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.dto.NewBookDto;
 import com.weblibrary.domain.book.repository.BookRepository;
@@ -18,8 +19,8 @@ public class BookService {
         bookRepository.save(newBookDto.getBookName(), newBookDto.getIsbn());
     }
 
-    public Optional<Book> deleteBook(Long bookId) {
-        return bookRepository.remove(bookId);
+    public void deleteBook(Long bookId) {
+        bookRepository.remove(bookId).orElseThrow(NotFoundBookException::new);
     }
 
     public Optional<Book> findBookById(Long id) {

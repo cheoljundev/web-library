@@ -1,11 +1,8 @@
-package com.weblibrary.web.validation;
+package com.weblibrary.web.response;
 
-import com.weblibrary.web.response.ErrorResponse;
-import com.weblibrary.web.response.JsonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
@@ -20,7 +17,7 @@ import java.util.Map;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ValidationUtils {
+public class ErrorResponseUtils {
 
     /* 메시지 소스 빈 DI */
     private final MessageSource messageSource;
@@ -48,11 +45,10 @@ public class ValidationUtils {
             errors.put(fieldError.getField(), errorMessage);
         }
 
-        return new ResponseEntity<>(ErrorResponse.builder()
+        return ResponseEntity.badRequest().body(ErrorResponse.builder()
                 .code("validation")
                 .message("validation 실패")
-                .errors(errors).build()
-                , HttpStatus.BAD_REQUEST);
+                .errors(errors).build());
     }
 
     public ResponseEntity<ErrorResponse> handleNotFoundErrors(String object) {
@@ -65,10 +61,9 @@ public class ValidationUtils {
 
         errors.put(object, errorMessage);
 
-        return new ResponseEntity<>(ErrorResponse.builder()
+        return ResponseEntity.badRequest().body(ErrorResponse.builder()
                 .code("validation")
                 .message("validation 실패")
-                .errors(errors).build()
-                , HttpStatus.BAD_REQUEST);
+                .errors(errors).build());
     }
 }

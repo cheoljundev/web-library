@@ -4,7 +4,7 @@ import com.weblibrary.domain.admin.model.Role;
 import com.weblibrary.domain.admin.model.RoleType;
 import com.weblibrary.domain.admin.repository.MemoryUserRoleRepository;
 import com.weblibrary.domain.admin.repository.UserRoleRepository;
-import com.weblibrary.domain.book.model.Book;
+import com.weblibrary.domain.book.exception.NotFoundBookException;
 import com.weblibrary.domain.book.model.dto.ModifyBookDto;
 import com.weblibrary.domain.book.model.dto.NewBookDto;
 import com.weblibrary.domain.book.service.BookService;
@@ -43,7 +43,7 @@ public class AdminService {
         /* 가장 높은 권한 순서로 sort <- Comparable<Role> */
         roles.sort(null);
 
-         /* 첫번째 (가장 높은 권한을 반환) Role의 RoleType 반환 */
+        /* 첫번째 (가장 높은 권한을 반환) Role의 RoleType 반환 */
         return roles.get(0).getRoleType();
     }
 
@@ -90,8 +90,8 @@ public class AdminService {
         bookService.addBook(newBookDto);
     }
 
-    public Optional<Book> modifyBook(Long bookId, ModifyBookDto modifyBookDto) {
-        return bookService.findBookById(bookId).map(book -> book.modify(modifyBookDto));
+    public void modifyBook(Long bookId, ModifyBookDto modifyBookDto) {
+        bookService.findBookById(bookId).map(book -> book.modify(modifyBookDto)).orElseThrow(NotFoundBookException::new);
     }
 
     public boolean isAdmin(Long userId) {
