@@ -3,9 +3,14 @@ import {fetchRequest, handleError} from "./util.js";
 const addBook = async errorContainer => {
     const bookName = document.getElementById("addBookName").value;
     const isbn = document.getElementById("addBookIsbn").value;
+    const coverImage = document.getElementById("addBookCoverImage").files[0]; // 파일 선택
+    const body = new FormData();
+    body.append("bookName", bookName);
+    body.append("isbn", isbn);
+    body.append("coverImage", coverImage);
 
     try {
-        const data = await fetchRequest(`/books/add`, "POST", {bookName, isbn});
+        const data = await fetchRequest(`/books/add`, "POST", body);
         if (data.redirected) {
             console.log("페이지가 리다이렉트되었습니다.");
             return;

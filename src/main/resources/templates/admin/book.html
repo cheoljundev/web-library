@@ -10,14 +10,22 @@
     <section class="section">
         <h2 th:text="#{admin.manage.book.title}">도서 관리</h2>
         <div class="mb-3" th:object="${addBook}" id="addBook">
+            <label for="addBookName" th:text="#{label.bookName}">책 이름</label>
             <input type="text" class="form-control mb-2" id="addBookName" th:field="*{bookName}" th:placeholder="#{placeholder.bookName}" placeholder="도서 이름 입력">
             <div class="field-error bookName">
                 <p>책 이름 오류</p>
             </div>
+            <label for="addBookIsbn" th:text="#{label.isbn}">isbn</label>
             <input type="text" class="form-control mb-2" id="addBookIsbn" th:field="*{isbn}" th:placeholder="#{placeholder.isbn}" placeholder="ISBN 입력">
             <div class="field-error isbn">
                 <p>isbn 오류</p>
             </div>
+            <label for="addBookCoverImage" th:text="#{label.coverImage}">커버 이미지</label>
+            <input type="file" th:field="*{coverImage}" id="addBookCoverImage">
+            <div class="field-error coverImage">
+                <p>coverImage 오류</p>
+            </div>
+            <br>
             <button class="btn btn-success" onclick="addBook('addBook')" th:text="#{button.add}">등록</button>
         </div>
         <ul class="list-group" th:if="${books != null}">

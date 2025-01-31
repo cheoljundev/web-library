@@ -6,7 +6,7 @@ import com.weblibrary.domain.admin.repository.MemoryUserRoleRepository;
 import com.weblibrary.domain.admin.repository.UserRoleRepository;
 import com.weblibrary.domain.book.exception.NotFoundBookException;
 import com.weblibrary.domain.book.model.dto.ModifyBookDto;
-import com.weblibrary.domain.book.model.dto.NewBookDto;
+import com.weblibrary.domain.book.model.dto.NewBookForm;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
@@ -86,8 +86,8 @@ public class AdminService {
         return userRepository.findAll();
     }
 
-    public void addBook(NewBookDto newBookDto) {
-        bookService.addBook(newBookDto);
+    public void addBook(NewBookForm newBookForm) {
+        bookService.addBook(newBookForm);
     }
 
     public void modifyBook(Long bookId, ModifyBookDto modifyBookDto) {

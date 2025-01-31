@@ -3,7 +3,7 @@ package com.weblibrary.web.admin.controller;
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.dto.ModifyBookDto;
-import com.weblibrary.domain.book.model.dto.NewBookDto;
+import com.weblibrary.domain.book.model.dto.NewBookForm;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.web.book.validation.BookAddValidator;
 import com.weblibrary.web.book.validation.BookModifyValidator;
@@ -13,9 +13,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -36,8 +38,8 @@ public class AdminBookController {
     }
 
     @ModelAttribute("addBook")
-    public NewBookDto newBookModel() {
-        return new NewBookDto();
+    public NewBookForm newBookForm() {
+        return new NewBookForm();
     }
 
     @ModelAttribute("modifyBook")
@@ -52,10 +54,14 @@ public class AdminBookController {
 
     @ResponseBody
     @PostMapping("/books/add")
-    public ResponseEntity<JsonResponse> addBook(@Validated @RequestBody NewBookDto book, BindingResult bindingResult) {
+    public ResponseEntity<JsonResponse> addBook(@RequestParam(required = false) String bookName,
+                                                @RequestParam(required = false) String isbn,
+                                                @RequestParam(required = false) MultipartFile coverImage) {
 
-        log.debug("bindingResult.objectName={}", bindingResult.getObjectName());
+        NewBookForm book = new NewBookForm(bookName, isbn, coverImage);
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(book, "newBookForm");
         log.debug("bindingResult.target={}", bindingResult.getTarget());
+        log.debug("bindingResult.objectName={}", bindingResult.getObjectName());
 
         log.debug("book={}", book);
         log.debug("book.bookName={}", book.getBookName());
@@ -64,7 +70,6 @@ public class AdminBookController {
         bookAddValidator.validate(book, bindingResult);
 
         if (bindingResult.hasErrors()) {
-
             log.debug("errors={}", bindingResult);
             return errorResponseUtils.handleValidationErrors(bindingResult);
         }
