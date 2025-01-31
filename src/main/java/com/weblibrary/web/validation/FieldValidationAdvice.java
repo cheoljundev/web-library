@@ -2,6 +2,7 @@ package com.weblibrary.web.validation;
 
 import com.weblibrary.web.response.ErrorResponseUtils;
 import com.weblibrary.web.response.JsonResponse;
+import jakarta.validation.UnexpectedTypeException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

@@ -1,21 +1,23 @@
 package com.weblibrary.domain.book.model;
 
-import com.weblibrary.domain.book.model.dto.ModifyBookDto;
 import com.weblibrary.domain.user.model.User;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @ToString
+@RequiredArgsConstructor
 public class Book {
-    private final Long id;
+    @Setter
+    private Long id;
     private String name;
     private String isbn;
     private boolean isRental;
     private User rentedBy;
 
-    public Book(Long id, String name, String isbn) {
-        this.id = id;
+    public Book(String name, String isbn) {
         this.name = name;
         this.isbn = isbn;
     }
@@ -37,14 +39,12 @@ public class Book {
     /**
      * 새로운 book 정보를 받아 현재 객체를 수정하고, 기존 객체를 반환한다
      *
-     * @param newBookInfo : 변경할 book 정보
      * @return 기존 정보를담은 Book
      */
-    public Book modify(ModifyBookDto newBookInfo) {
+    public Book modify(String name, String isbn) {
         Book oldBook = new Book(this);
-
-        this.name = newBookInfo.getBookName();
-        this.isbn = newBookInfo.getIsbn();
+        this.name = name;
+        this.isbn = isbn;
 
         return oldBook;
     }

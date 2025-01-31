@@ -1,7 +1,13 @@
 package com.weblibrary;
 
 import com.weblibrary.domain.admin.service.AdminService;
-import com.weblibrary.domain.book.model.dto.NewBookDto;
+import com.weblibrary.domain.book.model.Book;
+import com.weblibrary.domain.book.model.BookCover;
+import com.weblibrary.domain.book.model.dto.NewBookForm;
+import com.weblibrary.domain.book.repository.BookCoverRepository;
+import com.weblibrary.domain.book.repository.BookRepository;
+import com.weblibrary.domain.book.service.BookService;
+import com.weblibrary.domain.file.model.UploadFile;
 import com.weblibrary.domain.user.dto.JoinUserDto;
 import com.weblibrary.domain.user.repository.UserRepository;
 import com.weblibrary.domain.user.service.UserService;
@@ -15,6 +21,8 @@ public class TestInit {
     private final AdminService adminService;
     private final UserService userService;
     private final UserRepository userRepository;
+    private final BookRepository bookRepository;
+    private final BookCoverRepository bookCoverRepository;
 
     @PostConstruct
     private void init() {
@@ -35,13 +43,11 @@ public class TestInit {
      * 메모리 리포지토리 환경에서 테스트를 위한 Book init 메서드
      */
     private void initBook() {
-        NewBookDto jpa = new NewBookDto("JPA", "12345");
-        NewBookDto spring = new NewBookDto("SPRING", "45678");
-        NewBookDto kor = new NewBookDto("KOREAN", "72347982");
-        NewBookDto en = new NewBookDto("ENGLISH", "590328402");
-        adminService.addBook(jpa);
-        adminService.addBook(spring);
-        adminService.addBook(kor);
-        adminService.addBook(en);
+        Book saved1 = bookRepository.save(new Book("book1", "12345"));
+        Book saved2 = bookRepository.save(new Book("book2", "45678"));
+        Book saved3 = bookRepository.save(new Book("book3", "12395"));
+        bookCoverRepository.save(new BookCover(saved1.getId(), new UploadFile("book1.jpg", "book1.jpg")));
+        bookCoverRepository.save(new BookCover(saved2.getId(), new UploadFile("book2.jpg", "book2.jpg")));
+        bookCoverRepository.save(new BookCover(saved3.getId(), new UploadFile("book3.jpg", "book3.jpg")));
     }
 }
