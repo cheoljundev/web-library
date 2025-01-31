@@ -55,9 +55,15 @@ const modifyBook = async errorContainer => {
     const id = document.getElementById("modifyBookId").value;
     const bookName = document.getElementById("modifyBookName").value;
     const isbn = document.getElementById("modifyIsbn").value;
+    const coverImage = document.getElementById("modifyBookCoverImage").files[0]; // 파일 선택
+    const body = new FormData();
+    body.append("id", id);
+    body.append("bookName", bookName);
+    body.append("isbn", isbn);
+    body.append("coverImage", coverImage);
 
     try {
-        const data = await fetchRequest(`/books/${id}`, "PUT", {id, bookName, isbn});
+        const data = await fetchRequest(`/books/${id}`, "PUT", body);
         if (data.redirected) {
             console.log("페이지가 리다이렉트되었습니다.");
             return;

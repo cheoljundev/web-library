@@ -2,13 +2,19 @@ package com.weblibrary.domain.book.model;
 
 import com.weblibrary.domain.book.model.dto.ModifyBookForm;
 import com.weblibrary.domain.file.model.UploadFile;
+import com.weblibrary.domain.file.repository.UploadRepository;
 import com.weblibrary.domain.user.model.User;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.IOException;
 
 @Getter
 @ToString
+@RequiredArgsConstructor
 public class Book {
     @Setter
     private Long id;
@@ -42,14 +48,18 @@ public class Book {
     /**
      * 새로운 book 정보를 받아 현재 객체를 수정하고, 기존 객체를 반환한다
      *
-     * @param newBookInfo : 변경할 book 정보
+     * @param form : 변경할 book 정보
      * @return 기존 정보를담은 Book
      */
-    public Book modify(ModifyBookForm newBookInfo) {
+    public Book modify(Book newBook) {
         Book oldBook = new Book(this);
 
-        this.name = newBookInfo.getBookName();
-        this.isbn = newBookInfo.getIsbn();
+        this.name = newBook.getName();
+        this.isbn = newBook.getIsbn();
+
+        if (newBook.coverImage != null) {
+            this.coverImage = newBook.coverImage;
+        }
 
         return oldBook;
     }

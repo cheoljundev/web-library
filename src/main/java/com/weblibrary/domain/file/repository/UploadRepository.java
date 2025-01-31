@@ -29,4 +29,6 @@ public interface UploadRepository {
         return uuid + ext;
         //"123.123.123.123.png"
     }
+
+    void deleteFile(String storeFileName);
 }

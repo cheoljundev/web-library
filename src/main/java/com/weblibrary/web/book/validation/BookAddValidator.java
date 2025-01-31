@@ -32,7 +32,6 @@ public class BookAddValidator implements Validator {
     public void validate(Object target, Errors errors) {
         NewBookForm book = (NewBookForm) target;
 
-
         String bookName = book.getBookName();
         String isbn = book.getIsbn();
         MultipartFile coverImage = book.getCoverImage();
