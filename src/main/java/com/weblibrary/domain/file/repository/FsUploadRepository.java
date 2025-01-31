@@ -54,4 +54,10 @@ public class FsUploadRepository implements UploadRepository {
 
         return new UploadFile(originalFilename, storeFileName);
     }
+
+    @Override
+    public void deleteFile(String storeFileName) {
+        File file = new File(getFullPath(storeFileName));
+        file.delete();
+    }
 }

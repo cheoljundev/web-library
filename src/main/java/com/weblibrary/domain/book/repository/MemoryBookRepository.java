@@ -16,13 +16,14 @@ import java.util.*;
 public class MemoryBookRepository implements BookRepository {
 
     private final Map<Long, Book> store = new HashMap<>();
-    public Long lastId = 0L;
+    public static Long lastId = 0L;
 
     @Override
-    public void save(Book book) {
+    public Book save(Book book) {
         book.setId(incrementLastId());
         store.put(book.getId(), book);
         log.debug("saved book={}", book);
+        return book;
     }
 
     private Long incrementLastId() {

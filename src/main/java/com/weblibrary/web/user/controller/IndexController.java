@@ -1,9 +1,7 @@
 package com.weblibrary.web.user.controller;
 
-import com.weblibrary.domain.book.model.Book;
+import com.weblibrary.domain.book.model.dto.BookListItem;
 import com.weblibrary.domain.book.service.BookService;
-import com.weblibrary.domain.user.model.User;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +21,7 @@ public class IndexController {
     @GetMapping("/")
     public String index(Model model) {
 
-        List<Book> books = bookService.findAll();
+        List<BookListItem> books = bookService.findAll();
         model.addAttribute("books", books);
 
         return "home/index";

@@ -13,7 +13,7 @@ public interface BookRepository {
      * 책 저장
      * @param book : book 객체
      */
-    void save(Book book);
+    Book save(Book book);
 
     /**
      * id로 책을 찾음

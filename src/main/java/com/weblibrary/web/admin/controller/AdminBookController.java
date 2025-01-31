@@ -1,21 +1,20 @@
 package com.weblibrary.web.admin.controller;
 
-import com.weblibrary.domain.admin.service.AdminService;
-import com.weblibrary.domain.book.model.Book;
+import com.weblibrary.domain.book.model.dto.BookListItem;
 import com.weblibrary.domain.book.model.dto.ModifyBookForm;
+import com.weblibrary.domain.book.model.dto.ModifyBookViewForm;
 import com.weblibrary.domain.book.model.dto.NewBookForm;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.web.book.validation.BookAddValidator;
 import com.weblibrary.web.book.validation.BookModifyValidator;
-import com.weblibrary.web.response.JsonResponse;
 import com.weblibrary.web.response.ErrorResponseUtils;
+import com.weblibrary.web.response.JsonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,14 +26,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminBookController {
 
-    private final AdminService adminService;
     private final BookAddValidator bookAddValidator;
     private final BookModifyValidator bookModifyValidator;
     private final BookService bookService;
     private final ErrorResponseUtils errorResponseUtils;
 
     @ModelAttribute("books")
-    public List<Book> books() {
+    public List<BookListItem> books() {
         return bookService.findAll();
     }
 
@@ -44,8 +42,8 @@ public class AdminBookController {
     }
 
     @ModelAttribute("modifyBook")
-    public ModifyBookForm modifyBookDto() {
-        return new ModifyBookForm();
+    public ModifyBookViewForm modifyBookDto() {
+        return new ModifyBookViewForm();
     }
 
     @GetMapping("/admin/book")
@@ -59,23 +57,23 @@ public class AdminBookController {
                                                 @RequestParam(required = false) String isbn,
                                                 @RequestParam(required = false) MultipartFile coverImage) throws IOException {
 
-        NewBookForm book = new NewBookForm(bookName, isbn, coverImage);
-        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(book, "newBookForm");
+        NewBookForm form = new NewBookForm(bookName, isbn, coverImage);
+        BindingResult bindingResult = new BeanPropertyBindingResult(form, "newBookForm");
         log.debug("bindingResult.target={}", bindingResult.getTarget());
         log.debug("bindingResult.objectName={}", bindingResult.getObjectName());
 
-        log.debug("book={}", book);
-        log.debug("book.bookName={}", book.getBookName());
-        log.debug("book.isbn={}", book.getIsbn());
+        log.debug("form={}", form);
+        log.debug("form.bookName={}", form.getBookName());
+        log.debug("form.isbn={}", form.getIsbn());
 
-        bookAddValidator.validate(book, bindingResult);
+        bookAddValidator.validate(form, bindingResult);
 
         if (bindingResult.hasErrors()) {
             log.debug("errors={}", bindingResult);
             return errorResponseUtils.handleValidationErrors(bindingResult);
         }
 
-        bookService.addBook(book);
+        bookService.addBook(form);
 
         return ResponseEntity.ok().body(JsonResponse.builder()
                 .message("정상 등록되었습니다.")
@@ -93,19 +91,26 @@ public class AdminBookController {
 
     @ResponseBody
     @PutMapping("/books/{bookId}")
-    public ResponseEntity<JsonResponse> modifyBook(@PathVariable("bookId") Long bookId, @Validated @RequestBody ModifyBookForm book, BindingResult bindingResult) {
+    public ResponseEntity<JsonResponse> modifyBook(@RequestParam(required = false) Long id,
+                                                   @RequestParam(required = false) String bookName,
+                                                   @RequestParam(required = false) String isbn,
+                                                   @RequestParam(required = false) MultipartFile coverImage) throws IOException {
+
+        ModifyBookForm form = new ModifyBookForm(id, bookName, isbn, coverImage);
+
+        BindingResult bindingResult = new BeanPropertyBindingResult(form, "modifyBookForm");
 
         log.debug("bindingResult.objectName={}", bindingResult.getObjectName());
         log.debug("bindingResult.target={}", bindingResult.getTarget());
 
-        bookModifyValidator.validate(book, bindingResult);
+        bookModifyValidator.validate(form, bindingResult);
 
         if (bindingResult.hasErrors()) {
             log.debug("errors={}", bindingResult);
             return errorResponseUtils.handleValidationErrors(bindingResult);
         }
 
-        adminService.modifyBook(bookId, book);
+        bookService.modifyBook(id, form);
 
         return ResponseEntity.ok().body(JsonResponse.builder()
                 .message("정상 수정되었습니다.")

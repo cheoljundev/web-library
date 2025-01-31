@@ -1,12 +1,14 @@
 package com.weblibrary.domain.book.model.dto;
 
-import com.weblibrary.domain.file.model.UploadFile;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
+@AllArgsConstructor
 public class ModifyBookForm {
     private Long id;
     private String bookName;
     private String isbn;
-    private UploadFile coverImage;
+    private MultipartFile coverImage;
 }

@@ -2,7 +2,9 @@ package com.weblibrary;
 
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.book.model.Book;
+import com.weblibrary.domain.book.model.BookCover;
 import com.weblibrary.domain.book.model.dto.NewBookForm;
+import com.weblibrary.domain.book.repository.BookCoverRepository;
 import com.weblibrary.domain.book.repository.BookRepository;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.file.model.UploadFile;
@@ -20,6 +22,7 @@ public class TestInit {
     private final UserService userService;
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
+    private final BookCoverRepository bookCoverRepository;
 
     @PostConstruct
     private void init() {
@@ -40,11 +43,11 @@ public class TestInit {
      * 메모리 리포지토리 환경에서 테스트를 위한 Book init 메서드
      */
     private void initBook() {
-        Book book1 = new Book("book1", "12345", new UploadFile("book1.jpg", "book1.jpg"));
-        Book book2 = new Book("book2", "45678", new UploadFile("book2.jpg", "book2.jpg"));
-        Book book3 = new Book("book3", "12395", new UploadFile("book3.jpg", "book3.jpg"));
-        bookRepository.save(book1);
-        bookRepository.save(book2);
-        bookRepository.save(book3);
+        Book saved1 = bookRepository.save(new Book("book1", "12345"));
+        Book saved2 = bookRepository.save(new Book("book2", "45678"));
+        Book saved3 = bookRepository.save(new Book("book3", "12395"));
+        bookCoverRepository.save(new BookCover(saved1.getId(), new UploadFile("book1.jpg", "book1.jpg")));
+        bookCoverRepository.save(new BookCover(saved2.getId(), new UploadFile("book2.jpg", "book2.jpg")));
+        bookCoverRepository.save(new BookCover(saved3.getId(), new UploadFile("book3.jpg", "book3.jpg")));
     }
 }

@@ -5,13 +5,19 @@ import com.weblibrary.domain.admin.model.RoleType;
 import com.weblibrary.domain.admin.repository.MemoryUserRoleRepository;
 import com.weblibrary.domain.admin.repository.UserRoleRepository;
 import com.weblibrary.domain.book.exception.NotFoundBookException;
+import com.weblibrary.domain.book.model.BookCover;
 import com.weblibrary.domain.book.model.dto.ModifyBookForm;
+import com.weblibrary.domain.book.repository.BookCoverRepository;
 import com.weblibrary.domain.book.service.BookService;
+import com.weblibrary.domain.file.model.UploadFile;
+import com.weblibrary.domain.file.repository.UploadRepository;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +32,6 @@ public class AdminService {
 
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
-    private final BookService bookService;
 
     public boolean setUserAsAdmin(Long userId) {
         if (isAdmin(userId)) {
@@ -85,9 +90,6 @@ public class AdminService {
         return userRepository.findAll();
     }
 
-    public void modifyBook(Long bookId, ModifyBookForm modifyBookForm) {
-        bookService.findBookById(bookId).map(book -> book.modify(modifyBookForm)).orElseThrow(NotFoundBookException::new);
-    }
 
     public boolean isAdmin(Long userId) {
         return userRoleRepository.findRoleByUserIdAndRoleType(userId, ADMIN).isPresent();

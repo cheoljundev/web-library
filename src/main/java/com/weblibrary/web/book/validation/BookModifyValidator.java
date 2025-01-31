@@ -6,6 +6,7 @@ import com.weblibrary.domain.book.service.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -16,8 +17,10 @@ public class BookModifyValidator implements Validator {
 
     private final BookService bookService;
     private static final String DUPLICATED_FIELD = "duplicated";
-    private static final String NOT_FOUND_FIELD = "not.found";
-
+    private static final String MIN_FIELD = "min";
+    private static final String NOT_BLANK_FIELD = "NotBlank";
+    private static final int BOOK_NAME_MIN_SIZE = 5;
+    private static final int ISBN_MIN_SIZE = 5;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -27,7 +30,14 @@ public class BookModifyValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         ModifyBookForm book = (ModifyBookForm) target;
+
+        String bookName = book.getBookName();
         String isbn = book.getIsbn();
+
+        boolean isBookNameEmpty = !StringUtils.hasText(bookName);
+        boolean isIsbnEmpty = !StringUtils.hasText(isbn);
+        boolean isBookNameTooShort = bookName.length() < BOOK_NAME_MIN_SIZE;
+        boolean isIsbnTooShort = isbn.length() < ISBN_MIN_SIZE;
 
         bookService.findBookById(book.getId())
                 .ifPresentOrElse(findOldBook -> {
@@ -38,6 +48,20 @@ public class BookModifyValidator implements Validator {
                 }, () -> {
                     throw new NotFoundBookException();
                 });
+
+        if (isBookNameEmpty || isIsbnEmpty || isBookNameTooShort || isIsbnTooShort
+        ) {
+            if (isBookNameEmpty) {
+                errors.rejectValue("bookName", NOT_BLANK_FIELD);
+            } else if (isBookNameTooShort) {
+                errors.rejectValue("bookName", MIN_FIELD, new Object[]{BOOK_NAME_MIN_SIZE}, null);
+            }
+            if (isIsbnEmpty) {
+                errors.rejectValue("isbn", NOT_BLANK_FIELD);
+            } else if (isIsbnTooShort) {
+                errors.rejectValue("isbn", MIN_FIELD, new Object[]{ISBN_MIN_SIZE}, null);
+            }
+        }
 
     }
 
