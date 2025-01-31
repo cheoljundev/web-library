@@ -25,6 +25,7 @@
                     <p>유저 오류</p>
                 </div>
                 <div>
+                    <img class="book-cover" th:src="|/images/*{coverImage.getStoreFileName()}|" th:alt="*{coverImage.getUploadFileName()}">
                     <span th:text="*{name}">책 이름</span>
                     <small class="text-muted ms-2">(ISBN: <span th:text="*{isbn}">책 isbn</span>)</small>
                 </div>

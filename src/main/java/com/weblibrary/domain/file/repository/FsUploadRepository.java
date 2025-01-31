@@ -19,10 +19,12 @@ public class FsUploadRepository implements UploadRepository {
     private String fileDir;
 
     private String getFullPath(String filename) {
-        log.debug("fileDir={}", fileDir); //null
-        log.debug("filename={}", filename);
-        log.debug("fileDir+filename={}" + fileDir + filename);
         return fileDir + filename;
+    }
+
+    @Override
+    public String getUrlPath(String filename) {
+        return "file:" + getFullPath(filename);
     }
 
     @Override

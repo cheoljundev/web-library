@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.UUID;
 
 public interface UploadRepository {
+    String getUrlPath(String filename);
+
     List<UploadFile> storeFiles(List<MultipartFile> multipartFiles) throws IOException;
     UploadFile storeFile(MultipartFile multipartFile) throws IOException;
 
