@@ -1,8 +1,7 @@
 package com.weblibrary.web.book.validation;
 
 import com.weblibrary.domain.book.exception.NotFoundBookException;
-import com.weblibrary.domain.book.model.Book;
-import com.weblibrary.domain.book.model.dto.ModifyBookDto;
+import com.weblibrary.domain.book.model.dto.ModifyBookForm;
 import com.weblibrary.domain.book.service.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,12 +21,12 @@ public class BookModifyValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return ModifyBookDto.class.isAssignableFrom(clazz);
+        return ModifyBookForm.class.isAssignableFrom(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        ModifyBookDto book = (ModifyBookDto) target;
+        ModifyBookForm book = (ModifyBookForm) target;
         String isbn = book.getIsbn();
 
         bookService.findBookById(book.getId())

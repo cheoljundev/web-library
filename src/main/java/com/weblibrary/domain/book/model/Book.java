@@ -1,6 +1,6 @@
 package com.weblibrary.domain.book.model;
 
-import com.weblibrary.domain.book.model.dto.ModifyBookDto;
+import com.weblibrary.domain.book.model.dto.ModifyBookForm;
 import com.weblibrary.domain.file.model.UploadFile;
 import com.weblibrary.domain.user.model.User;
 import lombok.Getter;
@@ -45,7 +45,7 @@ public class Book {
      * @param newBookInfo : 변경할 book 정보
      * @return 기존 정보를담은 Book
      */
-    public Book modify(ModifyBookDto newBookInfo) {
+    public Book modify(ModifyBookForm newBookInfo) {
         Book oldBook = new Book(this);
 
         this.name = newBookInfo.getBookName();

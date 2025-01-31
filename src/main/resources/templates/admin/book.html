@@ -22,22 +22,23 @@
             </div>
             <label for="addBookCoverImage" th:text="#{label.coverImage}">커버 이미지</label>
             <input type="file" th:field="*{coverImage}" id="addBookCoverImage">
-            <img src="" alt="preview" id="addBookPreview">
+            <img src="" alt="preview" class="book-preview" id="addBookPreview">
             <div class="field-error coverImage">
                 <p>coverImage 오류</p>
             </div>
             <br>
             <button class="btn btn-success" onclick="addBook('addBook')" th:text="#{button.add}">등록</button>
         </div>
+        <h2 th:text="#{book.list.title}">도서 목록</h2>
         <ul class="list-group" th:if="${books != null}">
             <li class="list-group-item" th:each="book : ${books}" th:object="${book}">
                 <div>
-                    <img class="book-cover" th:src="|/images/*{coverImage.getStoreFileName()}|" th:alt="*{coverImage.getUploadFileName()}">
+                    <img class="book-cover" th:src="@{/images/{filename}(filename=*{coverImage.storeFileName})}" th:alt="@{/images/{filename}(filename=*{coverImage.storeFileName})}">
                     <span th:text="|#{book.name} *{name}|">책 이름</span>
                     <small class="text-muted ms-2" th:text="|#{book.isbn} *{isbn}|">isbn</small>
                 </div>
                 <div class="btn-group">
-                    <button class="btn btn-warning" th:data-id="*{id}" th:data-name="*{name}" th:data-isbn="*{isbn}" onclick="setModifySection(this)" th:text="#{button.edit}">수정</button>
+                    <button class="btn btn-warning" th:data-id="*{id}" th:data-name="*{name}" th:data-isbn="*{isbn}" th:data-cover="@{/images/{filename}(filename=*{coverImage.storeFileName})}" onclick="setModifySection(this)" th:text="#{button.edit}">수정</button>
                     <button class="btn btn-danger" th:onclick="'deleteBook(' + *{id} + ')'" th:text="#{button.delete}">삭제</button>
                 </div>
             </li>
@@ -46,6 +47,14 @@
             <h3 th:text="#{admin.manage.book.modify.title}">도서 수정</h3>
             <div class="field-error book">
                 <p>책 global 오류</p>
+            </div>
+            <img class="book-preview"
+                 id="modifyBookPreview"
+                 th:src="${coverImage != null} ? '@{/images/{filename}(filename=*{coverImage.storeFileName})}' : ''"
+                 th:alt="*{coverImage != null} ? *{coverImage.uploadFileName} : ''">
+            <input type="file" name="" id="modifyBookCoverImage" th:field="*{coverImage}">
+            <div class="field-error coverImage">
+                <p>coverImage 오류</p>
             </div>
             <input type="hidden" id="modifyBookId">
             <input type="text" class="form-control mb-2" th:field="*{bookName}" id="modifyBookName" th:placeholder="#{placeholder.bookName}" placeholder="도서 이름 수정">

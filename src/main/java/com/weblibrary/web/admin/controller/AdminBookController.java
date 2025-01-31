@@ -2,7 +2,7 @@ package com.weblibrary.web.admin.controller;
 
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.book.model.Book;
-import com.weblibrary.domain.book.model.dto.ModifyBookDto;
+import com.weblibrary.domain.book.model.dto.ModifyBookForm;
 import com.weblibrary.domain.book.model.dto.NewBookForm;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.web.book.validation.BookAddValidator;
@@ -44,8 +44,8 @@ public class AdminBookController {
     }
 
     @ModelAttribute("modifyBook")
-    public ModifyBookDto modifyBookDto() {
-        return new ModifyBookDto();
+    public ModifyBookForm modifyBookDto() {
+        return new ModifyBookForm();
     }
 
     @GetMapping("/admin/book")
@@ -93,7 +93,7 @@ public class AdminBookController {
 
     @ResponseBody
     @PutMapping("/books/{bookId}")
-    public ResponseEntity<JsonResponse> modifyBook(@PathVariable("bookId") Long bookId, @Validated @RequestBody ModifyBookDto book, BindingResult bindingResult) {
+    public ResponseEntity<JsonResponse> modifyBook(@PathVariable("bookId") Long bookId, @Validated @RequestBody ModifyBookForm book, BindingResult bindingResult) {
 
         log.debug("bindingResult.objectName={}", bindingResult.getObjectName());
         log.debug("bindingResult.target={}", bindingResult.getTarget());
