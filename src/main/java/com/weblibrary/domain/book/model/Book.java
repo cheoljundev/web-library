@@ -1,23 +1,27 @@
 package com.weblibrary.domain.book.model;
 
 import com.weblibrary.domain.book.model.dto.ModifyBookDto;
+import com.weblibrary.domain.file.model.UploadFile;
 import com.weblibrary.domain.user.model.User;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @ToString
 public class Book {
-    private final Long id;
+    @Setter
+    private Long id;
     private String name;
     private String isbn;
     private boolean isRental;
     private User rentedBy;
+    private UploadFile coverImage;
 
-    public Book(Long id, String name, String isbn) {
-        this.id = id;
+    public Book(String name, String isbn, UploadFile coverImage) {
         this.name = name;
         this.isbn = isbn;
+        this.coverImage = coverImage;
     }
 
     /**
@@ -32,6 +36,7 @@ public class Book {
         this.isbn = book.getIsbn();
         this.isRental = book.isRental();
         this.rentedBy = book.getRentedBy();
+        this.coverImage = book.getCoverImage();
     }
 
     /**

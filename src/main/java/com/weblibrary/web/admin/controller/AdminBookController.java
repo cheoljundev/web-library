@@ -19,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -56,7 +57,7 @@ public class AdminBookController {
     @PostMapping("/books/add")
     public ResponseEntity<JsonResponse> addBook(@RequestParam(required = false) String bookName,
                                                 @RequestParam(required = false) String isbn,
-                                                @RequestParam(required = false) MultipartFile coverImage) {
+                                                @RequestParam(required = false) MultipartFile coverImage) throws IOException {
 
         NewBookForm book = new NewBookForm(bookName, isbn, coverImage);
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(book, "newBookForm");
@@ -74,7 +75,7 @@ public class AdminBookController {
             return errorResponseUtils.handleValidationErrors(bindingResult);
         }
 
-        adminService.addBook(book);
+        bookService.addBook(book);
 
         return ResponseEntity.ok().body(JsonResponse.builder()
                 .message("정상 등록되었습니다.")

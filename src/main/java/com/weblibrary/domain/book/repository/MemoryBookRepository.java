@@ -1,21 +1,28 @@
 package com.weblibrary.domain.book.repository;
 
 import com.weblibrary.domain.book.model.Book;
+import com.weblibrary.domain.book.model.dto.NewBookForm;
+import com.weblibrary.domain.file.model.UploadFile;
+import com.weblibrary.domain.file.repository.UploadRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.io.IOException;
 import java.util.*;
 
+@Slf4j
 @Repository
 public class MemoryBookRepository implements BookRepository {
 
     private final Map<Long, Book> store = new HashMap<>();
-
     public Long lastId = 0L;
 
     @Override
-    public void save(String bookName, String isbn) {
-        Book book = new Book(incrementLastId(), bookName, isbn);
+    public void save(Book book) {
+        book.setId(incrementLastId());
         store.put(book.getId(), book);
+        log.debug("saved book={}", book);
     }
 
     private Long incrementLastId() {

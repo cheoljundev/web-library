@@ -1,18 +1,19 @@
 package com.weblibrary.domain.book.repository;
 
 import com.weblibrary.domain.book.model.Book;
+import com.weblibrary.domain.book.model.dto.NewBookForm;
 import com.weblibrary.domain.user.model.User;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 public interface BookRepository {
     /**
      * 책 저장
-     * @param bookName : 저장할 책 이름
-     * @param isbn : 저장할 책 isbn
+     * @param book : book 객체
      */
-    void save(String bookName, String isbn);
+    void save(Book book);
 
     /**
      * id로 책을 찾음

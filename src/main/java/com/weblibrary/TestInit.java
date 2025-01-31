@@ -1,7 +1,11 @@
 package com.weblibrary;
 
 import com.weblibrary.domain.admin.service.AdminService;
+import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.dto.NewBookForm;
+import com.weblibrary.domain.book.repository.BookRepository;
+import com.weblibrary.domain.book.service.BookService;
+import com.weblibrary.domain.file.model.UploadFile;
 import com.weblibrary.domain.user.dto.JoinUserDto;
 import com.weblibrary.domain.user.repository.UserRepository;
 import com.weblibrary.domain.user.service.UserService;
@@ -15,6 +19,7 @@ public class TestInit {
     private final AdminService adminService;
     private final UserService userService;
     private final UserRepository userRepository;
+    private final BookRepository bookRepository;
 
     @PostConstruct
     private void init() {
@@ -35,13 +40,11 @@ public class TestInit {
      * 메모리 리포지토리 환경에서 테스트를 위한 Book init 메서드
      */
     private void initBook() {
-//        NewBookForm jpa = new NewBookForm("JPA", "12345");
-//        NewBookForm spring = new NewBookForm("SPRING", "45678");
-//        NewBookForm kor = new NewBookForm("KOREAN", "72347982");
-//        NewBookForm en = new NewBookForm("ENGLISH", "590328402");
-//        adminService.addBook(jpa);
-//        adminService.addBook(spring);
-//        adminService.addBook(kor);
-//        adminService.addBook(en);
+        Book book1 = new Book("book1", "12345", new UploadFile("book1.jpg", "book1.jpg"));
+        Book book2 = new Book("book2", "45678", new UploadFile("book2.jpg", "book2.jpg"));
+        Book book3 = new Book("book3", "12395", new UploadFile("book3.jpg", "book3.jpg"));
+        bookRepository.save(book1);
+        bookRepository.save(book2);
+        bookRepository.save(book3);
     }
 }
