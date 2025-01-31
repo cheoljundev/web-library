@@ -46,3 +46,6 @@ aside a:hover {
 .field-error{
     display: none;
 }
+#addBookPreview {
+    display: none;
+}

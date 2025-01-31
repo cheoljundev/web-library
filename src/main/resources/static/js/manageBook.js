@@ -66,7 +66,24 @@ const modifyBook = async errorContainer => {
     }
 };
 
+const addCoverPreview = () => {
+    document.getElementById('addBookCoverImage').addEventListener('change', function(event) {
+        const file = event.target.files[0]; // 사용자가 선택한 파일 가져오기
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('addBookPreview');
+                preview.src = e.target.result; // 미리보기 이미지 설정
+                preview.style.display = 'block'; // 이미지 표시
+            };
+            reader.readAsDataURL(file); // 파일을 DataURL로 변환
+        }
+    });
+}
+
 window.addBook = addBook;
 window.deleteBook = deleteBook;
 window.setModifySection = setModifySection;
 window.modifyBook = modifyBook;
+
+addCoverPreview();

@@ -22,6 +22,7 @@
             </div>
             <label for="addBookCoverImage" th:text="#{label.coverImage}">커버 이미지</label>
             <input type="file" th:field="*{coverImage}" id="addBookCoverImage">
+            <img src="" alt="preview" id="addBookPreview">
             <div class="field-error coverImage">
                 <p>coverImage 오류</p>
             </div>
@@ -29,14 +30,15 @@
             <button class="btn btn-success" onclick="addBook('addBook')" th:text="#{button.add}">등록</button>
         </div>
         <ul class="list-group" th:if="${books != null}">
-            <li class="list-group-item" th:each="book : ${books}">
+            <li class="list-group-item" th:each="book : ${books}" th:object="${book}">
                 <div>
-                    <span th:text="|#{book.name} ${book.name}|">책 이름</span>
-                    <small class="text-muted ms-2" th:text="|#{book.isbn} ${book.isbn}|">isbn</small>
+                    <img class="book-cover" th:src="|/images/*{coverImage.getStoreFileName()}|" th:alt="*{coverImage.getUploadFileName()}">
+                    <span th:text="|#{book.name} *{name}|">책 이름</span>
+                    <small class="text-muted ms-2" th:text="|#{book.isbn} *{isbn}|">isbn</small>
                 </div>
                 <div class="btn-group">
-                    <button class="btn btn-warning" th:data-id="${book.id}" th:data-name="${book.name}" th:data-isbn="${book.isbn}" onclick="setModifySection(this)" th:text="#{button.edit}">수정</button>
-                    <button class="btn btn-danger" th:onclick="'deleteBook(' + ${book.id} + ')'" th:text="#{button.delete}">삭제</button>
+                    <button class="btn btn-warning" th:data-id="*{id}" th:data-name="*{name}" th:data-isbn="*{isbn}" onclick="setModifySection(this)" th:text="#{button.edit}">수정</button>
+                    <button class="btn btn-danger" th:onclick="'deleteBook(' + *{id} + ')'" th:text="#{button.delete}">삭제</button>
                 </div>
             </li>
         </ul>
