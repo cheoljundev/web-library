@@ -1,4 +1,4 @@
-package com.weblibrary.web.user.advice;
+package com.weblibrary.web.user.exception;
 
 import com.weblibrary.domain.user.exception.NotFoundUserException;
 import com.weblibrary.web.response.ErrorResponse;
