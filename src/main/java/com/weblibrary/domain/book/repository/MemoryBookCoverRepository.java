@@ -5,15 +5,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class FSBookCoverRepository implements BookCoverRepository {
+public class MemoryBookCoverRepository implements BookCoverRepository {
 
     private final static Map<Long, BookCover> store = new HashMap<>();
     private static Long lastId = 0L;
@@ -39,12 +36,11 @@ public class FSBookCoverRepository implements BookCoverRepository {
     }
 
     @Override
-    public BookCover findByBookId(Long bookId) {
+    public Optional<BookCover> findByBookId(Long bookId) {
 
         return findAll().stream()
                 .filter(bookCover -> bookCover.getBook().getBookId().equals(bookId))
-                .findFirst()
-                .orElse(null);
+                .findFirst();
 
     }
 

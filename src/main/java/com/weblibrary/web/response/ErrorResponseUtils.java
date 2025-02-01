@@ -52,9 +52,9 @@ public class ErrorResponseUtils {
                 .errors(errors).build());
     }
 
-    public ResponseEntity<ErrorResponse> handleExceptionError(RentalException e) {
+    public ResponseEntity<ErrorResponse> handleExceptionError(RuntimeException e, String objectName) {
         Map<String, String> errors = new HashMap<>();
-        errors.put(e.objectName, e.getMessage());
+        errors.put(objectName, e.getMessage());
         return ResponseEntity.badRequest().body(ErrorResponse.builder()
                 .code("global")
                 .errors(errors).build());
