@@ -24,6 +24,9 @@ class UserRepositoryTest {
 
     @Test
     void findById() {
+        Long userId = 5L;
+        User user = userRepository.findById(userId).get();
+        assertThat(user.getUsername()).isEqualTo("user");
     }
 
     @Test

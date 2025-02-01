@@ -7,7 +7,6 @@ import lombok.ToString;
 
 import java.util.Objects;
 
-@RequiredArgsConstructor
 @Getter
 @ToString
 public class User {
@@ -16,6 +15,17 @@ public class User {
     private final String username;
     private final String password;
     private int remainingRents = 3; // 남은 대출 가능 권수
+
+    public User(Long userId, String username, String password) {
+        this.userId = userId;
+        this.username = username;
+        this.password = password;
+    }
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 
     public void decrementRemainingRents() {
         remainingRents--;

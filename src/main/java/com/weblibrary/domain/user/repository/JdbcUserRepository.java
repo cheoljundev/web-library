@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static com.weblibrary.web.connection.DBConnectionUtil.close;
@@ -47,7 +48,33 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findById(Long id) {
-        return Optional.empty();
+        String sql = "select * from users where user_id = ?";
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            con = getConnection();
+            pstmt = con.prepareStatement(sql);
+            pstmt.setLong(1, id);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                long userId = rs.getLong("user_id");
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+                User user = new User(userId, username, password);
+                return Optional.of(user);
+            } else {
+                throw new NoSuchElementException("member not found userId=" + id);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            close(con, pstmt, rs);
+        }
     }
 
     @Override
