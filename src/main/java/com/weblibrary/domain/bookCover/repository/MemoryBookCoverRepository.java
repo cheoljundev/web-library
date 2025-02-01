@@ -1,6 +1,6 @@
-package com.weblibrary.domain.book.repository;
+package com.weblibrary.domain.bookCover.repository;
 
-import com.weblibrary.domain.book.model.BookCover;
+import com.weblibrary.domain.bookCover.model.BookCover;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;

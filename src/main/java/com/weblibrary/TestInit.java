@@ -2,8 +2,8 @@ package com.weblibrary;
 
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.book.model.Book;
-import com.weblibrary.domain.book.model.BookCover;
-import com.weblibrary.domain.book.repository.BookCoverRepository;
+import com.weblibrary.domain.bookCover.model.BookCover;
+import com.weblibrary.domain.bookCover.repository.BookCoverRepository;
 import com.weblibrary.domain.book.repository.BookRepository;
 import com.weblibrary.domain.file.model.UploadFile;
 import com.weblibrary.domain.user.dto.JoinUserDto;
