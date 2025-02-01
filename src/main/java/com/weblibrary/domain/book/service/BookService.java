@@ -30,7 +30,7 @@ public class BookService {
     private final BookCoverRepository bookCoverRepository;
     private final UploadFileRepository uploadFileRepository;
 
-    public void addBook(NewBookForm newBookForm) throws IOException {
+    public void addBook(NewBookForm newBookForm) {
         Book book = new Book(newBookForm.getBookName(), newBookForm.getIsbn());
         bookRepository.save(book);
         saveBookCover(book, newBookForm.getCoverImage());
