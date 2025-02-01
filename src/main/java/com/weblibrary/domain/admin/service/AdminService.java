@@ -63,7 +63,6 @@ public class AdminService {
         return userRepository.findById(userId)
                 .map(user -> {
                     Role adminRole = new Role(
-                            MemoryUserRoleRepository.incrementLastId(),
                             user.getUserId(),
                             ADMIN
                     );

@@ -2,9 +2,7 @@ package com.weblibrary.web.connection;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 import static com.weblibrary.web.connection.ConnectionConst.*;
 
@@ -18,5 +16,33 @@ public class DBConnectionUtil {
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    public static void close(Connection con, Statement stmt, ResultSet rs) {
+
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                log.error("error", e);
+            }
+        }
+
+        if (stmt != null) {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                log.error("error", e);
+            }
+        }
+
+        if (con != null) {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                log.error("error", e);
+            }
+        }
+
     }
 }

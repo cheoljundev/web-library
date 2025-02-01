@@ -24,7 +24,7 @@ public class TestInit {
 
     @PostConstruct
     private void init() {
-        initUser();
+//        initUser();
         initBook();
     }
 

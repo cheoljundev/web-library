@@ -18,6 +18,7 @@ public class MemoryUserRoleRepository implements UserRoleRepository {
 
     @Override
     public void save(Role role) {
+        role.setRoleId(incrementLastId());
         store.put(role.getRoleId(), role);
     }
 

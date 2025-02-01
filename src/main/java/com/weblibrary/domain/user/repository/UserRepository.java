@@ -8,9 +8,11 @@ import java.util.Optional;
 public interface UserRepository {
     /**
      * 회원 가입
+     *
      * @param user
+     * @return
      */
-    void save(User user);
+    User save(User user);
 
     /**
      * id로 회원 찾기
