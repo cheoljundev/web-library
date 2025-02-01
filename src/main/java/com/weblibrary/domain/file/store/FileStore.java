@@ -1,4 +1,4 @@
-package com.weblibrary.domain.file.repository;
+package com.weblibrary.domain.file.store;
 
 import com.weblibrary.domain.file.model.UploadFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-public interface UploadRepository {
+public interface FileStore {
     String getUrlPath(String filename);
 
     List<UploadFile> storeFiles(List<MultipartFile> multipartFiles) throws IOException;

@@ -9,7 +9,7 @@ import com.weblibrary.domain.book.model.dto.NewBookForm;
 import com.weblibrary.domain.book.repository.BookCoverRepository;
 import com.weblibrary.domain.book.repository.BookRepository;
 import com.weblibrary.domain.file.model.UploadFile;
-import com.weblibrary.domain.file.repository.UploadRepository;
+import com.weblibrary.domain.file.store.FileStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +25,7 @@ import java.util.Optional;
 public class BookService {
     private final BookRepository bookRepository;
     private final BookCoverRepository bookCoverRepository;
-    private final UploadRepository uploadRepository;
+    private final FileStore fileStore;
 
     public void addBook(NewBookForm newBookForm) throws IOException {
         Book book = new Book(newBookForm.getBookName(), newBookForm.getIsbn());
@@ -70,13 +70,13 @@ public class BookService {
     }
 
     private void removeBookCover(Long bookId) {
-        uploadRepository.deleteFile(bookCoverRepository.findByBookId(bookId).getImage().getStoreFileName());
+        fileStore.deleteFile(bookCoverRepository.findByBookId(bookId).getImage().getStoreFileName());
         bookCoverRepository.remove(bookCoverRepository.findByBookId(bookId).getId());
     }
 
     private void saveBookCover(Long bookId, MultipartFile multipartFile) {
         try {
-            UploadFile image = uploadRepository.storeFile(multipartFile);
+            UploadFile image = fileStore.storeFile(multipartFile);
             BookCover newBookCover = new BookCover(bookId, image);
             bookCoverRepository.save(newBookCover);
         } catch (IOException e) {

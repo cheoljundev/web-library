@@ -1,9 +1,10 @@
-package com.weblibrary.domain.file.repository;
+package com.weblibrary.domain.file.store;
 
 import com.weblibrary.domain.file.model.UploadFile;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -12,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-@Repository
-public class FsUploadRepository implements UploadRepository {
+@Service
+public class LocalFileStore implements FileStore {
 
     @Value("${file.dir}")
     private String fileDir;
@@ -47,7 +48,7 @@ public class FsUploadRepository implements UploadRepository {
 
         String originalFilename = multipartFile.getOriginalFilename();
 
-        String storeFileName = UploadRepository.createStoreFileName(originalFilename);
+        String storeFileName = FileStore.createStoreFileName(originalFilename);
 
         //getfullpath : nullfillname
         multipartFile.transferTo(new File(getFullPath(storeFileName)));

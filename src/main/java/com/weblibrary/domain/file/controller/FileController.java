@@ -1,6 +1,6 @@
 package com.weblibrary.domain.file.controller;
 
-import com.weblibrary.domain.file.repository.UploadRepository;
+import com.weblibrary.domain.file.store.FileStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -16,11 +16,11 @@ import java.net.MalformedURLException;
 @RequiredArgsConstructor
 public class FileController {
 
-    private final UploadRepository uploadRepository;
+    private final FileStore fileStore;
 
     @GetMapping("/images/{filename}")
     public ResponseEntity<Resource> getImage(@PathVariable("filename") String filename) throws MalformedURLException {
-        UrlResource urlResource = new UrlResource(uploadRepository.getUrlPath(filename));
+        UrlResource urlResource = new UrlResource(fileStore.getUrlPath(filename));
 
         return ResponseEntity.ok()
                 .contentType(getMediaType(filename))

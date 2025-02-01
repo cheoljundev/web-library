@@ -1,14 +1,9 @@
 package com.weblibrary.domain.book.repository;
 
 import com.weblibrary.domain.book.model.Book;
-import com.weblibrary.domain.book.model.dto.NewBookForm;
-import com.weblibrary.domain.file.model.UploadFile;
-import com.weblibrary.domain.file.repository.UploadRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-import java.io.IOException;
 import java.util.*;
 
 @Slf4j
