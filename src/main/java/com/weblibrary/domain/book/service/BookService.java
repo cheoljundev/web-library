@@ -44,10 +44,7 @@ public class BookService {
             }
 
             book.modify(form.getBookName(), form.getIsbn());
-            if (form.getCoverImage() != null) {
-                removeBookCover(book);
-                saveBookCover(book, form.getCoverImage());
-            }
+            modifyBookCover(form, book);
 
         }, () -> {
             throw new NotFoundBookException();
@@ -104,6 +101,13 @@ public class BookService {
             bookCoverRepository.save(newBookCover);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
+        }
+    }
+
+    private void modifyBookCover(ModifyBookForm form, Book book) {
+        if (form.getCoverImage() != null) {
+            removeBookCover(book);
+            saveBookCover(book, form.getCoverImage());
         }
     }
 
