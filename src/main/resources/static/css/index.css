@@ -27,7 +27,7 @@ body {
 .btn-container button {
     margin-left: 0.5rem;
 }
-.field-error{
+.error{
     display: none;
     width: 100%;
 }

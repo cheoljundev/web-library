@@ -1,5 +1,6 @@
 package com.weblibrary.web.response;
 
+import com.weblibrary.domain.rental.exception.RentalException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -48,6 +49,14 @@ public class ErrorResponseUtils {
         return ResponseEntity.badRequest().body(ErrorResponse.builder()
                 .code("validation")
                 .message("validation 실패")
+                .errors(errors).build());
+    }
+
+    public ResponseEntity<ErrorResponse> handleExceptionError(RentalException e) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put(e.objectName, e.getMessage());
+        return ResponseEntity.badRequest().body(ErrorResponse.builder()
+                .code("global")
                 .errors(errors).build());
     }
 

@@ -12,18 +12,18 @@
         <div class="mb-3" th:object="${addBook}" id="addBook">
             <label for="addBookName" th:text="#{label.bookName}">책 이름</label>
             <input type="text" class="form-control mb-2" id="addBookName" th:field="*{bookName}" th:placeholder="#{placeholder.bookName}" placeholder="도서 이름 입력">
-            <div class="field-error bookName">
+            <div class="error bookName">
                 <p>책 이름 오류</p>
             </div>
             <label for="addBookIsbn" th:text="#{label.isbn}">isbn</label>
             <input type="text" class="form-control mb-2" id="addBookIsbn" th:field="*{isbn}" th:placeholder="#{placeholder.isbn}" placeholder="ISBN 입력">
-            <div class="field-error isbn">
+            <div class="error isbn">
                 <p>isbn 오류</p>
             </div>
             <label for="addBookCoverImage" th:text="#{label.coverImage}">커버 이미지</label>
             <input type="file" th:field="*{coverImage}" id="addBookCoverImage">
             <img src="" alt="preview" class="book-preview" id="addBookPreview">
-            <div class="field-error coverImage">
+            <div class="error coverImage">
                 <p>coverImage 오류</p>
             </div>
             <br>
@@ -45,7 +45,7 @@
         </ul>
         <div id="modifyBook" class="mt-3 p-3 border rounded" th:object="${modifyBook}">
             <h3 th:text="#{admin.manage.book.modify.title}">도서 수정</h3>
-            <div class="field-error book">
+            <div class="error book">
                 <p>책 global 오류</p>
             </div>
             <img class="book-preview"
@@ -53,16 +53,16 @@
                  th:src="${coverImage != null} ? '@{/images/{filename}(filename=*{coverImage.storeFileName})}' : ''"
                  th:alt="*{coverImage != null} ? *{coverImage.uploadFileName} : ''">
             <input type="file" name="" id="modifyBookCoverImage" th:field="*{coverImage}">
-            <div class="field-error coverImage">
+            <div class="error coverImage">
                 <p>coverImage 오류</p>
             </div>
             <input type="hidden" id="modifyBookId">
             <input type="text" class="form-control mb-2" th:field="*{bookName}" id="modifyBookName" th:placeholder="#{placeholder.bookName}" placeholder="도서 이름 수정">
-            <div class="field-error bookName">
+            <div class="error bookName">
                 <p>책 이름 오류</p>
             </div>
             <input type="text" class="form-control mb-2" id="modifyIsbn" data-th-field="*{isbn}" th:field="*{isbn}" th:placeholder="#{placeholder.isbn}" placeholder="ISBN 수정">
-            <div class="field-error isbn">
+            <div class="error isbn">
                 <p>isbn 오류</p>
             </div>
             <button class="btn btn-primary" onclick="modifyBook('modifyBook')" th:text="#{button.edit-final}">최종 수정</button>

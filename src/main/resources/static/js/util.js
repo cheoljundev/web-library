@@ -1,18 +1,18 @@
 const resetErrorFields = () => {
-    const errorFieldErrors = document.querySelectorAll(".field-error");
+    const errorFieldErrors = document.querySelectorAll(".error");
     errorFieldErrors?.forEach((el) => {
         el.style.display = "none";
     });
 }
 
-const handleValidationError = (error, errorContainer) => {
+const handleErrorMessage = (error, errorContainer) => {
     const errors = error.response.errors;
 
     resetErrorFields();
 
     // errors 객체에 해당하는 클래스만 표시
     Object.keys(errors).forEach((field) => {
-        const fieldErrorElement = document.querySelector(`#${errorContainer} .field-error.${field}`);
+        const fieldErrorElement = document.querySelector(`#${errorContainer} .error.${field}`);
         if (fieldErrorElement) {
             fieldErrorElement.style.display = "block";
             fieldErrorElement.textContent = errors[field]; // 에러 메시지 추가
@@ -66,8 +66,8 @@ export const handleError = (error, errorContainer) => {
     if (error.status === 403) {
         location.href = "/access-denied"
     } else if (error.status == 400) {
-        if (error.response.code == "validation") {
-            handleValidationError(error, errorContainer);
+        if (error.response.errors) {
+            handleErrorMessage(error, errorContainer);
         } else {
             alert(error.response.message);
         }

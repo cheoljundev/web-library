@@ -18,10 +18,10 @@
         <h2 class="mb-3" th:text="#{book.list.title}">도서 목록</h2>
         <ul class="book-list" th:if="${books != null}">
             <li class="book-item" th:each="book : ${books}" th:object="${book}" th:id="|rent*{id}|">
-                <div class="field-error book">
+                <div class="error book">
                     <p>책 오류</p>
                 </div>
-                <div class="field-error user">
+                <div class="error user">
                     <p>유저 오류</p>
                 </div>
                 <div>

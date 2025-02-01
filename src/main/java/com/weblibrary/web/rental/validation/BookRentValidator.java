@@ -1,8 +1,8 @@
-package com.weblibrary.web.book.validation;
+package com.weblibrary.web.rental.validation;
 
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.dto.BookRentDto;
-import com.weblibrary.domain.book.service.BookService;
+import com.weblibrary.domain.rental.service.BookRentalService;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +14,12 @@ import org.springframework.validation.Validator;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class BookUnRentValidator implements Validator {
+public class BookRentValidator implements Validator {
 
-    public static final String INVALID_STATUS_FIELD = "invalid.status";
-    public static final String INVALID_RENTED_FIELD = "invalid.rented";
+    private final BookRentalService bookRentalService;
+    private final UserService userService;
+    public static final String INVALID_REMAIN_FIELD = "invalid.remain";
+    public static final String INVALID_AVAILABLE_FIELD = "invalid.available";
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -31,11 +33,13 @@ public class BookUnRentValidator implements Validator {
         User user = bookRentDto.getUser();
         Book book = bookRentDto.getBook();
 
-        if (!book.isRental()) {
-            errors.rejectValue("book", INVALID_STATUS_FIELD);
-        } else if (!book.getRentedBy().equals(user)) {
-            errors.reject("book", INVALID_RENTED_FIELD);
+        if (user.getRemainingRents() == 0) {
+            errors.rejectValue("user", INVALID_REMAIN_FIELD, new Object[]{user.getRemainingRents()}, null);
         }
+//        if (book.isRented()) {
+//            User rentedUser = bookRentalService.findUserNameByBookId(book.getId());
+//            errors.rejectValue("book", INVALID_AVAILABLE_FIELD, new Object[]{rentedUser.getUsername()}, null);
+//        }
 
     }
 }

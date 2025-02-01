@@ -1,6 +1,6 @@
-package com.weblibrary.web.book.exception;
+package com.weblibrary.web.user.advice;
 
-import com.weblibrary.domain.book.exception.NotFoundBookException;
+import com.weblibrary.domain.user.exception.NotFoundUserException;
 import com.weblibrary.web.response.ErrorResponse;
 import com.weblibrary.web.response.ErrorResponseUtils;
 import lombok.RequiredArgsConstructor;
@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 @RequiredArgsConstructor
-public class BookExceptionAdvice {
+public class UserExceptionAdvice {
 
     private final ErrorResponseUtils errorResponseUtils;
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleNotFoundBookError(NotFoundBookException e) {
-        return errorResponseUtils.handleNotFoundErrors("book");
+    public ResponseEntity<ErrorResponse> handleNotFoundBookError(NotFoundUserException e) {
+        return errorResponseUtils.handleNotFoundErrors("user");
     }
 }

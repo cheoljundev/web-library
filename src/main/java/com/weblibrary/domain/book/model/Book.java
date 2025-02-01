@@ -1,6 +1,5 @@
 package com.weblibrary.domain.book.model;
 
-import com.weblibrary.domain.user.model.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -14,8 +13,7 @@ public class Book {
     private Long id;
     private String name;
     private String isbn;
-    private boolean isRental;
-    private User rentedBy;
+    private boolean isRented;
 
     public Book(String name, String isbn) {
         this.name = name;
@@ -32,8 +30,7 @@ public class Book {
         this.id = book.getId();
         this.name = book.getName();
         this.isbn = book.getIsbn();
-        this.isRental = book.isRental();
-        this.rentedBy = book.getRentedBy();
+        this.isRented = book.isRented();
     }
 
     /**
@@ -51,23 +48,17 @@ public class Book {
 
     /**
      * 도서 대출 메서드
-     * 대출상태를 변경하고, 대출한 사람을 기록한다.
      *
-     * @param rentedBy : 대출할 유저
      */
-    public void rent(User rentedBy) {
-        isRental = true;
-        this.rentedBy = rentedBy;
+    public void rent() {
+        isRented = true;
     }
 
     /**
      * 도서 반납 메서드
-     * 대출 상태를 변경하고, 대출한 사람도 비운다.
      *
-     * @param rentedBy : 대출했던 유저
      */
-    public void unRent(User rentedBy) {
-        isRental = false;
-        this.rentedBy = null;
+    public void unRent() {
+        isRented = false;
     }
 }
