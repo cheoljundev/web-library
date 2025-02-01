@@ -17,13 +17,6 @@ public class BookRentalService {
     private final BookService bookService;
     private final UserService userService;
 
-    /**
-     * 책 대출
-     *
-     * @param user
-     * @param book
-     * @return rental
-     */
     public Rental rentBook(User user, Book book) {
         // remailrents가 없거나, 현재 누가 대출중인 경우 예외 발생함
         User rendtedUser = findUserByBookId(book.getId());
