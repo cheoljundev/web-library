@@ -57,6 +57,7 @@ public class UserService {
      * @return : User
      */
     public Optional<User> findByUsername(String username) {
+        //todo: Validator에서도 find를 하기 때문에 불필요한 connection 연결 발생함. 여기서 예외 처리 필요.
         return userRepository.findByUsername(username);
     }
 

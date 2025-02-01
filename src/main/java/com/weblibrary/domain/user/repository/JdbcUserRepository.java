@@ -61,10 +61,10 @@ public class JdbcUserRepository implements UserRepository {
             rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                long userId = rs.getLong("user_id");
-                String username = rs.getString("username");
-                String password = rs.getString("password");
-                User user = new User(userId, username, password);
+                long getUserId = rs.getLong("user_id");
+                String getUsername = rs.getString("username");
+                String getPassword = rs.getString("password");
+                User user = new User(getUserId, getUsername, getPassword);
                 return Optional.of(user);
             } else {
                 throw new NoSuchElementException("member not found userId=" + id);
@@ -79,7 +79,32 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findByUsername(String username) {
-        return Optional.empty();
+        String sql = "select * from users where username = ?";
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            con = getConnection();
+            pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, username);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                long getUserId = rs.getLong("user_id");
+                String getUsername = rs.getString("username");
+                String getPassword = rs.getString("password");
+                User user = new User(getUserId, getUsername, getPassword);
+                return Optional.of(user);
+            } else {
+                throw new NoSuchElementException("member not found username=" + username);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            close(con, pstmt, rs);
+        }
     }
 
     @Override
