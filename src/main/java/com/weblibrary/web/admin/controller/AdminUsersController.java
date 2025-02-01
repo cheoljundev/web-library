@@ -40,13 +40,13 @@ public class AdminUsersController {
             log.debug("user={}", user);
 
             /* 찾은 유저의 가장 높은 RoleType 가져오기 */
-            RoleType roleType = adminService.findUserRoleType(user.getId());
+            RoleType roleType = adminService.findUserRoleType(user.getUserId());
 
             log.debug("roleType={}", roleType);
             log.debug("roleType.name()={}", roleType.name());
 
             SetUserDto userDto = SetUserDto.builder()
-                    .id(user.getId())
+                    .id(user.getUserId())
                     .username(user.getUsername())
                     .roleTypeName(roleType.name())
                     .build();

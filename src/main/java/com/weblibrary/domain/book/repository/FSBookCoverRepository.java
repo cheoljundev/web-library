@@ -20,8 +20,8 @@ public class FSBookCoverRepository implements BookCoverRepository {
 
     @Override
     public void save(BookCover cover) {
-        cover.setId(incrementLastId());
-        store.put(cover.getId(), cover);
+        cover.setBookCoverId(incrementLastId());
+        store.put(cover.getBookCoverId(), cover);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class FSBookCoverRepository implements BookCoverRepository {
     public BookCover findByBookId(Long bookId) {
 
         return findAll().stream()
-                .filter(bookCover -> bookCover.getBookId().equals(bookId))
+                .filter(bookCover -> bookCover.getBook().getBookId().equals(bookId))
                 .findFirst()
                 .orElse(null);
 

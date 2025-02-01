@@ -30,14 +30,14 @@ public class BookService {
     public void addBook(NewBookForm newBookForm) throws IOException {
         Book book = new Book(newBookForm.getBookName(), newBookForm.getIsbn());
         bookRepository.save(book);
-        saveBookCover(book.getId(), newBookForm.getCoverImage());
+        saveBookCover(book, newBookForm.getCoverImage());
     }
 
     public void modifyBook(Long bookId, ModifyBookForm form) {
         findBookById(bookId).ifPresentOrElse(book -> {
             book.modify(form.getBookName(), form.getIsbn());
-            removeBookCover(bookId);
-            saveBookCover(bookId, form.getCoverImage());
+            removeBookCover(book);
+            saveBookCover(book, form.getCoverImage());
         }, () -> {
             throw new NotFoundBookException();
         });
@@ -63,21 +63,21 @@ public class BookService {
     public List<BookListItem> findAll() {
         List<BookListItem> bookListItemList = new ArrayList<>();
         bookRepository.findAll().forEach((book -> {
-                    BookListItem bookListItem = new BookListItem(book.getId(), book.getName(), book.getIsbn(), bookCoverRepository.findByBookId(book.getId()).getImage());
+                    BookListItem bookListItem = new BookListItem(book.getBookId(), book.getBookName(), book.getIsbn(), bookCoverRepository.findByBookId(book.getBookId()).getImage());
                     bookListItemList.add(bookListItem);
                 }));
         return bookListItemList;
     }
 
-    private void removeBookCover(Long bookId) {
-        fileStore.deleteFile(bookCoverRepository.findByBookId(bookId).getImage().getStoreFileName());
-        bookCoverRepository.remove(bookCoverRepository.findByBookId(bookId).getId());
+    private void removeBookCover(Book book) {
+        fileStore.deleteFile(bookCoverRepository.findByBookId(book.getBookId()).getImage().getStoreFileName());
+        bookCoverRepository.remove(bookCoverRepository.findByBookId(book.getBookId()).getBookCoverId());
     }
 
-    private void saveBookCover(Long bookId, MultipartFile multipartFile) {
+    private void saveBookCover(Book book, MultipartFile multipartFile) {
         try {
             UploadFile image = fileStore.storeFile(multipartFile);
-            BookCover newBookCover = new BookCover(bookId, image);
+            BookCover newBookCover = new BookCover(book, image);
             bookCoverRepository.save(newBookCover);
         } catch (IOException e) {
             throw new UncheckedIOException(e);

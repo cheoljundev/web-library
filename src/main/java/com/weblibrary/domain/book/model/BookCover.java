@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class BookCover {
-    private Long id;
-    private final Long bookId;
+    private Long bookCoverId;
+    private final Book book;
     private final UploadFile image;
 }

@@ -3,10 +3,8 @@ package com.weblibrary;
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.BookCover;
-import com.weblibrary.domain.book.model.dto.NewBookForm;
 import com.weblibrary.domain.book.repository.BookCoverRepository;
 import com.weblibrary.domain.book.repository.BookRepository;
-import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.file.model.UploadFile;
 import com.weblibrary.domain.user.dto.JoinUserDto;
 import com.weblibrary.domain.user.repository.UserRepository;
@@ -35,7 +33,7 @@ public class TestInit {
         userService.join(new JoinUserDto("user", "1111"));
         userRepository.findByUsername("admin")
                 .ifPresent(admin -> {
-                    adminService.setUserAsAdmin(admin.getId());
+                    adminService.setUserAsAdmin(admin.getUserId());
                 });
     }
 
@@ -46,8 +44,8 @@ public class TestInit {
         Book saved1 = bookRepository.save(new Book("book1", "12345"));
         Book saved2 = bookRepository.save(new Book("book2", "45678"));
         Book saved3 = bookRepository.save(new Book("book3", "12395"));
-        bookCoverRepository.save(new BookCover(saved1.getId(), new UploadFile("book1.jpg", "book1.jpg")));
-        bookCoverRepository.save(new BookCover(saved2.getId(), new UploadFile("book2.jpg", "book2.jpg")));
-        bookCoverRepository.save(new BookCover(saved3.getId(), new UploadFile("book3.jpg", "book3.jpg")));
+        bookCoverRepository.save(new BookCover(saved1, new UploadFile("book1.jpg", "book1.jpg")));
+        bookCoverRepository.save(new BookCover(saved2, new UploadFile("book2.jpg", "book2.jpg")));
+        bookCoverRepository.save(new BookCover(saved3, new UploadFile("book3.jpg", "book3.jpg")));
     }
 }

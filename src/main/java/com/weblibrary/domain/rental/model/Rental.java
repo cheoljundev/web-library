@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @ToString
 public class Rental {
     @Setter
-    private Long id; // 고유 대출 ID
+    private Long rentalId; // 고유 대출 ID
     private final Long bookId;
     private final Long userId;
     private final LocalDateTime rentedAt;

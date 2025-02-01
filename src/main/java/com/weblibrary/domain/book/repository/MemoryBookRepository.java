@@ -15,8 +15,8 @@ public class MemoryBookRepository implements BookRepository {
 
     @Override
     public Book save(Book book) {
-        book.setId(incrementLastId());
-        store.put(book.getId(), book);
+        book.setBookId(incrementLastId());
+        store.put(book.getBookId(), book);
         log.debug("saved book={}", book);
         return book;
     }
@@ -31,9 +31,9 @@ public class MemoryBookRepository implements BookRepository {
     }
 
     @Override
-    public Optional<Book> findByName(String name) {
+    public Optional<Book> findByName(String bookName) {
         return findAll().stream()
-                .filter(book -> book.getName().equals(name))
+                .filter(book -> book.getBookName().equals(bookName))
                 .findFirst();
     }
 

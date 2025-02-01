@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class Role implements Comparable<Role>{
-    private final Long id;
+    private final Long roleId;
     private final Long userId;
     private final RoleType roleType;
 

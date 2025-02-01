@@ -18,8 +18,8 @@ public class MemoryBookRentRepository implements BookRentalRepository{
     @Override
     public Rental save(Rental rental) {
         long newId = rentalIdGenerator.getAndIncrement();
-        rental.setId(newId);
-        rentals.put(rental.getId(), rental);
+        rental.setRentalId(newId);
+        rentals.put(rental.getRentalId(), rental);
         return rental;
     }
 
@@ -44,6 +44,6 @@ public class MemoryBookRentRepository implements BookRentalRepository{
 
     @Override
     public void delete(Rental rental) {
-        rentals.remove(rental.getId());
+        rentals.remove(rental.getRentalId());
     }
 }

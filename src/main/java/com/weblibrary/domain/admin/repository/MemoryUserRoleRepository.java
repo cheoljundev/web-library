@@ -18,7 +18,7 @@ public class MemoryUserRoleRepository implements UserRoleRepository {
 
     @Override
     public void save(Role role) {
-        store.put(role.getId(), role);
+        store.put(role.getRoleId(), role);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class MemoryUserRoleRepository implements UserRoleRepository {
     public List<Role> findRolesByUserId(Long userId) {
         List<Role> list = new ArrayList<>();
         for (Role role : store.values()) {
-            if (role.getId() == userId) {
+            if (role.getRoleId() == userId) {
                 list.add(role);
             }
         }

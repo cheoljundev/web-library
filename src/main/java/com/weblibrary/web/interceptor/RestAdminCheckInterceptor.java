@@ -22,7 +22,7 @@ public class RestAdminCheckInterceptor implements HandlerInterceptor {
 
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute(SessionConst.LOGIN_USER);
-        if (!adminService.isAdmin(user.getId())) {
+        if (!adminService.isAdmin(user.getUserId())) {
                 session.invalidate();
                 throw new UnauthorizedAccessException("관리자가 아닙니다.");
             }

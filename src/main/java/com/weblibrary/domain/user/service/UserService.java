@@ -30,7 +30,7 @@ public class UserService {
         String username = joinUserDto.getUsername();
         String password = joinUserDto.getPassword();
         User user = new User(MemoryUserRepository.incrementLastId(), username, password);
-        Role role = new Role(MemoryUserRoleRepository.incrementLastId(), user.getId(), DEFAULT);
+        Role role = new Role(MemoryUserRoleRepository.incrementLastId(), user.getUserId(), DEFAULT);
         userRoleRepository.save(role);
         userRepository.save(user);
     }
