@@ -1,10 +1,12 @@
 package com.weblibrary.web.user.controller;
 
+import com.weblibrary.domain.user.exception.InvalidLoginException;
 import com.weblibrary.web.argumentresolver.Login;
 import com.weblibrary.web.response.ErrorResponse;
+import com.weblibrary.web.response.ErrorResponseUtils;
 import com.weblibrary.web.response.JsonResponse;
 import com.weblibrary.domain.user.dto.JoinUserDto;
-import com.weblibrary.domain.user.dto.LoginUserDto;
+import com.weblibrary.domain.user.dto.LoginUserForm;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;
 import com.weblibrary.web.user.validation.JoinValidator;
@@ -21,6 +23,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 유저 회원가입 컨트롤러, GET, POST에 따라 다르게 동작.
  */
@@ -30,7 +35,6 @@ import org.springframework.web.bind.annotation.*;
 public class AccountController {
 
     private final UserService userService;
-    private final LoginValidator loginValidator;
     private final JoinValidator joinValidator;
 
     /* join form 보여주기 */
@@ -66,31 +70,18 @@ public class AccountController {
 
     @GetMapping("/login")
     public String loginForm(Model model) {
-        model.addAttribute("user", new LoginUserDto());
+        model.addAttribute("user", new LoginUserForm());
         return "home/login";
     }
 
     /* 로그인 처리하기 */
     @PostMapping("/login")
-    public String login(HttpSession session, @Validated @ModelAttribute("user") LoginUserDto user, BindingResult bindingResult,
+    public String login(HttpSession session, @Validated @ModelAttribute("user") LoginUserForm form,
                         @RequestParam(value = "redirectUrl", defaultValue = "/") String redirectUrl) {
 
-        log.debug("objectName={}", bindingResult.getObjectName()); // loginUserDto로 나오고 있었다. @ModelAttribute("user")로 해결
-        log.debug("target={}", bindingResult.getTarget()); // 정상적으로 LoginUserDto 인스턴스를 찾아옴.
+        log.debug("Input User DTO: {}", form);
 
-        log.debug("Input User DTO: {}", user);
-
-        /* 검증 실행 */
-        loginValidator.validate(user, bindingResult);
-
-        /* 검증에 에러가 발견되면, 폼을 보여줌. */
-        if (bindingResult.hasErrors()) {
-            log.debug("errors={}", bindingResult);
-            return "home/login";
-        }
-
-        /* 검증이 끝나면, 컨트롤러에서 로그인 처리 */
-        userService.login(session, user);
+        userService.login(session, form);
 
         /* 로그인 후에 redirectUrl로 리다이렉트 */
         return "redirect:" + redirectUrl;
@@ -116,6 +107,15 @@ public class AccountController {
         return new ResponseEntity<>(JsonResponse.builder()
                 .message("로그아웃 되었습니다.")
                 .build(), HttpStatus.OK);
+    }
+
+    @ExceptionHandler(InvalidLoginException.class)
+    public String handleInvalidLoginException(InvalidLoginException e, Model model) {
+        List<String> errors = new ArrayList<>();
+        errors.add(e.getMessage());
+        model.addAttribute("user", e.getForm());
+        model.addAttribute("errors", errors);
+        return "home/login";
     }
 
 }

@@ -1,12 +1,11 @@
 package com.weblibrary.domain.user.service;
 
 import com.weblibrary.domain.admin.model.Role;
-import com.weblibrary.domain.admin.repository.MemoryUserRoleRepository;
 import com.weblibrary.domain.admin.repository.UserRoleRepository;
 import com.weblibrary.domain.user.dto.JoinUserDto;
-import com.weblibrary.domain.user.dto.LoginUserDto;
+import com.weblibrary.domain.user.dto.LoginUserForm;
+import com.weblibrary.domain.user.exception.InvalidLoginException;
 import com.weblibrary.domain.user.model.User;
-import com.weblibrary.domain.user.repository.MemoryUserRepository;
 import com.weblibrary.domain.user.repository.UserRepository;
 import com.weblibrary.web.SessionConst;
 import jakarta.servlet.http.HttpSession;
@@ -39,15 +38,16 @@ public class UserService {
      * 로그인 처리를 담은 서비스 계층 메서드
      * Validator에서 호출한다.
      *
-     * @param session : 세션
-     * @param loginUserDto : Valitation에 성공한 유저Dto
+     * @param session      : 세션
+     * @param form : Valitation에 성공한 유저Dto
      */
 
-    public void login(HttpSession session, LoginUserDto loginUserDto) {
-        findByUsername(loginUserDto.getUsername())
-                .ifPresent(user -> {
-                    session.setAttribute(SessionConst.LOGIN_USER, user);
-                });
+    public void login(HttpSession session, LoginUserForm form) {
+        User loginUser = findByUsername(form.getUsername())
+                .filter(user -> user.getPassword().equals(form.getPassword()))
+                .orElseThrow(() -> new InvalidLoginException("로그인에 실패했습니다. 아이디 및 비밀번호를 확인하세요.", form));
+
+        session.setAttribute(SessionConst.LOGIN_USER, loginUser);
     }
 
     /**
@@ -57,7 +57,6 @@ public class UserService {
      * @return : User
      */
     public Optional<User> findByUsername(String username) {
-        //todo: Validator에서도 find를 하기 때문에 불필요한 connection 연결 발생함. 여기서 예외 처리 필요.
         return userRepository.findByUsername(username);
     }
 

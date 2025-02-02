@@ -1,6 +1,6 @@
 package com.weblibrary.web.user.validation;
 
-import com.weblibrary.domain.user.dto.LoginUserDto;
+import com.weblibrary.domain.user.dto.LoginUserForm;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +21,12 @@ public class LoginValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return LoginUserDto.class.isAssignableFrom(clazz);
+        return LoginUserForm.class.isAssignableFrom(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        LoginUserDto user = (LoginUserDto) target;
+        LoginUserForm user = (LoginUserForm) target;
 
         String password = user.getPassword();
 
@@ -39,7 +39,7 @@ public class LoginValidator implements Validator {
                 });
     }
 
-    private Optional<User> getFoundUser(LoginUserDto user) {
+    private Optional<User> getFoundUser(LoginUserForm user) {
         return userService.findByUsername(user.getUsername());
     }
 

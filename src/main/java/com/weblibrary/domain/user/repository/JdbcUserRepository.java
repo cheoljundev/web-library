@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static com.weblibrary.web.connection.DBConnectionUtil.close;
@@ -60,15 +59,16 @@ public class JdbcUserRepository implements UserRepository {
             pstmt.setLong(1, id);
             rs = pstmt.executeQuery();
 
+            User user = null;
+
             if (rs.next()) {
                 long getUserId = rs.getLong("user_id");
                 String getUsername = rs.getString("username");
                 String getPassword = rs.getString("password");
-                User user = new User(getUserId, getUsername, getPassword);
-                return Optional.of(user);
-            } else {
-                throw new NoSuchElementException("member not found userId=" + id);
+                user = new User(getUserId, getUsername, getPassword);
             }
+
+            return Optional.ofNullable(user);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -90,15 +90,16 @@ public class JdbcUserRepository implements UserRepository {
             pstmt.setString(1, username);
             rs = pstmt.executeQuery();
 
+            User user = null;
+
             if (rs.next()) {
                 long getUserId = rs.getLong("user_id");
                 String getUsername = rs.getString("username");
                 String getPassword = rs.getString("password");
-                User user = new User(getUserId, getUsername, getPassword);
-                return Optional.of(user);
-            } else {
-                throw new NoSuchElementException("member not found username=" + username);
+                user = new User(getUserId, getUsername, getPassword);
             }
+
+            return Optional.ofNullable(user);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
