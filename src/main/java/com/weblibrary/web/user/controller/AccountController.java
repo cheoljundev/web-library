@@ -75,9 +75,15 @@ public class AccountController {
     /* 로그인 처리하기 */
     @PostMapping("/login")
     public String login(HttpSession session, @Validated @ModelAttribute("user") LoginUserForm form,
+                        BindingResult bindingResult,
                         @RequestParam(value = "redirectUrl", defaultValue = "/") String redirectUrl) {
 
         log.debug("Input User DTO: {}", form);
+
+        if (bindingResult.hasErrors()) {
+            log.debug("errors={}", bindingResult);
+            return "home/login";
+        }
 
         userService.login(session, form);
 
