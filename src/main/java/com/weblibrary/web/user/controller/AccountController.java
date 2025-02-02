@@ -1,16 +1,14 @@
 package com.weblibrary.web.user.controller;
 
-import com.weblibrary.domain.user.exception.InvalidLoginException;
-import com.weblibrary.web.argumentresolver.Login;
-import com.weblibrary.web.response.ErrorResponse;
-import com.weblibrary.web.response.ErrorResponseUtils;
-import com.weblibrary.web.response.JsonResponse;
 import com.weblibrary.domain.user.dto.JoinUserDto;
 import com.weblibrary.domain.user.dto.LoginUserForm;
+import com.weblibrary.domain.user.exception.InvalidLoginException;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;
+import com.weblibrary.web.argumentresolver.Login;
+import com.weblibrary.web.response.ErrorResponse;
+import com.weblibrary.web.response.JsonResponse;
 import com.weblibrary.web.user.validation.JoinValidator;
-import com.weblibrary.web.user.validation.LoginValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
