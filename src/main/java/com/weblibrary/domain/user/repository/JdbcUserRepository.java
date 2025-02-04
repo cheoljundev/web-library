@@ -37,13 +37,14 @@ public class JdbcUserRepository implements UserRepository {
                 }
             }
 
+            return user;
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
             close(con, pstmt, rs);
         }
 
-        return user;
     }
 
     @Override
