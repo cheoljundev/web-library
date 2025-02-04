@@ -1,14 +1,14 @@
-package com.weblibrary.web.user.controller;
+package com.weblibrary.web.account.controller;
 
-import com.weblibrary.domain.user.dto.JoinUserDto;
-import com.weblibrary.domain.user.dto.LoginUserForm;
-import com.weblibrary.domain.user.exception.InvalidLoginException;
+import com.weblibrary.domain.account.service.AccountService;
+import com.weblibrary.domain.account.dto.JoinUserForm;
+import com.weblibrary.domain.account.dto.LoginUserForm;
+import com.weblibrary.domain.account.exception.InvalidJoinException;
+import com.weblibrary.domain.account.exception.InvalidLoginException;
 import com.weblibrary.domain.user.model.User;
-import com.weblibrary.domain.user.service.UserService;
 import com.weblibrary.web.argumentresolver.Login;
 import com.weblibrary.web.response.ErrorResponse;
 import com.weblibrary.web.response.JsonResponse;
-import com.weblibrary.web.user.validation.JoinValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -32,26 +32,20 @@ import java.util.List;
 @Slf4j
 public class AccountController {
 
-    private final UserService userService;
-    private final JoinValidator joinValidator;
+    private final AccountService accountService;
 
     /* join form 보여주기 */
     @GetMapping("/join")
     public String joinForm(Model model) {
-        model.addAttribute("user", new JoinUserDto());
+        model.addAttribute("user", new LoginUserForm());
         return "home/join";
     }
 
     /* 회원가입 처리하기 */
     @PostMapping("/join")
-    public String join(@Validated @ModelAttribute("user") JoinUserDto user, BindingResult bindingResult) {
+    public String join(@Validated @ModelAttribute("user") JoinUserForm form, BindingResult bindingResult) {
 
-        log.debug("objectName={}", bindingResult.getObjectName());
-        log.debug("target={}", bindingResult.getTarget());
-
-        log.debug("Input User DTO: {}", user);
-
-        joinValidator.validate(user, bindingResult);
+        log.debug("Input User DTO: {}", form);
 
         /* 검증에 에러가 발견되면, 폼을 보여줌. */
         if (bindingResult.hasErrors()) {
@@ -60,7 +54,7 @@ public class AccountController {
         }
 
         /* 검증이 끝나면, 컨트롤러에서 회원가입 처리 */
-        userService.join(user);
+        accountService.join(form);
 
         // 회원가입 후에 홈으로 리다이렉트
         return "redirect:/";
@@ -85,7 +79,7 @@ public class AccountController {
             return "home/login";
         }
 
-        userService.login(session, form);
+        accountService.login(session, form);
 
         /* 로그인 후에 redirectUrl로 리다이렉트 */
         return "redirect:" + redirectUrl;
@@ -120,6 +114,15 @@ public class AccountController {
         model.addAttribute("user", e.getForm());
         model.addAttribute("errors", errors);
         return "home/login";
+    }
+
+    @ExceptionHandler(InvalidJoinException.class)
+    public String handleInvalidJoinException(InvalidJoinException e, Model model) {
+        List<String> errors = new ArrayList<>();
+        errors.add(e.getMessage());
+        model.addAttribute("user", e.getForm());
+        model.addAttribute("errors", errors);
+        return "home/join";
     }
 
 }

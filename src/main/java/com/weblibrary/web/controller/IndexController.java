@@ -1,6 +1,6 @@
-package com.weblibrary.web.user.controller;
+package com.weblibrary.web.controller;
 
-import com.weblibrary.domain.book.model.dto.BookListItem;
+import com.weblibrary.domain.book.dto.BookListItem;
 import com.weblibrary.domain.book.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

@@ -1,4 +1,4 @@
-package com.weblibrary.domain.file.controller;
+package com.weblibrary.web.file.controller;
 
 import com.weblibrary.domain.file.store.FileStore;
 import lombok.RequiredArgsConstructor;

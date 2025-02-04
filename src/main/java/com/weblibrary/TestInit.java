@@ -1,12 +1,13 @@
 package com.weblibrary;
 
+import com.weblibrary.domain.account.service.AccountService;
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.bookCover.model.BookCover;
 import com.weblibrary.domain.bookCover.repository.BookCoverRepository;
 import com.weblibrary.domain.book.repository.BookRepository;
 import com.weblibrary.domain.file.model.UploadFile;
-import com.weblibrary.domain.user.dto.JoinUserDto;
+import com.weblibrary.domain.account.dto.JoinUserForm;
 import com.weblibrary.domain.user.repository.UserRepository;
 import com.weblibrary.domain.user.service.UserService;
 import jakarta.annotation.PostConstruct;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class TestInit {
     private final AdminService adminService;
-    private final UserService userService;
+    private final AccountService accountService;
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
     private final BookCoverRepository bookCoverRepository;
@@ -29,8 +30,8 @@ public class TestInit {
     }
 
     private void initUser() {
-        userService.join(new JoinUserDto("admin", "1111"));
-        userService.join(new JoinUserDto("user", "1111"));
+        accountService.join(new JoinUserForm("admin", "1111"));
+        accountService.join(new JoinUserForm("user", "1111"));
         userRepository.findByUsername("admin")
                 .ifPresent(admin -> {
                     adminService.setUserAsAdmin(admin.getUserId());

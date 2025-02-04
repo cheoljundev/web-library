@@ -1,4 +1,4 @@
-package com.weblibrary.domain.user.dto;
+package com.weblibrary.domain.account.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

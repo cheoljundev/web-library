@@ -1,0 +1,59 @@
+package com.weblibrary.domain.account.service;
+
+import com.weblibrary.domain.admin.model.Role;
+import com.weblibrary.domain.admin.repository.UserRoleRepository;
+import com.weblibrary.domain.account.dto.JoinUserForm;
+import com.weblibrary.domain.account.dto.LoginUserForm;
+import com.weblibrary.domain.account.exception.InvalidJoinException;
+import com.weblibrary.domain.account.exception.InvalidLoginException;
+import com.weblibrary.domain.user.model.User;
+import com.weblibrary.domain.user.service.UserService;
+import com.weblibrary.web.SessionConst;
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import static com.weblibrary.domain.admin.model.RoleType.DEFAULT;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class AccountService {
+
+    private final UserService userService;
+    private final UserRoleRepository userRoleRepository;
+
+    /**
+     * 가입 처리 서비스 계층 메서드
+     */
+    public void join(JoinUserForm form) {
+        if (!isUniqueUsername(form.getUsername())) {
+            throw new InvalidJoinException("이미 존재하는 유저이름입니다.", form);
+        }
+        User user = new User(form.getUsername(), form.getPassword());
+        Role role = new Role(user.getUserId(), DEFAULT);
+        userRoleRepository.save(role);
+        userService.save(user);
+    }
+
+    /**
+     * 로그인 처리를 담은 서비스 계층 메서드
+     * Validator에서 호출한다.
+     *
+     * @param session      : 세션
+     * @param form : Valitation에 성공한 유저Dto
+     */
+
+    public void login(HttpSession session, LoginUserForm form) {
+        User loginUser = userService.findByUsername(form.getUsername())
+                .filter(user -> user.getPassword().equals(form.getPassword()))
+                .orElseThrow(() -> new InvalidLoginException("로그인에 실패했습니다. 아이디 및 비밀번호를 확인하세요.", form));
+
+        session.setAttribute(SessionConst.LOGIN_USER, loginUser);
+    }
+
+    private boolean isUniqueUsername(String username) {
+        return userService.findByUsername(username).isEmpty();
+    }
+}

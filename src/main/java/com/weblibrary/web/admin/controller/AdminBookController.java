@@ -1,9 +1,9 @@
 package com.weblibrary.web.admin.controller;
 
-import com.weblibrary.domain.book.model.dto.BookListItem;
-import com.weblibrary.domain.book.model.dto.ModifyBookForm;
-import com.weblibrary.domain.book.model.dto.ModifyBookViewForm;
-import com.weblibrary.domain.book.model.dto.NewBookForm;
+import com.weblibrary.domain.book.dto.BookListItem;
+import com.weblibrary.domain.book.dto.ModifyBookForm;
+import com.weblibrary.domain.book.dto.ModifyBookViewForm;
+import com.weblibrary.domain.book.dto.NewBookForm;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.web.book.validation.BookAddValidator;
 import com.weblibrary.web.book.validation.BookModifyValidator;

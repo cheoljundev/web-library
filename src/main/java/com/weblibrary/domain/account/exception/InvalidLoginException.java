@@ -1,6 +1,6 @@
-package com.weblibrary.domain.user.exception;
+package com.weblibrary.domain.account.exception;
 
-import com.weblibrary.domain.user.dto.LoginUserForm;
+import com.weblibrary.domain.account.dto.LoginUserForm;
 import lombok.Getter;
 
 public class InvalidLoginException extends RuntimeException{

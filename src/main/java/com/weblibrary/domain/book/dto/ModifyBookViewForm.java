@@ -1,4 +1,4 @@
-package com.weblibrary.domain.book.model.dto;
+package com.weblibrary.domain.book.dto;
 
 import com.weblibrary.domain.file.model.UploadFile;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.weblibrary.domain.book.model.dto;
+package com.weblibrary.domain.book.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,7 +1,6 @@
-package com.weblibrary.domain.user.dto;
+package com.weblibrary.domain.account.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class JoinUserDto {
+public class JoinUserForm {
 
     @NotBlank
     @Size(min = 5)

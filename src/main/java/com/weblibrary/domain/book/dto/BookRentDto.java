@@ -1,4 +1,4 @@
-package com.weblibrary.domain.book.model.dto;
+package com.weblibrary.domain.book.dto;
 
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.user.model.User;
