@@ -41,8 +41,4 @@ public interface UserRepository {
      */
     Optional<User> remove(Long userId);
 
-    /**
-     * 저장소 비우기
-     */
-    void clearAll();
 }

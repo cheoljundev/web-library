@@ -169,8 +169,4 @@ public class JdbcUserRepository implements UserRepository {
         }
     }
 
-    @Override
-    public void clearAll() {
-
-    }
 }

@@ -43,7 +43,6 @@ public class MemoryUserRepository implements UserRepository {
         return Optional.ofNullable(store.remove(userId));
     }
 
-    @Override
     public void clearAll() {
         store.clear();
     }
