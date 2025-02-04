@@ -93,13 +93,10 @@ public class AdminUsersController {
     @DeleteMapping("/users/{id}")
     public ResponseEntity<JsonResponse> deleteUser(@PathVariable("id") Long id) {
 
-        return adminService.deleteUser(id)
-                .map(removed -> new ResponseEntity<JsonResponse>(JsonResponse.builder()
-                        .message("정상적으로 유저가 삭제되었습니다.")
-                        .build(), HttpStatus.OK)
-                ).orElseGet(() -> new ResponseEntity<JsonResponse>(ErrorResponse.builder()
-                        .message("찾을 수 없는 유저입니다.")
-                        .build(), HttpStatus.BAD_REQUEST));
+        adminService.deleteUser(id);
 
+        return ResponseEntity.ok().body(JsonResponse.builder()
+                .message("정상적으로 유저가 삭제되었습니다.")
+                .build());
     }
 }

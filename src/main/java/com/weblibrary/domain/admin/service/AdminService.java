@@ -4,6 +4,7 @@ import com.weblibrary.domain.admin.model.Role;
 import com.weblibrary.domain.admin.model.RoleType;
 import com.weblibrary.domain.admin.repository.MemoryUserRoleRepository;
 import com.weblibrary.domain.admin.repository.UserRoleRepository;
+import com.weblibrary.domain.user.exception.NotFoundUserException;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -72,8 +73,15 @@ public class AdminService {
                 .orElse(false); // userId에 해당하는 사용자가 없으면 false 반환
     }
 
-    public Optional<User> deleteUser(Long userId) {
-        return userRepository.remove(userId);
+    public void deleteUser(Long userId) {
+        userRepository.remove(userId).ifPresentOrElse(user -> {
+            List<Role> roles = userRoleRepository.findByUserId(user.getUserId());
+            roles.forEach(role -> {
+                        userRoleRepository.remove(role.getRoleId());
+                    });
+        }, () -> {
+            throw new NotFoundUserException();
+        });
     }
 
     public List<User> findAllUsers() {
