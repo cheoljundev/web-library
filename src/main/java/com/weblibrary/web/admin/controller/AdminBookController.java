@@ -53,9 +53,9 @@ public class AdminBookController {
 
     @ResponseBody
     @PostMapping("/books/add")
-    public ResponseEntity<JsonResponse> addBook(@RequestParam(required = false) String bookName,
-                                                @RequestParam(required = false) String isbn,
-                                                @RequestParam(required = false) MultipartFile coverImage) throws IOException {
+    public ResponseEntity<JsonResponse> addBook(@RequestParam(name = "bookName", required = false) String bookName,
+                                                @RequestParam(name = "isbn", required = false) String isbn,
+                                                @RequestParam(name = "coverImage", required = false) MultipartFile coverImage) throws IOException {
 
         NewBookForm form = new NewBookForm(bookName, isbn, coverImage);
         BindingResult bindingResult = new BeanPropertyBindingResult(form, "newBookForm");

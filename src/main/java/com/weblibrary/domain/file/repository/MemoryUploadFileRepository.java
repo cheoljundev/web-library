@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Repository
 @RequiredArgsConstructor
 public class MemoryUploadFileRepository implements UploadFileRepository{
 
