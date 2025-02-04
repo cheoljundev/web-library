@@ -1,5 +1,6 @@
 package com.weblibrary.web.admin.controller;
 
+import com.weblibrary.domain.account.service.AccountService;
 import com.weblibrary.domain.admin.model.RoleType;
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.user.dto.SetUserDto;
@@ -22,6 +23,7 @@ import java.util.List;
 public class AdminUsersController {
 
     private final AdminService adminService;
+    private final AccountService accountService;
 
     @ModelAttribute("roleTypes")
     public RoleType[] roleTypes() {
@@ -40,13 +42,13 @@ public class AdminUsersController {
             log.debug("user={}", user);
 
             /* 찾은 유저의 가장 높은 RoleType 가져오기 */
-            RoleType roleType = adminService.findUserRoleType(user.getId());
+            RoleType roleType = adminService.findUserRoleType(user.getUserId());
 
             log.debug("roleType={}", roleType);
             log.debug("roleType.name()={}", roleType.name());
 
             SetUserDto userDto = SetUserDto.builder()
-                    .id(user.getId())
+                    .id(user.getUserId())
                     .username(user.getUsername())
                     .roleTypeName(roleType.name())
                     .build();
@@ -93,13 +95,10 @@ public class AdminUsersController {
     @DeleteMapping("/users/{id}")
     public ResponseEntity<JsonResponse> deleteUser(@PathVariable("id") Long id) {
 
-        return adminService.deleteUser(id)
-                .map(removed -> new ResponseEntity<JsonResponse>(JsonResponse.builder()
-                        .message("정상적으로 유저가 삭제되었습니다.")
-                        .build(), HttpStatus.OK)
-                ).orElseGet(() -> new ResponseEntity<JsonResponse>(ErrorResponse.builder()
-                        .message("찾을 수 없는 유저입니다.")
-                        .build(), HttpStatus.BAD_REQUEST));
+        accountService.deleteUser(id);
 
+        return ResponseEntity.ok().body(JsonResponse.builder()
+                .message("정상적으로 유저가 삭제되었습니다.")
+                .build());
     }
 }

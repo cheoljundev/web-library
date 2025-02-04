@@ -1,8 +1,6 @@
 package com.weblibrary.web.book.validation;
 
-import com.weblibrary.domain.book.exception.NotFoundBookException;
-import com.weblibrary.domain.book.model.dto.ModifyBookForm;
-import com.weblibrary.domain.book.service.BookService;
+import com.weblibrary.domain.book.dto.ModifyBookForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -15,8 +13,6 @@ import org.springframework.validation.Validator;
 @RequiredArgsConstructor
 public class BookModifyValidator implements Validator {
 
-    private final BookService bookService;
-    private static final String DUPLICATED_FIELD = "duplicated";
     private static final String MIN_FIELD = "min";
     private static final String NOT_BLANK_FIELD = "NotBlank";
     private static final int BOOK_NAME_MIN_SIZE = 5;
@@ -39,16 +35,6 @@ public class BookModifyValidator implements Validator {
         boolean isBookNameTooShort = bookName.length() < BOOK_NAME_MIN_SIZE;
         boolean isIsbnTooShort = isbn.length() < ISBN_MIN_SIZE;
 
-        bookService.findBookById(book.getId())
-                .ifPresentOrElse(findOldBook -> {
-                    // ISBN 중복 체크
-                    if (isDuplicated(findOldBook.getIsbn(), isbn)) {
-                        errors.rejectValue("isbn", DUPLICATED_FIELD, null);
-                    }
-                }, () -> {
-                    throw new NotFoundBookException();
-                });
-
         if (isBookNameEmpty || isIsbnEmpty || isBookNameTooShort || isIsbnTooShort
         ) {
             if (isBookNameEmpty) {
@@ -63,9 +49,5 @@ public class BookModifyValidator implements Validator {
             }
         }
 
-    }
-
-    private boolean isDuplicated(String oldIsbn, String newIsbn) {
-        return !oldIsbn.equals(newIsbn) && bookService.findBookByIsbn(newIsbn) != null;
     }
 }

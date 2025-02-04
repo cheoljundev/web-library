@@ -1,22 +1,20 @@
 package com.weblibrary.domain.book.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @ToString
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class Book {
     @Setter
-    private Long id;
-    private String name;
+    private Long bookId;
+    private String bookName;
     private String isbn;
     private boolean isRented;
 
-    public Book(String name, String isbn) {
-        this.name = name;
+    public Book(String bookName, String isbn) {
+        this.bookName = bookName;
         this.isbn = isbn;
     }
 
@@ -27,8 +25,8 @@ public class Book {
      * @param book : 같은 값으로 생성할 book
      */
     public Book(Book book) {
-        this.id = book.getId();
-        this.name = book.getName();
+        this.bookId = book.getBookId();
+        this.bookName = book.getBookName();
         this.isbn = book.getIsbn();
         this.isRented = book.isRented();
     }
@@ -38,9 +36,9 @@ public class Book {
      *
      * @return 기존 정보를담은 Book
      */
-    public Book modify(String name, String isbn) {
+    public Book modify(String bookName, String isbn) {
         Book oldBook = new Book(this);
-        this.name = name;
+        this.bookName = bookName;
         this.isbn = isbn;
 
         return oldBook;

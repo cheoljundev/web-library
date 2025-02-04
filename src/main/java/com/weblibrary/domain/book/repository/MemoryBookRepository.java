@@ -1,18 +1,12 @@
 package com.weblibrary.domain.book.repository;
 
 import com.weblibrary.domain.book.model.Book;
-import com.weblibrary.domain.book.model.dto.NewBookForm;
-import com.weblibrary.domain.file.model.UploadFile;
-import com.weblibrary.domain.file.repository.UploadRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-import java.io.IOException;
 import java.util.*;
 
 @Slf4j
-@Repository
 public class MemoryBookRepository implements BookRepository {
 
     private final Map<Long, Book> store = new HashMap<>();
@@ -20,8 +14,8 @@ public class MemoryBookRepository implements BookRepository {
 
     @Override
     public Book save(Book book) {
-        book.setId(incrementLastId());
-        store.put(book.getId(), book);
+        book.setBookId(incrementLastId());
+        store.put(book.getBookId(), book);
         log.debug("saved book={}", book);
         return book;
     }
@@ -36,9 +30,9 @@ public class MemoryBookRepository implements BookRepository {
     }
 
     @Override
-    public Optional<Book> findByName(String name) {
+    public Optional<Book> findByName(String bookName) {
         return findAll().stream()
-                .filter(book -> book.getName().equals(name))
+                .filter(book -> book.getBookName().equals(bookName))
                 .findFirst();
     }
 
@@ -59,7 +53,6 @@ public class MemoryBookRepository implements BookRepository {
         return Optional.ofNullable(store.remove(bookId));
     }
 
-    @Override
     public void clearAll() {
         store.clear();
     }

@@ -13,8 +13,8 @@
     <section id="login" th:if="${session.loginUser == null}">
         <form action="login" th:action method="post" th:object="${user}">
             <legend th:text="#{menu.login}">로그인</legend>
-            <div th:if="${#fields.hasGlobalErrors()}">
-                <p class="error" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+            <div th:if="${errors}">
+                <p class="error" th:each="err : ${errors}" th:text="${err}"></p>
             </div>
             <div class="mb-3">
                 <label for="username" class="form-label" th:text="#{user.username}">username</label>

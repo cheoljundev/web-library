@@ -1,7 +1,6 @@
 package com.weblibrary.domain.rental.repository;
 
 import com.weblibrary.domain.rental.model.Rental;
-import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +9,6 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-@Repository
 public class MemoryBookRentRepository implements BookRentalRepository{
     private final Map<Long, Rental> rentals = new HashMap<>();
     private final AtomicLong rentalIdGenerator = new AtomicLong(1);
@@ -18,8 +16,8 @@ public class MemoryBookRentRepository implements BookRentalRepository{
     @Override
     public Rental save(Rental rental) {
         long newId = rentalIdGenerator.getAndIncrement();
-        rental.setId(newId);
-        rentals.put(rental.getId(), rental);
+        rental.setRentalId(newId);
+        rentals.put(rental.getRentalId(), rental);
         return rental;
     }
 
@@ -38,12 +36,17 @@ public class MemoryBookRentRepository implements BookRentalRepository{
     }
 
     @Override
-    public Optional<Rental> findById(Long id) {
-        return Optional.ofNullable(rentals.get(id));
+    public Optional<Rental> findById(Long rental_id) {
+        return Optional.ofNullable(rentals.get(rental_id));
     }
 
     @Override
-    public void delete(Rental rental) {
-        rentals.remove(rental.getId());
+    public void returnBook(Long bookId) {
+        findActiveRentalByBookId(bookId).ifPresent(Rental::returnBook);
+    }
+
+    @Override
+    public void delete(Long rental_id) {
+        rentals.remove(rental_id);
     }
 }

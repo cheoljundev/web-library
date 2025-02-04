@@ -1,11 +1,9 @@
 package com.weblibrary.domain.user.repository;
 
 import com.weblibrary.domain.user.model.User;
-import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
-@Repository
 public class MemoryUserRepository implements UserRepository {
 
     private final Map<Long, User> store = new HashMap<>();
@@ -17,8 +15,10 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public void save(User user) {
-        store.put(user.getId(), user);
+    public User save(User user) {
+        user.setUserId(incrementLastId());
+        store.put(user.getUserId(), user);
+        return user;
     }
 
     @Override
@@ -43,7 +43,6 @@ public class MemoryUserRepository implements UserRepository {
         return Optional.ofNullable(store.remove(userId));
     }
 
-    @Override
     public void clearAll() {
         store.clear();
     }

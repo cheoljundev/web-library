@@ -1,6 +1,6 @@
 package com.weblibrary.web.book.validation;
 
-import com.weblibrary.domain.book.model.dto.NewBookForm;
+import com.weblibrary.domain.book.dto.NewBookForm;
 import com.weblibrary.domain.book.service.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

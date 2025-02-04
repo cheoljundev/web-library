@@ -1,53 +1,21 @@
 package com.weblibrary.domain.user.service;
 
-import com.weblibrary.domain.admin.model.Role;
-import com.weblibrary.domain.admin.repository.MemoryUserRoleRepository;
-import com.weblibrary.domain.admin.repository.UserRoleRepository;
-import com.weblibrary.domain.user.dto.JoinUserDto;
-import com.weblibrary.domain.user.dto.LoginUserDto;
 import com.weblibrary.domain.user.model.User;
-import com.weblibrary.domain.user.repository.MemoryUserRepository;
 import com.weblibrary.domain.user.repository.UserRepository;
-import com.weblibrary.web.SessionConst;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static com.weblibrary.domain.admin.model.RoleType.DEFAULT;
-
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final UserRoleRepository userRoleRepository;
 
-    /**
-     * 가입 처리 서비스 계층 메서드
-     */
-    public void join(JoinUserDto joinUserDto) {
-        String username = joinUserDto.getUsername();
-        String password = joinUserDto.getPassword();
-        User user = new User(MemoryUserRepository.incrementLastId(), username, password);
-        Role role = new Role(MemoryUserRoleRepository.incrementLastId(), user.getId(), DEFAULT);
-        userRoleRepository.save(role);
-        userRepository.save(user);
-    }
-
-    /**
-     * 로그인 처리를 담은 서비스 계층 메서드
-     * Validator에서 호출한다.
-     *
-     * @param session : 세션
-     * @param loginUserDto : Valitation에 성공한 유저Dto
-     */
-
-    public void login(HttpSession session, LoginUserDto loginUserDto) {
-        findByUsername(loginUserDto.getUsername())
-                .ifPresent(user -> {
-                    session.setAttribute(SessionConst.LOGIN_USER, user);
-                });
+    public User save(User user) {
+        return userRepository.save(user);
     }
 
     /**
@@ -63,4 +31,6 @@ public class UserService {
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
+
+
 }

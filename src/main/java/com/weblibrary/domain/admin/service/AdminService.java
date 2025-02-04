@@ -2,24 +2,13 @@ package com.weblibrary.domain.admin.service;
 
 import com.weblibrary.domain.admin.model.Role;
 import com.weblibrary.domain.admin.model.RoleType;
-import com.weblibrary.domain.admin.repository.MemoryUserRoleRepository;
 import com.weblibrary.domain.admin.repository.UserRoleRepository;
-import com.weblibrary.domain.book.exception.NotFoundBookException;
-import com.weblibrary.domain.book.model.BookCover;
-import com.weblibrary.domain.book.model.dto.ModifyBookForm;
-import com.weblibrary.domain.book.repository.BookCoverRepository;
-import com.weblibrary.domain.book.service.BookService;
-import com.weblibrary.domain.file.model.UploadFile;
-import com.weblibrary.domain.file.repository.UploadRepository;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.List;
-import java.util.Optional;
 
 import static com.weblibrary.domain.admin.model.RoleType.ADMIN;
 
@@ -42,7 +31,7 @@ public class AdminService {
 
 
     public RoleType findUserRoleType(Long userId) {
-        List<Role> roles = userRoleRepository.findByUserId(userId);
+        List<Role> roles = userRoleRepository.findRolesByUserId(userId);
 
         /* 가장 높은 권한 순서로 sort <- Comparable<Role> */
         roles.sort(null);
@@ -63,7 +52,7 @@ public class AdminService {
     private boolean removeAdminRole(Long userId) {
         return userRoleRepository.findRoleByUserIdAndRoleType(userId, ADMIN)
                 .map(role -> {
-                    userRoleRepository.remove(role.getId());
+                    userRoleRepository.remove(role.getRoleId());
                     return true;
                 }).orElse(false);
     }
@@ -72,18 +61,13 @@ public class AdminService {
         return userRepository.findById(userId)
                 .map(user -> {
                     Role adminRole = new Role(
-                            MemoryUserRoleRepository.incrementLastId(),
-                            user.getId(),
+                            user.getUserId(),
                             ADMIN
                     );
                     userRoleRepository.save(adminRole);
                     return true;
                 })
                 .orElse(false); // userId에 해당하는 사용자가 없으면 false 반환
-    }
-
-    public Optional<User> deleteUser(Long userId) {
-        return userRepository.remove(userId);
     }
 
     public List<User> findAllUsers() {

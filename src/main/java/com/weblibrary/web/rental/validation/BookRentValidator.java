@@ -1,7 +1,7 @@
 package com.weblibrary.web.rental.validation;
 
 import com.weblibrary.domain.book.model.Book;
-import com.weblibrary.domain.book.model.dto.BookRentDto;
+import com.weblibrary.domain.book.dto.BookRentDto;
 import com.weblibrary.domain.rental.service.BookRentalService;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;

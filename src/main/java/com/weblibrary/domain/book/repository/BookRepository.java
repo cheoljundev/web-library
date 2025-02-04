@@ -1,10 +1,7 @@
 package com.weblibrary.domain.book.repository;
 
 import com.weblibrary.domain.book.model.Book;
-import com.weblibrary.domain.book.model.dto.NewBookForm;
-import com.weblibrary.domain.user.model.User;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,8 +41,4 @@ public interface BookRepository {
      */
     Optional<Book> remove(Long bookId);
 
-    /**
-     * 모든 내용 삭제
-     */
-    void clearAll();
 }
