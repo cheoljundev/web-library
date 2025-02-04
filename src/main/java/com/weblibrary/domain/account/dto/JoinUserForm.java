@@ -15,6 +15,10 @@ public class JoinUserForm {
     @Size(min = 5)
     private String username;
 
+    public void setUsername(String username) {
+        this.username = (username != null) ? username.trim() : null;
+    }
+
     @NotBlank
     @Size(min = 5)
     private String password;
