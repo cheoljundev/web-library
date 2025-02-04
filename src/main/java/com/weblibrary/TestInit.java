@@ -25,13 +25,13 @@ public class TestInit {
 
     @PostConstruct
     private void init() {
-//        initUser();
+        initUser();
         initBook();
     }
 
     private void initUser() {
-        accountService.join(new JoinUserForm("admin", "1111"));
         accountService.join(new JoinUserForm("user", "1111"));
+        accountService.join(new JoinUserForm("admin", "1111"));
         userRepository.findByUsername("admin")
                 .ifPresent(admin -> {
                     adminService.setUserAsAdmin(admin.getUserId());

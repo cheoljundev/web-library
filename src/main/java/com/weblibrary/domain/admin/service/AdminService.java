@@ -2,16 +2,13 @@ package com.weblibrary.domain.admin.service;
 
 import com.weblibrary.domain.admin.model.Role;
 import com.weblibrary.domain.admin.model.RoleType;
-import com.weblibrary.domain.admin.repository.MemoryUserRoleRepository;
 import com.weblibrary.domain.admin.repository.UserRoleRepository;
-import com.weblibrary.domain.user.exception.NotFoundUserException;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.weblibrary.domain.admin.model.RoleType.ADMIN;
 
@@ -34,7 +31,7 @@ public class AdminService {
 
 
     public RoleType findUserRoleType(Long userId) {
-        List<Role> roles = userRoleRepository.findByUserId(userId);
+        List<Role> roles = userRoleRepository.findRolesByUserId(userId);
 
         /* 가장 높은 권한 순서로 sort <- Comparable<Role> */
         roles.sort(null);

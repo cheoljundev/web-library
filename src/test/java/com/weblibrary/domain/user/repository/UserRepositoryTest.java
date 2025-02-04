@@ -3,6 +3,7 @@ package com.weblibrary.domain.user.repository;
 import com.weblibrary.domain.account.dto.JoinUserForm;
 import com.weblibrary.domain.account.service.AccountService;
 import com.weblibrary.domain.user.model.User;
+import com.weblibrary.domain.user.service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,8 @@ class UserRepositoryTest {
     UserRepository userRepository;
     @Autowired
     AccountService accountService;
+    @Autowired
+    private UserService userService;
 
     @BeforeEach
     void setUp() {
@@ -29,7 +32,7 @@ class UserRepositoryTest {
     @AfterEach
     void tearDown() {
         userRepository.findByUsername("tester").ifPresent( user ->
-                userRepository.remove(user.getUserId())
+                accountService.deleteUser(user.getUserId())
         );
     }
 
@@ -38,6 +41,7 @@ class UserRepositoryTest {
         User user = new User("tester2", "1234");
         User savedUser = userRepository.save(user);
         assertThat(user).isEqualTo(savedUser);
+        userRepository.remove(savedUser.getUserId());
     }
 
     @Test
@@ -64,8 +68,9 @@ class UserRepositoryTest {
     @Test
     void remove() {
         User user = userRepository.findByUsername("tester").get();
-        User removed = userRepository.remove(user.getUserId()).get();
-        assertThat(removed).isEqualTo(user);
+        accountService.deleteUser(user.getUserId());
+        User findUser = userService.findByUsername("tester").orElse(null);
+        assertThat(findUser).isNull();
     }
 
     @Test

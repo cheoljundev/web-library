@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface UserRoleRepository {
     void save(Role role);
+    Optional<Role> findById(Long roleId);
     Optional<Role> findRoleByUserIdAndRoleType(Long userId, RoleType roleType);
-    List<Role> findByUserId(Long userId);
     List<Role> findRolesByUserId(Long userId);
     List<Role> findAll();
-    Optional<Role> remove(Long roleId);
+    boolean remove(Long roleId);
 }

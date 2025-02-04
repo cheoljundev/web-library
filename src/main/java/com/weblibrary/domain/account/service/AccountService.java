@@ -16,8 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 import static com.weblibrary.domain.admin.model.RoleType.DEFAULT;
 
 @Slf4j
@@ -36,10 +34,9 @@ public class AccountService {
         if (!isUniqueUsername(form.getUsername())) {
             throw new InvalidJoinException("이미 존재하는 유저이름입니다.", form);
         }
-        User user = new User(form.getUsername(), form.getPassword());
-        Role role = new Role(user.getUserId(), DEFAULT);
+        User savedUser = userService.save(new User(form.getUsername(), form.getPassword()));
+        Role role = new Role(savedUser.getUserId(), DEFAULT);
         userRoleRepository.save(role);
-        userService.save(user);
     }
 
     /**
@@ -59,14 +56,15 @@ public class AccountService {
     }
 
     public void deleteUser(Long userId) {
-        userRepository.remove(userId).ifPresentOrElse(user -> {
-            List<Role> roles = userRoleRepository.findByUserId(user.getUserId());
-            roles.forEach(role -> {
-                userRoleRepository.remove(role.getRoleId());
-            });
-        }, () -> {
-            throw new NotFoundUserException();
+
+        userService.findById(userId)
+                .orElseThrow(NotFoundUserException::new);
+
+        userRoleRepository.findRolesByUserId(userId).forEach(role -> {
+            userRoleRepository.remove(role.getRoleId());
         });
+
+        userRepository.remove(userId);
     }
 
     private boolean isUniqueUsername(String username) {
