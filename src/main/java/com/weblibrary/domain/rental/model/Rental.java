@@ -1,15 +1,13 @@
 package com.weblibrary.domain.rental.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @RequiredArgsConstructor
 @ToString
+@AllArgsConstructor
 public class Rental {
     @Setter
     private Long rentalId; // 고유 대출 ID
@@ -24,8 +22,9 @@ public class Rental {
         this.rentedAt = LocalDateTime.now();
     }
 
-    public void returnBook() {
+    public LocalDateTime returnBook() {
         this.returnedAt = LocalDateTime.now();
+        return this.returnedAt;
     }
 
     public boolean isReturned() {

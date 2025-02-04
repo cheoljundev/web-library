@@ -8,8 +8,10 @@ import com.weblibrary.domain.rental.repository.BookRentalRepository;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BookRentalService {
@@ -38,6 +40,7 @@ public class BookRentalService {
     public void unRentBook(User user, Book book) {
         User rendtedUser = findUserByBookId(book.getBookId());
         if (!user.equals(rendtedUser)) {
+            log.debug("rendtedUser={}", rendtedUser);
             throw new RentalException("빌리지 않은 도서입니다.");
         }
 
@@ -49,11 +52,12 @@ public class BookRentalService {
                 .ifPresent(Book::unRent);
         userService.findById(rental.getUserId())
                 .ifPresent(User::incrementRemainingRents);
-        rental.returnBook();
+        bookRentalRepository.returnBook(book.getBookId());
     }
 
     public User findUserByBookId(Long bookId) {
-        return bookRentalRepository.findActiveRentalByBookId(bookId).flatMap(rental -> userService.findById(rental.getUserId()))
+        return bookRentalRepository.findActiveRentalByBookId(bookId)
+                .flatMap(rental -> userService.findById(rental.getUserId()))
                 .orElse(null);
     }
 
