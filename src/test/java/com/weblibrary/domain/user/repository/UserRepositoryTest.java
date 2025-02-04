@@ -31,6 +31,9 @@ class UserRepositoryTest {
 
     @Test
     void findByUsername() {
+        String username = "user";
+        User user = userRepository.findByUsername("user").get();
+        assertThat(user.getUsername()).isEqualTo("user");
     }
 
     @Test
