@@ -1,5 +1,6 @@
 package com.weblibrary.web.admin.controller;
 
+import com.weblibrary.domain.account.service.AccountService;
 import com.weblibrary.domain.admin.model.RoleType;
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.user.dto.SetUserDto;
@@ -22,6 +23,7 @@ import java.util.List;
 public class AdminUsersController {
 
     private final AdminService adminService;
+    private final AccountService accountService;
 
     @ModelAttribute("roleTypes")
     public RoleType[] roleTypes() {
@@ -93,7 +95,7 @@ public class AdminUsersController {
     @DeleteMapping("/users/{id}")
     public ResponseEntity<JsonResponse> deleteUser(@PathVariable("id") Long id) {
 
-        adminService.deleteUser(id);
+        accountService.deleteUser(id);
 
         return ResponseEntity.ok().body(JsonResponse.builder()
                 .message("정상적으로 유저가 삭제되었습니다.")

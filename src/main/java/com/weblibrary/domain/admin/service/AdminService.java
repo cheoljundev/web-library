@@ -73,17 +73,6 @@ public class AdminService {
                 .orElse(false); // userId에 해당하는 사용자가 없으면 false 반환
     }
 
-    public void deleteUser(Long userId) {
-        userRepository.remove(userId).ifPresentOrElse(user -> {
-            List<Role> roles = userRoleRepository.findByUserId(user.getUserId());
-            roles.forEach(role -> {
-                        userRoleRepository.remove(role.getRoleId());
-                    });
-        }, () -> {
-            throw new NotFoundUserException();
-        });
-    }
-
     public List<User> findAllUsers() {
         return userRepository.findAll();
     }

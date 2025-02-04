@@ -6,13 +6,17 @@ import com.weblibrary.domain.account.dto.JoinUserForm;
 import com.weblibrary.domain.account.dto.LoginUserForm;
 import com.weblibrary.domain.account.exception.InvalidJoinException;
 import com.weblibrary.domain.account.exception.InvalidLoginException;
+import com.weblibrary.domain.user.exception.NotFoundUserException;
 import com.weblibrary.domain.user.model.User;
+import com.weblibrary.domain.user.repository.UserRepository;
 import com.weblibrary.domain.user.service.UserService;
 import com.weblibrary.web.SessionConst;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static com.weblibrary.domain.admin.model.RoleType.DEFAULT;
 
@@ -21,6 +25,7 @@ import static com.weblibrary.domain.admin.model.RoleType.DEFAULT;
 @RequiredArgsConstructor
 public class AccountService {
 
+    private final UserRepository userRepository;
     private final UserService userService;
     private final UserRoleRepository userRoleRepository;
 
@@ -51,6 +56,17 @@ public class AccountService {
                 .orElseThrow(() -> new InvalidLoginException("로그인에 실패했습니다. 아이디 및 비밀번호를 확인하세요.", form));
 
         session.setAttribute(SessionConst.LOGIN_USER, loginUser);
+    }
+
+    public void deleteUser(Long userId) {
+        userRepository.remove(userId).ifPresentOrElse(user -> {
+            List<Role> roles = userRoleRepository.findByUserId(user.getUserId());
+            roles.forEach(role -> {
+                userRoleRepository.remove(role.getRoleId());
+            });
+        }, () -> {
+            throw new NotFoundUserException();
+        });
     }
 
     private boolean isUniqueUsername(String username) {
