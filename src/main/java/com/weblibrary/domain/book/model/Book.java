@@ -1,13 +1,11 @@
 package com.weblibrary.domain.book.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @ToString
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class Book {
     @Setter
     private Long bookId;

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 
 @Slf4j
-@Repository
 public class MemoryBookRepository implements BookRepository {
 
     private final Map<Long, Book> store = new HashMap<>();
@@ -54,7 +53,6 @@ public class MemoryBookRepository implements BookRepository {
         return Optional.ofNullable(store.remove(bookId));
     }
 
-    @Override
     public void clearAll() {
         store.clear();
     }

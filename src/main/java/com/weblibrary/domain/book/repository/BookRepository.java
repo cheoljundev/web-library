@@ -41,8 +41,4 @@ public interface BookRepository {
      */
     Optional<Book> remove(Long bookId);
 
-    /**
-     * 모든 내용 삭제
-     */
-    void clearAll();
 }
