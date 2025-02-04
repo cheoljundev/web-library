@@ -146,7 +146,27 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public Optional<User> remove(Long userId) {
-        return Optional.empty();
+        String sql = "delete from users where user_id=?";
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+
+        try {
+            User removed = findById(userId).orElse(null);
+
+            con = getConnection();
+            pstmt = con.prepareStatement(sql);
+            pstmt.setLong(1, userId);
+            pstmt.executeUpdate();
+
+            return Optional.ofNullable(removed);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            close(con, pstmt, rs);
+        }
     }
 
     @Override

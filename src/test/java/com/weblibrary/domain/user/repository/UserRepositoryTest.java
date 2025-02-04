@@ -1,11 +1,14 @@
 package com.weblibrary.domain.user.repository;
 
+import com.weblibrary.domain.account.dto.JoinUserForm;
+import com.weblibrary.domain.account.service.AccountService;
 import com.weblibrary.domain.user.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,6 +17,8 @@ class UserRepositoryTest {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    AccountService accountService;
 
 
     @Test
@@ -46,6 +51,10 @@ class UserRepositoryTest {
 
     @Test
     void remove() {
+        accountService.join(new JoinUserForm("tester", "1234"));
+        User user = userRepository.findByUsername("tester").get();
+        User removed = userRepository.remove(user.getUserId()).get();
+        assertThat(removed).isEqualTo(user);
     }
 
     @Test
