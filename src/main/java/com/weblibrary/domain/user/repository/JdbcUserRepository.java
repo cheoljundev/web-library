@@ -4,6 +4,7 @@ import com.weblibrary.domain.user.model.User;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,7 +66,8 @@ public class JdbcUserRepository implements UserRepository {
                 long getUserId = rs.getLong("user_id");
                 String getUsername = rs.getString("username");
                 String getPassword = rs.getString("password");
-                user = new User(getUserId, getUsername, getPassword);
+                int getRemainingRents = rs.getInt("remaining_rents");
+                user = new User(getUserId, getUsername, getPassword, getRemainingRents);
             }
 
             return Optional.ofNullable(user);
@@ -96,7 +98,8 @@ public class JdbcUserRepository implements UserRepository {
                 long getUserId = rs.getLong("user_id");
                 String getUsername = rs.getString("username");
                 String getPassword = rs.getString("password");
-                user = new User(getUserId, getUsername, getPassword);
+                int getRemainingRents = rs.getInt("remaining_rents");
+                user = new User(getUserId, getUsername, getPassword, getRemainingRents);
             }
 
             return Optional.ofNullable(user);
@@ -110,7 +113,35 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public List<User> findAll() {
-        return List.of();
+        String sql = "select * from users";
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        List<User> users = new ArrayList<>();
+
+        try {
+            con = getConnection();
+            pstmt = con.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                long getUserId = rs.getLong("user_id");
+                String getUsername = rs.getString("username");
+                String getPassword = rs.getString("password");
+                int getRemainingRents = rs.getInt("remaining_rents");
+                users.add(new User(getUserId, getUsername, getPassword, getRemainingRents));
+            }
+
+            return users;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            close(con, pstmt, rs);
+        }
+
     }
 
     @Override
