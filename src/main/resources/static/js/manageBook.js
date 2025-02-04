@@ -1,12 +1,18 @@
 import {fetchRequest, handleError} from "./util.js";
 
 const addBook = async errorContainer => {
-    const bookName = document.getElementById("addBookName").value;
-    const isbn = document.getElementById("addBookIsbn").value;
+    const bookInfo = {
+        bookName : document.getElementById("addBookName").value,
+        isbn : document.getElementById("addBookIsbn").value,
+    }
+
     const coverImage = document.getElementById("addBookCoverImage").files[0]; // 파일 선택
+
     const body = new FormData();
-    body.append("bookName", bookName);
-    body.append("isbn", isbn);
+
+    body.append("bookData", new Blob(
+        [JSON.stringify(bookInfo)], {type : "application/json"}
+    ));
     body.append("coverImage", coverImage);
 
     try {
@@ -52,18 +58,22 @@ const setModifySection = btn => {
 };
 
 const modifyBook = async errorContainer => {
-    const id = document.getElementById("modifyBookId").value;
-    const bookName = document.getElementById("modifyBookName").value;
-    const isbn = document.getElementById("modifyIsbn").value;
+
+    const bookInfo = {
+        id : document.getElementById("modifyBookId").value,
+        bookName : document.getElementById("modifyBookName").value,
+        isbn : document.getElementById("modifyIsbn").value,
+    }
+
     const coverImage = document.getElementById("modifyBookCoverImage").files[0]; // 파일 선택
     const body = new FormData();
-    body.append("id", id);
-    body.append("bookName", bookName);
-    body.append("isbn", isbn);
+    body.append("bookData", new Blob(
+        [JSON.stringify(bookInfo)], {type : "application/json"}
+    ))
     body.append("coverImage", coverImage);
 
     try {
-        const data = await fetchRequest(`/books/${id}`, "PUT", body);
+        const data = await fetchRequest(`/books/${bookInfo.id}`, "PUT", body);
         if (data.redirected) {
             console.log("페이지가 리다이렉트되었습니다.");
             return;

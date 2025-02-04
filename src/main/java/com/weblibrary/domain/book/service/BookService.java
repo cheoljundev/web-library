@@ -36,8 +36,8 @@ public class BookService {
         saveBookCover(book, newBookForm.getCoverImage());
     }
 
-    public void modifyBook(Long bookId, ModifyBookForm form) {
-        findBookById(bookId).ifPresentOrElse(book -> {
+    public void modifyBook(ModifyBookForm form) {
+        findBookById(form.getId()).ifPresentOrElse(book -> {
 
             if (isDuplicated(book.getIsbn(), form.getIsbn())) {
              throw new DuplicateIsbnException();

@@ -93,7 +93,7 @@ public class JdbcUploadFileRepository implements UploadFileRepository {
             throw new NotFoundFileException();
         });
 
-        String sql = "delete from upload_files where = upload_file_id = ?";
+        String sql = "delete from upload_files where upload_file_id = ?";
 
         Connection con = null;
         PreparedStatement pstmt = null;

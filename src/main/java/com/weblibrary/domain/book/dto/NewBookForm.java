@@ -12,7 +12,12 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @Data
 public class NewBookForm {
+
+    @NotBlank
     private String bookName;
+
+    @NotBlank
     private String isbn;
+
     private MultipartFile coverImage;
 }

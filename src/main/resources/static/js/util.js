@@ -33,9 +33,6 @@ export const fetchRequest = async (url, method, body = null) => {
             options.body = body; // FormData는 그대로 사용
         } else {
             options.body = JSON.stringify(body); // 그 외에는 JSON으로 변환
-            options.headers = {
-                'Content-Type': 'application/json', // JSON 형식인 경우 Content-Type 설정
-            };
         }
     }
 
