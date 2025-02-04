@@ -3,12 +3,10 @@ package com.weblibrary.domain.bookCover.repository;
 import com.weblibrary.domain.bookCover.model.BookCover;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
 @Slf4j
-@Repository
 @RequiredArgsConstructor
 public class MemoryBookCoverRepository implements BookCoverRepository {
 
@@ -31,15 +29,15 @@ public class MemoryBookCoverRepository implements BookCoverRepository {
     }
 
     @Override
-    public BookCover findById(Long coverId) {
-        return store.get(coverId);
+    public Optional<BookCover> findById(Long coverId) {
+        return Optional.ofNullable(store.get(coverId));
     }
 
     @Override
     public Optional<BookCover> findByBookId(Long bookId) {
 
         return findAll().stream()
-                .filter(bookCover -> bookCover.getBook().getBookId().equals(bookId))
+                .filter(bookCover -> bookCover.getBookId().equals(bookId))
                 .findFirst();
 
     }

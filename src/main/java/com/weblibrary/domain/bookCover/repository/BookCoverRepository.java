@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface BookCoverRepository {
     void save(BookCover cover);
     void remove(Long coverId);
-    BookCover findById(Long coverId);
+    Optional<BookCover> findById(Long coverId);
     Optional<BookCover> findByBookId(Long bookId);
     List<BookCover> findAll();
 }

@@ -32,8 +32,8 @@ public class BookService {
 
     public void addBook(NewBookForm newBookForm) {
         Book book = new Book(newBookForm.getBookName(), newBookForm.getIsbn());
-        bookRepository.save(book);
-        saveBookCover(book, newBookForm.getCoverImage());
+        Book savedBook = bookRepository.save(book);
+        saveBookCover(savedBook, newBookForm.getCoverImage());
     }
 
     public void modifyBook(ModifyBookForm form) {
@@ -71,8 +71,7 @@ public class BookService {
     public List<BookListItem> findAll() {
         List<BookListItem> bookListItemList = new ArrayList<>();
         bookRepository.findAll().forEach((book -> {
-            UploadFile image = bookCoverRepository.findByBookId(book.getBookId())
-                    .map(BookCover::getImage)
+            UploadFile image = bookCoverRepository.findByBookId(book.getBookId()).flatMap(bookCover -> uploadFileRepository.findById(bookCover.getUploadFileId()))
                     .orElseThrow(NotFoundBookCoverException::new);
             BookListItem bookListItem = new BookListItem(book.getBookId(), book.getBookName(), book.getIsbn(), image);
             bookListItemList.add(bookListItem);
@@ -84,7 +83,7 @@ public class BookService {
         BookCover bookCover = bookCoverRepository.findByBookId(book.getBookId())
                 .orElseThrow(NotFoundBookCoverException::new);
 
-        uploadFileRepository.findById(bookCover.getImage().getUploadFileId())
+        uploadFileRepository.findById(bookCover.getUploadFileId())
                 .ifPresentOrElse(
                         uploadFile -> uploadFileRepository.remove(uploadFile.getUploadFileId()),
                         () -> {
@@ -97,7 +96,7 @@ public class BookService {
     private void saveBookCover(Book book, MultipartFile multipartFile) {
         try {
             UploadFile image = uploadFileRepository.save(multipartFile);
-            BookCover newBookCover = new BookCover(book, image);
+            BookCover newBookCover = new BookCover(book.getBookId(), image.getUploadFileId());
             bookCoverRepository.save(newBookCover);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
