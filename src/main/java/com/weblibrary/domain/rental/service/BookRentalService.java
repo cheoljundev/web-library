@@ -41,7 +41,7 @@ public class BookRentalService {
         return bookRentalRepository.save(new Rental(book.getBookId(), user.getUserId()));
     }
 
-    public void unRentBook(User user, Book book) {
+    public void returnBook(User user, Book book) {
         User rendtedUser = findUserByBookId(book.getBookId());
         if (!user.equals(rendtedUser)) {
             log.debug("rendtedUser={}", rendtedUser);

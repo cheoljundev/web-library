@@ -28,7 +28,7 @@ public class BookRentalController {
     private final ErrorResponseUtils errorResponseUtils;
 
     @PostMapping("/{bookId}/rent")
-    public ResponseEntity<JsonResponse> rent(@Login User user, @PathVariable("bookId") Long bookId) {
+    public ResponseEntity<JsonResponse> rentBook(@Login User user, @PathVariable("bookId") Long bookId) {
 
         // Optional로 Book을 안전하게 처리
         Book findBook = bookService.findBookById(bookId)
@@ -44,16 +44,16 @@ public class BookRentalController {
                 .build());
     }
 
-    @PostMapping("/{bookId}/unrent")
-    public ResponseEntity<JsonResponse> unRent(@Login User user, @PathVariable("bookId") Long bookId) {
+    @PostMapping("/{bookId}/return")
+    public ResponseEntity<JsonResponse> returnBook(@Login User user, @PathVariable("bookId") Long bookId) {
 
         Book findBook = bookService.findBookById(bookId)
                 .orElseThrow(NotFoundBookException::new);
 
-        log.debug("unRent by user={}", user);
-        log.debug("unRent findBook={}", findBook);
+        log.debug("return by user={}", user);
+        log.debug("return findBook={}", findBook);
 
-        bookRentalService.unRentBook(user, findBook);
+        bookRentalService.returnBook(user, findBook);
 
         return ResponseEntity.ok().body(JsonResponse.builder()
                 .message("정상 반납되었습니다.")

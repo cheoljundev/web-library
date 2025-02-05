@@ -15,7 +15,7 @@ export const rent = async (id, errorContainer) => {
 
 export const unRent = async (id, errorContainer) => {
     try {
-        const data = await fetchRequest(`/books/${id}/unrent`, "POST");
+        const data = await fetchRequest(`/books/${id}/return`, "POST");
         if (data.redirected) {
             console.log("페이지가 리다이렉트되었습니다.");
             return;
