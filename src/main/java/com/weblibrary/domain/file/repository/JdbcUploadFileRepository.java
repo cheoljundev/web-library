@@ -3,6 +3,7 @@ package com.weblibrary.domain.file.repository;
 import com.weblibrary.domain.file.exception.NotFoundFileException;
 import com.weblibrary.domain.file.model.UploadFile;
 import com.weblibrary.domain.file.store.FileStore;
+import com.weblibrary.web.connection.DBConnectionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,15 +12,12 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.Optional;
 
-import static com.weblibrary.web.connection.DBConnectionUtil.close;
-import static com.weblibrary.web.connection.DBConnectionUtil.getConnection;
-
 @Repository
 @RequiredArgsConstructor
 public class JdbcUploadFileRepository implements UploadFileRepository {
 
     private final FileStore fileStore;
-
+    private final DBConnectionUtil dbConnectionUtil;
 
     @Override
     public UploadFile save(MultipartFile multipartFile) throws IOException {
@@ -31,7 +29,7 @@ public class JdbcUploadFileRepository implements UploadFileRepository {
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, uploadFile.getUploadFileName());
             pstmt.setString(2, uploadFile.getStoreFileName());
@@ -50,7 +48,7 @@ public class JdbcUploadFileRepository implements UploadFileRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
     }
 
@@ -65,7 +63,7 @@ public class JdbcUploadFileRepository implements UploadFileRepository {
         UploadFile uploadFile = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, uploadFileId);
             rs = pstmt.executeQuery();
@@ -82,7 +80,7 @@ public class JdbcUploadFileRepository implements UploadFileRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
 
     }
@@ -101,7 +99,7 @@ public class JdbcUploadFileRepository implements UploadFileRepository {
 
         try {
 
-            con = getConnection();
+            dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, uploadFileId);
             pstmt.executeUpdate();
@@ -109,7 +107,7 @@ public class JdbcUploadFileRepository implements UploadFileRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
 
 

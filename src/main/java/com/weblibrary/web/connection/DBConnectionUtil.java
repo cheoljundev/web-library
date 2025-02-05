@@ -1,48 +1,45 @@
 package com.weblibrary.web.connection;
 
+import com.zaxxer.hikari.HikariDataSource;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.support.JdbcUtils;
+import org.springframework.stereotype.Component;
 
-import java.sql.*;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import static com.weblibrary.web.connection.ConnectionConst.*;
 
 @Slf4j
+@Component
 public class DBConnectionUtil {
-    public static Connection getConnection() {
-        try {
-            Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            log.debug("get connection={}, class={}", connection, connection.getClass());
-            return connection;
-        } catch (SQLException e) {
-            throw new IllegalStateException(e);
-        }
+
+    private final DataSource dataSource;
+
+    public DBConnectionUtil() {
+        HikariDataSource dataSource = new HikariDataSource();
+        dataSource.setJdbcUrl(URL);
+        dataSource.setUsername(USERNAME);
+        dataSource.setPassword(PASSWORD);
+        dataSource.setPoolName("WebLibraryPool");
+        this.dataSource = dataSource;
     }
 
-    public static void close(Connection con, Statement stmt, ResultSet rs) {
+    public Connection getConnection() throws SQLException {
+        Connection con = dataSource.getConnection();
+        log.debug("get connection={}, class={}", con, con.getClass());
+        return con;
+    }
 
-        if (rs != null) {
-            try {
-                rs.close();
-            } catch (SQLException e) {
-                log.error("error", e);
-            }
-        }
+    public void close(Connection con, Statement stmt, ResultSet rs) {
 
-        if (stmt != null) {
-            try {
-                stmt.close();
-            } catch (SQLException e) {
-                log.error("error", e);
-            }
-        }
-
-        if (con != null) {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                log.error("error", e);
-            }
-        }
+        JdbcUtils.closeResultSet(rs);
+        JdbcUtils.closeStatement(stmt);
+        JdbcUtils.closeConnection(con);
 
     }
 }

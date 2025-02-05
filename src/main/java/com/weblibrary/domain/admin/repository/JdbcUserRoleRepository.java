@@ -2,6 +2,8 @@ package com.weblibrary.domain.admin.repository;
 
 import com.weblibrary.domain.admin.model.Role;
 import com.weblibrary.domain.admin.model.RoleType;
+import com.weblibrary.web.connection.DBConnectionUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -9,10 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.weblibrary.web.connection.DBConnectionUtil.*;
-
 @Repository
+@RequiredArgsConstructor
 public class JdbcUserRoleRepository implements UserRoleRepository{
+
+    private final DBConnectionUtil dbConnectionUtil;
+
+
     @Override
     public void save(Role role) {
         String sql = "insert into roles(user_id, role_type) values(?, ?)";
@@ -22,7 +27,7 @@ public class JdbcUserRoleRepository implements UserRoleRepository{
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setLong(1, role.getUserId());
             pstmt.setString(2, role.getRoleType().name());
@@ -39,7 +44,7 @@ public class JdbcUserRoleRepository implements UserRoleRepository{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
     }
 
@@ -54,7 +59,7 @@ public class JdbcUserRoleRepository implements UserRoleRepository{
         Role role = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, userId);
             pstmt.setString(2, roleType.name());
@@ -71,7 +76,7 @@ public class JdbcUserRoleRepository implements UserRoleRepository{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
     }
 
@@ -84,7 +89,7 @@ public class JdbcUserRoleRepository implements UserRoleRepository{
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, roleId);
             rs = pstmt.executeQuery();
@@ -118,7 +123,7 @@ public class JdbcUserRoleRepository implements UserRoleRepository{
         List<Role> roles = new ArrayList<>();
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, userId);
             rs = pstmt.executeQuery();
@@ -151,7 +156,7 @@ public class JdbcUserRoleRepository implements UserRoleRepository{
         List<Role> roles = new ArrayList<>();
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             rs = pstmt.executeQuery();
 
@@ -181,7 +186,7 @@ public class JdbcUserRoleRepository implements UserRoleRepository{
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, roleId);
             int executed = pstmt.executeUpdate();
@@ -189,7 +194,7 @@ public class JdbcUserRoleRepository implements UserRoleRepository{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
 
     }

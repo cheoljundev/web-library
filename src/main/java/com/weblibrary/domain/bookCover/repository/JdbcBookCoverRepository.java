@@ -1,7 +1,7 @@
 package com.weblibrary.domain.bookCover.repository;
 
 import com.weblibrary.domain.bookCover.model.BookCover;
-import com.weblibrary.domain.file.repository.UploadFileRepository;
+import com.weblibrary.web.connection.DBConnectionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.weblibrary.web.connection.DBConnectionUtil.close;
-import static com.weblibrary.web.connection.DBConnectionUtil.getConnection;
-
 @Repository
+@RequiredArgsConstructor
 public class JdbcBookCoverRepository implements BookCoverRepository {
+
+    private final DBConnectionUtil dbConnectionUtil;
 
     @Override
     public void save(BookCover cover) {
@@ -28,7 +28,7 @@ public class JdbcBookCoverRepository implements BookCoverRepository {
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, cover.getBookId());
             pstmt.setLong(2, cover.getUploadFileId());
@@ -37,7 +37,7 @@ public class JdbcBookCoverRepository implements BookCoverRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
 
     }
@@ -51,7 +51,7 @@ public class JdbcBookCoverRepository implements BookCoverRepository {
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, coverId);
             rs = pstmt.executeQuery();
@@ -72,7 +72,7 @@ public class JdbcBookCoverRepository implements BookCoverRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
     }
 
@@ -85,7 +85,7 @@ public class JdbcBookCoverRepository implements BookCoverRepository {
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, bookId);
             rs = pstmt.executeQuery();
@@ -106,7 +106,7 @@ public class JdbcBookCoverRepository implements BookCoverRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
 
     }
@@ -120,7 +120,7 @@ public class JdbcBookCoverRepository implements BookCoverRepository {
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             rs = pstmt.executeQuery();
 
@@ -143,7 +143,7 @@ public class JdbcBookCoverRepository implements BookCoverRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
     }
 
@@ -156,7 +156,7 @@ public class JdbcBookCoverRepository implements BookCoverRepository {
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, coverId);
             pstmt.executeUpdate();
@@ -165,7 +165,7 @@ public class JdbcBookCoverRepository implements BookCoverRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
     }
 }

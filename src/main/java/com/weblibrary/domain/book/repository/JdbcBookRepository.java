@@ -2,6 +2,8 @@ package com.weblibrary.domain.book.repository;
 
 import com.weblibrary.domain.book.exception.NotFoundBookException;
 import com.weblibrary.domain.book.model.Book;
+import com.weblibrary.web.connection.DBConnectionUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -9,11 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.weblibrary.web.connection.DBConnectionUtil.close;
-import static com.weblibrary.web.connection.DBConnectionUtil.getConnection;
 
 @Repository
+@RequiredArgsConstructor
 public class JdbcBookRepository implements BookRepository, DbBookRepository{
+
+    private final DBConnectionUtil dbConnectionUtil;
+
     @Override
     public Book save(Book book) {
         String sql = "insert into books(book_name, isbn) values(?, ?)";
@@ -23,7 +27,7 @@ public class JdbcBookRepository implements BookRepository, DbBookRepository{
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, book.getBookName());
             pstmt.setString(2, book.getIsbn());
@@ -41,7 +45,7 @@ public class JdbcBookRepository implements BookRepository, DbBookRepository{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
     }
 
@@ -54,7 +58,7 @@ public class JdbcBookRepository implements BookRepository, DbBookRepository{
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, id);
             rs = pstmt.executeQuery();
@@ -73,7 +77,7 @@ public class JdbcBookRepository implements BookRepository, DbBookRepository{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
 
     }
@@ -87,7 +91,7 @@ public class JdbcBookRepository implements BookRepository, DbBookRepository{
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, name);
             rs = pstmt.executeQuery();
@@ -106,7 +110,7 @@ public class JdbcBookRepository implements BookRepository, DbBookRepository{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
     }
 
@@ -119,7 +123,7 @@ public class JdbcBookRepository implements BookRepository, DbBookRepository{
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, isbn);
             rs = pstmt.executeQuery();
@@ -138,7 +142,7 @@ public class JdbcBookRepository implements BookRepository, DbBookRepository{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
     }
 
@@ -151,7 +155,7 @@ public class JdbcBookRepository implements BookRepository, DbBookRepository{
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             rs = pstmt.executeQuery();
 
@@ -173,7 +177,7 @@ public class JdbcBookRepository implements BookRepository, DbBookRepository{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
     }
 
@@ -193,7 +197,7 @@ public class JdbcBookRepository implements BookRepository, DbBookRepository{
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();;
             pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, book.getBookName());
             pstmt.setString(2, book.getIsbn());
@@ -206,7 +210,7 @@ public class JdbcBookRepository implements BookRepository, DbBookRepository{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
     }
 
@@ -220,7 +224,7 @@ public class JdbcBookRepository implements BookRepository, DbBookRepository{
 
         try {
             Book removed = findById(bookId).orElse(null);
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, bookId);
             pstmt.executeUpdate();
@@ -230,7 +234,7 @@ public class JdbcBookRepository implements BookRepository, DbBookRepository{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
 
     }

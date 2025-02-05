@@ -2,6 +2,8 @@ package com.weblibrary.domain.rental.repository;
 
 import com.weblibrary.domain.rental.exception.RentalException;
 import com.weblibrary.domain.rental.model.Rental;
+import com.weblibrary.web.connection.DBConnectionUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -10,11 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.weblibrary.web.connection.DBConnectionUtil.close;
-import static com.weblibrary.web.connection.DBConnectionUtil.getConnection;
 
 @Repository
+@RequiredArgsConstructor
 public class JdbcBookRentalRepository implements BookRentalRepository, DbBookRentalRepository {
+
+    private final DBConnectionUtil dbConnectionUtil;
+
     @Override
     public Rental save(Rental rental) {
         String sql = "insert into rentals(book_id, user_id, rented_at) values(?, ?, ?)";
@@ -24,7 +28,7 @@ public class JdbcBookRentalRepository implements BookRentalRepository, DbBookRen
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setLong(1, rental.getBookId());
             pstmt.setLong(2, rental.getUserId());
@@ -43,7 +47,7 @@ public class JdbcBookRentalRepository implements BookRentalRepository, DbBookRen
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
     }
 
@@ -56,7 +60,7 @@ public class JdbcBookRentalRepository implements BookRentalRepository, DbBookRen
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, bookId);
             rs = pstmt.executeQuery();
@@ -76,7 +80,7 @@ public class JdbcBookRentalRepository implements BookRentalRepository, DbBookRen
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
 
     }
@@ -90,7 +94,7 @@ public class JdbcBookRentalRepository implements BookRentalRepository, DbBookRen
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, userId);
             rs = pstmt.executeQuery();
@@ -112,7 +116,7 @@ public class JdbcBookRentalRepository implements BookRentalRepository, DbBookRen
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
 
     }
@@ -126,7 +130,7 @@ public class JdbcBookRentalRepository implements BookRentalRepository, DbBookRen
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, rental_id);
             rs = pstmt.executeQuery();
@@ -147,7 +151,7 @@ public class JdbcBookRentalRepository implements BookRentalRepository, DbBookRen
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
 
     }
@@ -171,7 +175,7 @@ public class JdbcBookRentalRepository implements BookRentalRepository, DbBookRen
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, rental.getBookId());
             pstmt.setLong(2, rental.getUserId());
@@ -185,7 +189,7 @@ public class JdbcBookRentalRepository implements BookRentalRepository, DbBookRen
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
 
 
@@ -201,7 +205,7 @@ public class JdbcBookRentalRepository implements BookRentalRepository, DbBookRen
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, rental_id);
             pstmt.executeUpdate();
@@ -209,7 +213,7 @@ public class JdbcBookRentalRepository implements BookRentalRepository, DbBookRen
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
 
 

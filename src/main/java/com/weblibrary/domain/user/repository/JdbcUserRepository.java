@@ -2,6 +2,8 @@ package com.weblibrary.domain.user.repository;
 
 import com.weblibrary.domain.user.exception.NotFoundUserException;
 import com.weblibrary.domain.user.model.User;
+import com.weblibrary.web.connection.DBConnectionUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -9,11 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.weblibrary.web.connection.DBConnectionUtil.close;
-import static com.weblibrary.web.connection.DBConnectionUtil.getConnection;
-
 @Repository
+@RequiredArgsConstructor
 public class JdbcUserRepository implements UserRepository, DbUserRepository {
+
+    private final DBConnectionUtil dbConnectionUtil;
 
     @Override
     public User save(User user) {
@@ -24,7 +26,7 @@ public class JdbcUserRepository implements UserRepository, DbUserRepository {
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, user.getUsername());
             pstmt.setString(2, user.getPassword());
@@ -43,7 +45,7 @@ public class JdbcUserRepository implements UserRepository, DbUserRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
 
     }
@@ -57,7 +59,7 @@ public class JdbcUserRepository implements UserRepository, DbUserRepository {
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, id);
             rs = pstmt.executeQuery();
@@ -77,7 +79,7 @@ public class JdbcUserRepository implements UserRepository, DbUserRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
     }
 
@@ -89,7 +91,7 @@ public class JdbcUserRepository implements UserRepository, DbUserRepository {
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, username);
             rs = pstmt.executeQuery();
@@ -109,7 +111,7 @@ public class JdbcUserRepository implements UserRepository, DbUserRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
     }
 
@@ -124,7 +126,7 @@ public class JdbcUserRepository implements UserRepository, DbUserRepository {
         List<User> users = new ArrayList<>();
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             rs = pstmt.executeQuery();
 
@@ -141,7 +143,7 @@ public class JdbcUserRepository implements UserRepository, DbUserRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
 
     }
@@ -162,7 +164,7 @@ public class JdbcUserRepository implements UserRepository, DbUserRepository {
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, user.getUsername());
             pstmt.setString(2, user.getPassword());
@@ -175,7 +177,7 @@ public class JdbcUserRepository implements UserRepository, DbUserRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
 
     }
@@ -192,7 +194,7 @@ public class JdbcUserRepository implements UserRepository, DbUserRepository {
         try {
             User removed = findById(userId).orElse(null);
 
-            con = getConnection();
+            dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, userId);
             pstmt.executeUpdate();
@@ -201,7 +203,7 @@ public class JdbcUserRepository implements UserRepository, DbUserRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            close(con, pstmt, rs);
+            dbConnectionUtil.close(con, pstmt, rs);
         }
     }
 
