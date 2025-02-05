@@ -28,11 +28,26 @@ public class User {
         this.password = password;
     }
 
-    public void decrementRemainingRents() {
+    public User(User user) {
+        this.userId = user.getUserId();
+        this.username = user.getUsername();
+        this.password = user.getPassword();
+        this.remainingRents = user.getRemainingRents();
+    }
+
+    public void rentBook(){
+        decrementRemainingRents();
+    }
+
+    public void returnBook(){
+        incrementRemainingRents();
+    }
+
+    private void decrementRemainingRents() {
         remainingRents--;
     }
 
-    public void incrementRemainingRents() {
+    private void incrementRemainingRents() {
         remainingRents++;
     }
 

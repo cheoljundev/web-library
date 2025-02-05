@@ -48,7 +48,7 @@ public class Book {
      * 도서 대출 메서드
      *
      */
-    public void rent() {
+    public void rentBook() {
         isRented = true;
     }
 
@@ -56,7 +56,7 @@ public class Book {
      * 도서 반납 메서드
      *
      */
-    public void unRent() {
+    public void returnBook() {
         isRented = false;
     }
 }

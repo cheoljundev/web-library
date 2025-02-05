@@ -31,8 +31,11 @@ public class BookRentalService {
             throw new RentalException("이미 다른 유저가 대출중입니다.");
         }
 
-        book.rent();
-        user.decrementRemainingRents();
+        book.rentBook();
+
+        user.rentBook();
+        log.debug("user={}", user);
+        userService.update(user);
 
         return bookRentalRepository.save(new Rental(book.getBookId(), user.getUserId()));
     }
@@ -48,10 +51,9 @@ public class BookRentalService {
                 .orElseThrow(() -> new RentalException("이미 대출중인 도서입니다."));
 
 
-        bookService.findBookById(rental.getBookId())
-                .ifPresent(Book::unRent);
-        userService.findById(rental.getUserId())
-                .ifPresent(User::incrementRemainingRents);
+        book.returnBook();
+        user.returnBook();
+        userService.update(user);
         bookRentalRepository.returnBook(book.getBookId());
     }
 

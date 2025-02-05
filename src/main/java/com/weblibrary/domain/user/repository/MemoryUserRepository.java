@@ -1,5 +1,6 @@
 package com.weblibrary.domain.user.repository;
 
+import com.weblibrary.domain.user.exception.NotFoundUserException;
 import com.weblibrary.domain.user.model.User;
 
 import java.util.*;

@@ -1,5 +1,6 @@
 package com.weblibrary.domain.user.repository;
 
+import com.weblibrary.domain.user.exception.NotFoundUserException;
 import com.weblibrary.domain.user.model.User;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +13,7 @@ import static com.weblibrary.web.connection.DBConnectionUtil.close;
 import static com.weblibrary.web.connection.DBConnectionUtil.getConnection;
 
 @Repository
-public class JdbcUserRepository implements UserRepository {
+public class JdbcUserRepository implements UserRepository, DbUserRepository {
 
     @Override
     public User save(User user) {
@@ -136,6 +137,40 @@ public class JdbcUserRepository implements UserRepository {
             }
 
             return users;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            close(con, pstmt, rs);
+        }
+
+    }
+
+    @Override
+    public User update(User user) {
+        User oldUser = findById(user.getUserId())
+                .orElseThrow(NotFoundUserException::new);
+
+        String sql = "update users set " +
+                "username = ?, " +
+                "password = ?, " +
+                "remaining_rents = ? " +
+                "where user_id = ?";
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            con = getConnection();
+            pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1, user.getUsername());
+            pstmt.setString(2, user.getPassword());
+            pstmt.setInt(3, user.getRemainingRents());
+            pstmt.setLong(4, user.getUserId());
+            pstmt.executeUpdate();
+
+            return oldUser;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

@@ -1,6 +1,7 @@
 package com.weblibrary.domain.user.service;
 
 import com.weblibrary.domain.user.model.User;
+import com.weblibrary.domain.user.repository.DbUserRepository;
 import com.weblibrary.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final DbUserRepository dbUserRepository;
 
     public User save(User user) {
         return userRepository.save(user);
@@ -30,6 +32,14 @@ public class UserService {
 
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
+    }
+
+    public User update(User user) {
+        if (userRepository instanceof DbUserRepository repository) {
+            return repository.update(user);
+        }
+
+        return null;
     }
 
 
