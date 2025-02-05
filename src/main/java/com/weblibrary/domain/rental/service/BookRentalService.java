@@ -5,6 +5,7 @@ import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.rental.exception.RentalException;
 import com.weblibrary.domain.rental.model.Rental;
 import com.weblibrary.domain.rental.repository.BookRentalRepository;
+import com.weblibrary.domain.rental.repository.DbBookRentalRepository;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -53,9 +54,13 @@ public class BookRentalService {
 
         book.returnBook();
         user.returnBook();
+        rental.returnBook();
         bookService.updateBook(book);
         userService.update(user);
-        bookRentalRepository.returnBook(book.getBookId());
+
+        if (bookRentalRepository instanceof DbBookRentalRepository repository) {
+            repository.update(rental);
+        }
     }
 
     public User findUserByBookId(Long bookId) {

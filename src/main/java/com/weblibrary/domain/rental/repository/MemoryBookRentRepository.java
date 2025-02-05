@@ -41,11 +41,6 @@ public class MemoryBookRentRepository implements BookRentalRepository{
     }
 
     @Override
-    public void returnBook(Long bookId) {
-        findActiveRentalByBookId(bookId).ifPresent(Rental::returnBook);
-    }
-
-    @Override
     public void delete(Long rental_id) {
         rentals.remove(rental_id);
     }

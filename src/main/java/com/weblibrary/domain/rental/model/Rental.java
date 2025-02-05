@@ -22,9 +22,8 @@ public class Rental {
         this.rentedAt = LocalDateTime.now();
     }
 
-    public LocalDateTime returnBook() {
+    public void returnBook() {
         this.returnedAt = LocalDateTime.now();
-        return this.returnedAt;
     }
 
     public boolean isReturned() {

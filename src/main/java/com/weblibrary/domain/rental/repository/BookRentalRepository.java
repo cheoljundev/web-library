@@ -39,8 +39,6 @@ public interface BookRentalRepository {
      */
     Optional<Rental> findById(Long rental_id);
 
-    void returnBook(Long bookId);
-
     /**
      * 대출 기록 삭제 (반납 처리)
      *

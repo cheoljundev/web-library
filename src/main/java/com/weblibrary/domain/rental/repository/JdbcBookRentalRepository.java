@@ -1,5 +1,6 @@
 package com.weblibrary.domain.rental.repository;
 
+import com.weblibrary.domain.rental.exception.RentalException;
 import com.weblibrary.domain.rental.model.Rental;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,7 @@ import static com.weblibrary.web.connection.DBConnectionUtil.close;
 import static com.weblibrary.web.connection.DBConnectionUtil.getConnection;
 
 @Repository
-public class JdbcBookRentalRepository implements BookRentalRepository {
+public class JdbcBookRentalRepository implements BookRentalRepository, DbBookRentalRepository {
     @Override
     public Rental save(Rental rental) {
         String sql = "insert into rentals(book_id, user_id, rented_at) values(?, ?, ?)";
@@ -152,8 +153,17 @@ public class JdbcBookRentalRepository implements BookRentalRepository {
     }
 
     @Override
-    public void returnBook(Long bookId) {
-        String sql = "update rentals set returned_at = ? where book_id = ? and returned_at is null";
+    public Rental update(Rental rental) {
+
+        Rental oldRental = findById(rental.getRentalId())
+                .orElseThrow(()->new RentalException("존재하지 않는 대출건입니다."));
+
+        String sql = "update rentals set " +
+                "book_id = ?, " +
+                "user_id = ?, " +
+                "rented_at = ?, " +
+                "returned_at = ? " +
+                "where rental_id = ?";
 
 
         Connection con = null;
@@ -163,9 +173,14 @@ public class JdbcBookRentalRepository implements BookRentalRepository {
         try {
             con = getConnection();
             pstmt = con.prepareStatement(sql);
-            pstmt.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
-            pstmt.setLong(2, bookId);
+            pstmt.setLong(1, rental.getBookId());
+            pstmt.setLong(2, rental.getUserId());
+            pstmt.setTimestamp(3, Timestamp.valueOf(rental.getRentedAt()));
+            pstmt.setTimestamp(4, Timestamp.valueOf(rental.getReturnedAt()));
+            pstmt.setLong(5, rental.getRentalId());
             pstmt.executeUpdate();
+
+            return oldRental;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
