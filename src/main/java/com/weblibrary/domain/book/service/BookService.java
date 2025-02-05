@@ -4,6 +4,7 @@ import com.weblibrary.domain.book.exception.DuplicateIsbnException;
 import com.weblibrary.domain.book.exception.NotFoundBookCoverException;
 import com.weblibrary.domain.book.exception.NotFoundBookException;
 import com.weblibrary.domain.book.model.Book;
+import com.weblibrary.domain.book.repository.DbBookRepository;
 import com.weblibrary.domain.bookCover.model.BookCover;
 import com.weblibrary.domain.book.dto.BookListItem;
 import com.weblibrary.domain.book.dto.ModifyBookForm;
@@ -54,6 +55,14 @@ public class BookService {
     public void deleteBook(Long bookId) {
         bookRepository.remove(bookId).orElseThrow(NotFoundBookException::new);
         bookCoverRepository.remove(bookId);
+    }
+
+    public Book updateBook(Book book) {
+        if (bookRepository instanceof DbBookRepository repository) {
+            return repository.update(book);
+        }
+
+        return null;
     }
 
     public Optional<Book> findBookById(Long id) {

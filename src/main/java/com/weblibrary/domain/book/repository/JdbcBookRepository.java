@@ -1,5 +1,6 @@
 package com.weblibrary.domain.book.repository;
 
+import com.weblibrary.domain.book.exception.NotFoundBookException;
 import com.weblibrary.domain.book.model.Book;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +13,7 @@ import static com.weblibrary.web.connection.DBConnectionUtil.close;
 import static com.weblibrary.web.connection.DBConnectionUtil.getConnection;
 
 @Repository
-public class JdbcBookRepository implements BookRepository{
+public class JdbcBookRepository implements BookRepository, DbBookRepository{
     @Override
     public Book save(Book book) {
         String sql = "insert into books(book_name, isbn) values(?, ?)";
@@ -168,6 +169,39 @@ public class JdbcBookRepository implements BookRepository{
             }
 
             return books;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            close(con, pstmt, rs);
+        }
+    }
+
+    @Override
+    public Book update(Book book) {
+        Book oldBook = findById(book.getBookId())
+                .orElseThrow(NotFoundBookException::new);
+
+        String sql = "update books set " +
+                "book_name = ?, " +
+                "isbn = ?, " +
+                "is_rented = ? " +
+                "where book_id = ?";
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            con = getConnection();
+            pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1, book.getBookName());
+            pstmt.setString(2, book.getIsbn());
+            pstmt.setBoolean(3, book.isRented());
+            pstmt.setLong(4, book.getBookId());
+            pstmt.executeUpdate();
+
+            return oldBook;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

@@ -32,9 +32,9 @@ public class BookRentalService {
         }
 
         book.rentBook();
-
         user.rentBook();
-        log.debug("user={}", user);
+
+        bookService.updateBook(book);
         userService.update(user);
 
         return bookRentalRepository.save(new Rental(book.getBookId(), user.getUserId()));
@@ -53,6 +53,7 @@ public class BookRentalService {
 
         book.returnBook();
         user.returnBook();
+        bookService.updateBook(book);
         userService.update(user);
         bookRentalRepository.returnBook(book.getBookId());
     }
