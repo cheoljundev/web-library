@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class LocalFileStore implements FileStore {
     }
 
     @Override
-    public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles) throws IOException {
+    public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles) {
         List<UploadFile> storeFileResult = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {
             if (!multipartFile.isEmpty()) {
@@ -40,7 +41,7 @@ public class LocalFileStore implements FileStore {
     }
 
     @Override
-    public UploadFile storeFile(MultipartFile multipartFile) throws IOException {
+    public UploadFile storeFile(MultipartFile multipartFile) {
         if (multipartFile.isEmpty()) {
             return null;
         }
@@ -50,7 +51,11 @@ public class LocalFileStore implements FileStore {
         String storeFileName = FileStore.createStoreFileName(originalFilename);
 
         //getfullpath : nullfillname
-        multipartFile.transferTo(new File(getFullPath(storeFileName)));
+        try {
+            multipartFile.transferTo(new File(getFullPath(storeFileName)));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
 
         return new UploadFile(originalFilename, storeFileName);
     }

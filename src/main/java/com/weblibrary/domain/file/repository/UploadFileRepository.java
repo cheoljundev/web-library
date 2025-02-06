@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 public interface UploadFileRepository {
-    UploadFile save(MultipartFile multipartFile) throws IOException;
+    UploadFile save(MultipartFile multipartFile);
     Optional<UploadFile> findById(Long uploadFileId);
     void remove(Long uploadFileId);
 }

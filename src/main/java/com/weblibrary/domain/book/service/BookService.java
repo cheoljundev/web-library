@@ -1,16 +1,15 @@
 package com.weblibrary.domain.book.service;
 
+import com.weblibrary.domain.book.dto.BookListItem;
+import com.weblibrary.domain.book.dto.ModifyBookForm;
+import com.weblibrary.domain.book.dto.NewBookForm;
 import com.weblibrary.domain.book.exception.DuplicateIsbnException;
 import com.weblibrary.domain.book.exception.NotFoundBookCoverException;
 import com.weblibrary.domain.book.exception.NotFoundBookException;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.BookCover;
-import com.weblibrary.domain.book.dto.BookListItem;
-import com.weblibrary.domain.book.dto.ModifyBookForm;
-import com.weblibrary.domain.book.dto.NewBookForm;
 import com.weblibrary.domain.book.repository.BookCoverRepository;
 import com.weblibrary.domain.book.repository.BookRepository;
-import com.weblibrary.domain.file.exception.NotFoundFileException;
 import com.weblibrary.domain.file.model.UploadFile;
 import com.weblibrary.domain.file.repository.UploadFileRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,7 +42,7 @@ public class BookService {
         findBookById(form.getId()).ifPresentOrElse(book -> {
 
             if (isDuplicated(book.getIsbn(), form.getIsbn())) {
-             throw new DuplicateIsbnException();
+                throw new DuplicateIsbnException();
             }
 
             book.modify(form.getBookName(), form.getIsbn());
@@ -103,25 +100,14 @@ public class BookService {
     private void removeBookCover(Book book) {
         BookCover bookCover = bookCoverRepository.findByBookId(book.getBookId())
                 .orElseThrow(NotFoundBookCoverException::new);
-
         bookCoverRepository.remove(bookCover.getBookCoverId());
-
-        uploadFileRepository.findById(bookCover.getUploadFileId())
-                .ifPresentOrElse(
-                        uploadFile -> uploadFileRepository.remove(uploadFile.getUploadFileId()),
-                        () -> {
-                            throw new NotFoundFileException();
-                        });
+        uploadFileRepository.remove(bookCover.getUploadFileId());
     }
 
     private void saveBookCover(Book book, MultipartFile multipartFile) {
-        try {
-            UploadFile image = uploadFileRepository.save(multipartFile);
-            BookCover newBookCover = new BookCover(book.getBookId(), image.getUploadFileId());
-            bookCoverRepository.save(newBookCover);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        UploadFile image = uploadFileRepository.save(multipartFile);
+        BookCover newBookCover = new BookCover(book.getBookId(), image.getUploadFileId());
+        bookCoverRepository.save(newBookCover);
     }
 
     private void modifyBookCover(ModifyBookForm form, Book book) {

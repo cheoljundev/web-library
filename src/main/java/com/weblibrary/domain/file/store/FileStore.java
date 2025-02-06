@@ -10,8 +10,8 @@ import java.util.UUID;
 public interface FileStore {
     String getUrlPath(String filename);
 
-    List<UploadFile> storeFiles(List<MultipartFile> multipartFiles) throws IOException;
-    UploadFile storeFile(MultipartFile multipartFile) throws IOException;
+    List<UploadFile> storeFiles(List<MultipartFile> multipartFiles);
+    UploadFile storeFile(MultipartFile multipartFile);
 
     static String extractExt(String originalFilename) {
         int pos = originalFilename.lastIndexOf(".");

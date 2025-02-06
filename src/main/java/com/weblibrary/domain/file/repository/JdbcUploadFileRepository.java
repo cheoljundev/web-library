@@ -24,7 +24,7 @@ public class JdbcUploadFileRepository implements UploadFileRepository {
     private final JdbcTemplate template;
 
     @Override
-    public UploadFile save(MultipartFile multipartFile) throws IOException {
+    public UploadFile save(MultipartFile multipartFile) {
         UploadFile uploadFile = fileStore.storeFile(multipartFile);
         String sql = "insert into upload_files(upload_file_name, store_file_name) values(?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
