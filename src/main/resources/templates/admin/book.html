@@ -30,8 +30,8 @@
             <button class="btn btn-success" onclick="addBook('addBook')" th:text="#{button.add}">등록</button>
         </div>
         <h2 th:text="#{book.list.title}">도서 목록</h2>
-        <ul class="list-group" th:if="${books != null}">
-            <li class="list-group-item" th:each="book : ${books}" th:object="${book}">
+        <ul class="list-group" th:if="${bookPage != null}">
+            <li class="list-group-item" th:each="book : ${bookPage.content}" th:object="${book}">
                 <div>
                     <img class="book-cover" th:src="@{/images/{filename}(filename=*{coverImage.storeFileName})}" th:alt="@{/images/{filename}(filename=*{coverImage.storeFileName})}">
                     <span th:text="|#{book.name} *{name}|">책 이름</span>
@@ -43,6 +43,30 @@
                 </div>
             </li>
         </ul>
+        <div>
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <!-- 이전 블록 링크: 시작 페이지가 0보다 크면 표시 -->
+                    <li class="page-item" th:if="${startPage > 0}">
+                        <a class="page-link" th:href="@{/admin/book(page=${startPage - 1})}" aria-label="Previous Block">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+
+                    <!-- 페이지 번호 링크: 컨트롤러에서 전달한 pageNumbers 리스트 사용 -->
+                    <li class="page-item" th:each="page : ${pageNumbers}" th:classappend="${page == bookPage.number} ? 'active'">
+                        <a class="page-link" th:href="@{/admin/book(page=${page})}" th:text="${page + 1}">1</a>
+                    </li>
+
+                    <!-- 다음 블록 링크: endPage가 전체 페이지 수보다 작으면 표시 -->
+                    <li class="page-item" th:if="${endPage < bookPage.totalPages}">
+                        <a class="page-link" th:href="@{/admin/book(page=${endPage})}" aria-label="Next Block">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
         <div id="modifyBook" class="mt-3 p-3 border rounded" th:object="${modifyBook}">
             <h3 th:text="#{admin.manage.book.modify.title}">도서 수정</h3>
             <div class="error book">

@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/common :: common_header(~{::title}, ~{::link ?: null}, ~{::script ?: null}, ~{::#content})}">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/common :: common_header(~{::title}, ~{::link ?: null}, ~{::script ?: null}, ~{::#content})}">
 <head>
     <title th:text="#{site.name}">온라인 도서관</title>
     <script defer type="module" src="../js/book.js" th:src="@{/js/book.js}"></script>
@@ -9,15 +10,16 @@
 <body>
 <div id="content">
     <section id="user-info" class="mb-4">
-        <p th:if="${session.loginUser != null}" class="welcome-message" th:text="#{user.welcome(${session.loginUser.username})}">
+        <p th:if="${session.loginUser != null}" class="welcome-message"
+           th:text="#{user.welcome(${session.loginUser.username})}">
             안녕하세요, username님!
         </p>
     </section>
 
     <section id="book-list">
         <h2 class="mb-3" th:text="#{book.list.title}">도서 목록</h2>
-        <ul class="book-list" th:if="${books != null}">
-            <li class="book-item" th:each="book : ${books}" th:object="${book}" th:id="|rent*{id}|">
+        <ul class="book-list" th:if="${bookPage.totalElements > 0}">
+            <li class="book-item" th:each="book : ${bookPage.content}" th:object="${book}" th:id="|rent*{id}|">
                 <div class="error book">
                     <p>책 오류</p>
                 </div>
@@ -25,16 +27,45 @@
                     <p>유저 오류</p>
                 </div>
                 <div>
-                    <img class="book-cover" th:src="|/images/*{coverImage.storeFileName}|" th:alt="*{coverImage.uploadFileName}">
+                    <img class="book-cover" th:src="|/images/*{coverImage.storeFileName}|"
+                         th:alt="*{coverImage.uploadFileName}">
                     <span th:text="*{name}">책 이름</span>
                     <small class="text-muted ms-2">(ISBN: <span th:text="*{isbn}">책 isbn</span>)</small>
                 </div>
                 <div class="btn-container">
-                    <button class="btn btn-primary" th:value="*{id}" onclick="rent(this.value, `rent${this.value}`)" th:text="#{button.book.rent}">대출</button>
-                    <button class="btn btn-danger" th:value="*{id}" onclick="unRent(this.value, `rent${this.value}`)" th:text="#{button.book.unrent}">반납</button>
+                    <button class="btn btn-primary" th:value="*{id}" onclick="rent(this.value, `rent${this.value}`)"
+                            th:text="#{button.book.rent}">대출
+                    </button>
+                    <button class="btn btn-danger" th:value="*{id}" onclick="unRent(this.value, `rent${this.value}`)"
+                            th:text="#{button.book.unrent}">반납
+                    </button>
                 </div>
             </li>
         </ul>
+        <div>
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <!-- 이전 블록 링크: 시작 페이지가 0보다 크면 표시 -->
+                    <li class="page-item" th:if="${startPage > 0}">
+                        <a class="page-link" th:href="@{/(page=${startPage - 1})}" aria-label="Previous Block">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+
+                    <!-- 페이지 번호 링크: 컨트롤러에서 전달한 pageNumbers 리스트 사용 -->
+                    <li class="page-item" th:each="page : ${pageNumbers}" th:classappend="${page == bookPage.number} ? 'active'">
+                        <a class="page-link" th:href="@{/(page=${page})}" th:text="${page + 1}">1</a>
+                    </li>
+
+                    <!-- 다음 블록 링크: endPage가 전체 페이지 수보다 작으면 표시 -->
+                    <li class="page-item" th:if="${endPage < bookPage.totalPages}">
+                        <a class="page-link" th:href="@{/(page=${endPage})}" aria-label="Next Block">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </section>
 </div>
 </body>

@@ -4,6 +4,9 @@ import com.weblibrary.domain.book.exception.NotFoundBookException;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.web.connection.DBConnectionUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -14,7 +17,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class JdbcBookRepository implements BookRepository, DbBookRepository {
+public class JdbcBookRepository implements BookRepository {
 
     private final DBConnectionUtil dbConnectionUtil;
 
@@ -147,38 +150,54 @@ public class JdbcBookRepository implements BookRepository, DbBookRepository {
     }
 
     @Override
-    public List<Book> findAll() {
-        String sql = "select * from books";
-
+    public Page<Book> findAll(Pageable pageable) {
+        List<Book> books = new ArrayList<>();
         Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
+        int pageSize = pageable.getPageSize();
+        int offset = (int) pageable.getOffset();
 
+        // 데이터 조회: LIMIT와 OFFSET 사용
+        String sql = "select * from books order by book_id limit ? offset ?";
         try {
             con = dbConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1, pageSize);
+            pstmt.setInt(2, offset);
             rs = pstmt.executeQuery();
-
-            Book book = null;
-
-            List<Book> books = new ArrayList<>();
 
             while (rs.next()) {
                 long getBookId = rs.getLong(1);
                 String getBookName = rs.getString(2);
                 String getIsbn = rs.getString(3);
                 boolean getIsRented = rs.getBoolean(4);
-                book = new Book(getBookId, getBookName, getIsbn, getIsRented);
+                Book book = new Book(getBookId, getBookName, getIsbn, getIsRented);
                 books.add(book);
             }
-
-            return books;
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
             dbConnectionUtil.close(con, pstmt, rs);
         }
+
+        // 전체 레코드 수 조회
+        int total = 0;
+        String countSql = "select count(*) from books";
+        try {
+            con = dbConnectionUtil.getConnection();
+            pstmt = con.prepareStatement(countSql);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            dbConnectionUtil.close(con, pstmt, rs);
+        }
+
+        return new PageImpl<>(books, pageable, total);
     }
 
     @Override

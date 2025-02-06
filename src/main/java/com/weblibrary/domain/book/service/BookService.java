@@ -15,6 +15,9 @@ import com.weblibrary.domain.file.exception.NotFoundFileException;
 import com.weblibrary.domain.file.model.UploadFile;
 import com.weblibrary.domain.file.repository.UploadFileRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +27,7 @@ import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -60,11 +64,7 @@ public class BookService {
     }
 
     public Book updateBook(Book book) {
-        if (bookRepository instanceof DbBookRepository repository) {
-            return repository.update(book);
-        }
-
-        return null;
+        return bookRepository.update(book);
     }
 
     @Transactional(readOnly = true)
@@ -83,15 +83,22 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public List<BookListItem> findAll() {
-        List<BookListItem> bookListItemList = new ArrayList<>();
-        bookRepository.findAll().forEach((book -> {
-            UploadFile image = bookCoverRepository.findByBookId(book.getBookId()).flatMap(bookCover -> uploadFileRepository.findById(bookCover.getUploadFileId()))
-                    .orElseThrow(NotFoundBookCoverException::new);
-            BookListItem bookListItem = new BookListItem(book.getBookId(), book.getBookName(), book.getIsbn(), image);
-            bookListItemList.add(bookListItem);
-        }));
-        return bookListItemList;
+    public Page<BookListItem> findAll(Pageable pageable) {
+        // Repository에서 Page<Book>을 조회
+        Page<Book> bookPage = bookRepository.findAll(pageable);
+
+        // 각 Book을 BookListItem으로 변환
+        List<BookListItem> bookListItems = bookPage.getContent().stream()
+                .map(book -> {
+                    UploadFile image = bookCoverRepository.findByBookId(book.getBookId())
+                            .flatMap(bookCover -> uploadFileRepository.findById(bookCover.getUploadFileId()))
+                            .orElseThrow(NotFoundBookCoverException::new);
+                    return new BookListItem(book.getBookId(), book.getBookName(), book.getIsbn(), image);
+                })
+                .collect(Collectors.toList());
+
+        // 변환된 결과와 페이징 정보를 이용해 새로운 Page 객체 생성
+        return new PageImpl<>(bookListItems, pageable, bookPage.getTotalElements());
     }
 
     private void removeBookCover(Book book) {
