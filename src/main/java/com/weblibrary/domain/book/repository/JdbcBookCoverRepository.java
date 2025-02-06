@@ -57,7 +57,7 @@ public class JdbcBookCoverRepository implements BookCoverRepository {
 
     @Override
     public void remove(Long coverId) {
-        String sql = "delete from book_covers where cover_id = ?";
+        String sql = "delete from book_covers where book_cover_id = ?";
         template.update(sql, coverId);
     }
 

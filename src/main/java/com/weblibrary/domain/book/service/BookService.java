@@ -49,6 +49,7 @@ public class BookService {
             }
 
             book.modify(form.getBookName(), form.getIsbn());
+            updateBook(book);
             modifyBookCover(form, book);
 
         }, () -> {
@@ -103,14 +104,14 @@ public class BookService {
         BookCover bookCover = bookCoverRepository.findByBookId(book.getBookId())
                 .orElseThrow(NotFoundBookCoverException::new);
 
+        bookCoverRepository.remove(bookCover.getBookCoverId());
+
         uploadFileRepository.findById(bookCover.getUploadFileId())
                 .ifPresentOrElse(
                         uploadFile -> uploadFileRepository.remove(uploadFile.getUploadFileId()),
                         () -> {
                             throw new NotFoundFileException();
                         });
-
-        bookCoverRepository.remove(bookCover.getBookCoverId());
     }
 
     private void saveBookCover(Book book, MultipartFile multipartFile) {

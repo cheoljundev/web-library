@@ -54,7 +54,9 @@ public class JdbcUploadFileRepository implements UploadFileRepository {
     @Override
     public void remove(Long uploadFileId) {
         String sql = "delete from upload_files where upload_file_id = ?";
+        UploadFile removed = findById(uploadFileId).orElse(null);
         template.update(sql, uploadFileId);
+        fileStore.deleteFile(removed.getStoreFileName());
     }
 
     private RowMapper<UploadFile> getUploadFileMapper() {
