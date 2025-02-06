@@ -9,6 +9,8 @@ import com.weblibrary.web.book.validation.BookAddValidator;
 import com.weblibrary.web.book.validation.BookModifyValidator;
 import com.weblibrary.web.response.ErrorResponseUtils;
 import com.weblibrary.web.response.JsonResponse;
+import com.weblibrary.web.util.PageBlock;
+import com.weblibrary.web.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -41,24 +43,10 @@ public class AdminBookController {
         Page<BookListItem> bookPage = bookService.findAll(pageable);
 
         int blockSize = 10; // 한 블록에 표시할 페이지 수
-        int currentPage = bookPage.getNumber();
-        int totalPages = bookPage.getTotalPages();
-
-        // 현재 블록의 시작 페이지 (0부터 시작)
-        int startPage = (currentPage / blockSize) * blockSize;
-        // 현재 블록의 끝 페이지 (단, 전체 페이지 수를 넘지 않도록)
-        int endPage = Math.min(startPage + blockSize, totalPages);
-
-        // startPage부터 endPage까지 페이지 번호 목록 생성
-        List<Integer> pageNumbers = new ArrayList<>();
-        for (int i = startPage; i < endPage; i++) {
-            pageNumbers.add(i);
-        }
+        PageBlock pageBlock = PaginationUtil.createPageBlock(bookPage, blockSize);
 
         model.addAttribute("bookPage", bookPage);
-        model.addAttribute("pageNumbers", pageNumbers);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
+        model.addAttribute("pageBlock", pageBlock);
         model.addAttribute("blockSize", blockSize);
 
 

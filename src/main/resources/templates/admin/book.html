@@ -46,21 +46,21 @@
         <div>
             <nav aria-label="Page navigation">
                 <ul class="pagination">
-                    <!-- 이전 블록 링크: 시작 페이지가 0보다 크면 표시 -->
-                    <li class="page-item" th:if="${startPage > 0}">
-                        <a class="page-link" th:href="@{/admin/book(page=${startPage - 1})}" aria-label="Previous Block">
+                    <!-- 이전 블록 링크 -->
+                    <li class="page-item" th:if="${pageBlock.startPage > 0}">
+                        <a class="page-link" th:href="@{/admin/book(page=${pageBlock.startPage - 1})}" aria-label="Previous Block">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
 
-                    <!-- 페이지 번호 링크: 컨트롤러에서 전달한 pageNumbers 리스트 사용 -->
-                    <li class="page-item" th:each="page : ${pageNumbers}" th:classappend="${page == bookPage.number} ? 'active'">
-                        <a class="page-link" th:href="@{/admin/book(page=${page})}" th:text="${page + 1}">1</a>
+                    <!-- 페이지 번호 링크 -->
+                    <li class="page-item" th:each="page : ${pageBlock.pageNumbers}" th:classappend="${page == pageBlock.currentPage} ? 'active'">
+                        <a class="page-link" th:href="@{/admin/book(page=${page})}" th:text="${page + 1}"></a>
                     </li>
 
-                    <!-- 다음 블록 링크: endPage가 전체 페이지 수보다 작으면 표시 -->
-                    <li class="page-item" th:if="${endPage < bookPage.totalPages}">
-                        <a class="page-link" th:href="@{/admin/book(page=${endPage})}" aria-label="Next Block">
+                    <!-- 다음 블록 링크 -->
+                    <li class="page-item" th:if="${pageBlock.endPage < pageBlock.totalPages}">
+                        <a class="page-link" th:href="@{/admin/book(page=${pageBlock.endPage})}" aria-label="Next Block">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
