@@ -7,6 +7,7 @@ import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ import static com.weblibrary.domain.admin.model.RoleType.ADMIN;
  * 관리자 서비스 계층
  */
 @Service
+@Transactional
 public class AdminService {
 
     private final UserRepository userRepository;
@@ -29,7 +31,7 @@ public class AdminService {
         return addAdminRole(userId); // 관리자가 아닌 경우에만 권한 추가
     }
 
-
+    @Transactional(readOnly = true)
     public RoleType findUserRoleType(Long userId) {
         List<Role> roles = userRoleRepository.findRolesByUserId(userId);
 
@@ -70,11 +72,13 @@ public class AdminService {
                 .orElse(false); // userId에 해당하는 사용자가 없으면 false 반환
     }
 
+    @Transactional(readOnly = true)
     public List<User> findAllUsers() {
         return userRepository.findAll();
     }
 
 
+    @Transactional(readOnly = true)
     public boolean isAdmin(Long userId) {
         return userRoleRepository.findRoleByUserIdAndRoleType(userId, ADMIN).isPresent();
     }

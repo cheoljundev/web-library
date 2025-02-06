@@ -16,6 +16,7 @@ import com.weblibrary.domain.file.model.UploadFile;
 import com.weblibrary.domain.file.repository.UploadFileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -26,6 +27,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class BookService {
     private final BookRepository bookRepository;
     private final BookCoverRepository bookCoverRepository;
@@ -65,18 +67,22 @@ public class BookService {
         return null;
     }
 
+    @Transactional(readOnly = true)
     public Optional<Book> findBookById(Long id) {
         return bookRepository.findById(id);
     }
 
+    @Transactional(readOnly = true)
     public Optional<Book> findBookByName(String name) {
         return bookRepository.findByName(name);
     }
 
+    @Transactional(readOnly = true)
     public Optional<Book> findBookByIsbn(String isbn) {
         return bookRepository.findByIsbn(isbn);
     }
 
+    @Transactional(readOnly = true)
     public List<BookListItem> findAll() {
         List<BookListItem> bookListItemList = new ArrayList<>();
         bookRepository.findAll().forEach((book -> {

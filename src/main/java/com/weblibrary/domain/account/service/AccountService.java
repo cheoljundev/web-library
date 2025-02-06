@@ -15,12 +15,14 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.weblibrary.domain.admin.model.RoleType.DEFAULT;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AccountService {
 
     private final UserRepository userRepository;
@@ -47,6 +49,7 @@ public class AccountService {
      * @param form : Valitation에 성공한 유저Dto
      */
 
+    @Transactional(readOnly = true)
     public void login(HttpSession session, LoginUserForm form) {
         User loginUser = userService.findByUsername(form.getUsername())
                 .filter(user -> user.getPassword().equals(form.getPassword()))

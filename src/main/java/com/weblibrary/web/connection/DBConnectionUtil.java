@@ -2,6 +2,7 @@ package com.weblibrary.web.connection;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,7 @@ public class DBConnectionUtil {
     private final DataSource dataSource;
 
     public Connection getConnection() throws SQLException {
-        Connection con = dataSource.getConnection();
+        Connection con = DataSourceUtils.getConnection(dataSource);
         log.debug("get connection={}, class={}", con, con.getClass());
         return con;
     }
@@ -28,7 +29,7 @@ public class DBConnectionUtil {
 
         JdbcUtils.closeResultSet(rs);
         JdbcUtils.closeStatement(stmt);
-        JdbcUtils.closeConnection(con);
+        DataSourceUtils.releaseConnection(con, dataSource);
 
     }
 }

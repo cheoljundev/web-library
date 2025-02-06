@@ -11,10 +11,12 @@ import com.weblibrary.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BookRentalService {
     private final BookRentalRepository bookRentalRepository;
     private final BookService bookService;
@@ -63,6 +65,7 @@ public class BookRentalService {
         }
     }
 
+    @Transactional(readOnly = true)
     public User findUserByBookId(Long bookId) {
         return bookRentalRepository.findActiveRentalByBookId(bookId)
                 .flatMap(rental -> userService.findById(rental.getUserId()))
