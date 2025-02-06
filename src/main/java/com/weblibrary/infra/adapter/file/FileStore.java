@@ -1,4 +1,4 @@
-package com.weblibrary.infrastructure.adapter.file;
+package com.weblibrary.infra.adapter.file;
 
 import com.weblibrary.domain.file.model.UploadFile;
 import org.springframework.web.multipart.MultipartFile;

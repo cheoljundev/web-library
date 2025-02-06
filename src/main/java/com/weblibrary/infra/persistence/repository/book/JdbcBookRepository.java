@@ -1,4 +1,4 @@
-package com.weblibrary.infrastructure.persistence.repository.book;
+package com.weblibrary.infra.persistence.repository.book;
 
 import com.weblibrary.domain.book.exception.NotFoundBookException;
 import com.weblibrary.domain.book.model.Book;

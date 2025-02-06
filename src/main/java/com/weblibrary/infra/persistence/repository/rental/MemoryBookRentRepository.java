@@ -1,4 +1,4 @@
-package com.weblibrary.infrastructure.persistence.repository.rental;
+package com.weblibrary.infra.persistence.repository.rental;
 
 import com.weblibrary.domain.rental.model.Rental;
 import com.weblibrary.domain.rental.repository.BookRentalRepository;

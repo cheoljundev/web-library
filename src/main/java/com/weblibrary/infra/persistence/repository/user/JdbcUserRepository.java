@@ -1,4 +1,4 @@
-package com.weblibrary.infrastructure.persistence.repository.user;
+package com.weblibrary.infra.persistence.repository.user;
 
 import com.weblibrary.domain.user.exception.NotFoundUserException;
 import com.weblibrary.domain.user.model.User;

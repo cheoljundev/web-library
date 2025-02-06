@@ -1,4 +1,4 @@
-package com.weblibrary.infrastructure.persistence.repository.book;
+package com.weblibrary.infra.persistence.repository.book;
 
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.repository.BookRepository;

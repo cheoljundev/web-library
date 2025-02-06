@@ -1,4 +1,4 @@
-package com.weblibrary.infrastructure.persistence.repository.user;
+package com.weblibrary.infra.persistence.repository.user;
 
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
