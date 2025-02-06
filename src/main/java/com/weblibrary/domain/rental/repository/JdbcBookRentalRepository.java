@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class JdbcBookRentalRepository implements BookRentalRepository, DbBookRentalRepository {
+public class JdbcBookRentalRepository implements BookRentalRepository {
 
     private final DBConnectionUtil dbConnectionUtil;
 

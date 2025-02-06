@@ -4,7 +4,6 @@ import com.weblibrary.domain.book.exception.DuplicateIsbnException;
 import com.weblibrary.domain.book.exception.NotFoundBookCoverException;
 import com.weblibrary.domain.book.exception.NotFoundBookException;
 import com.weblibrary.domain.book.model.Book;
-import com.weblibrary.domain.book.repository.DbBookRepository;
 import com.weblibrary.domain.book.model.BookCover;
 import com.weblibrary.domain.book.dto.BookListItem;
 import com.weblibrary.domain.book.dto.ModifyBookForm;
@@ -24,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

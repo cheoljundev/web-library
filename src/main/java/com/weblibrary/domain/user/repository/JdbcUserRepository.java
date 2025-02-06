@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class JdbcUserRepository implements UserRepository, DbUserRepository {
+public class JdbcUserRepository implements UserRepository {
 
     private final DBConnectionUtil dbConnectionUtil;
 

@@ -1,7 +1,6 @@
 package com.weblibrary.domain.user.service;
 
 import com.weblibrary.domain.user.model.User;
-import com.weblibrary.domain.user.repository.DbUserRepository;
 import com.weblibrary.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,11 +38,7 @@ public class UserService {
     }
 
     public User update(User user) {
-        if (userRepository instanceof DbUserRepository repository) {
-            return repository.update(user);
-        }
-
-        return null;
+        return userRepository.update(user);
     }
 
 

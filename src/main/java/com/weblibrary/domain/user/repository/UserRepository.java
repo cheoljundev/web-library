@@ -41,4 +41,6 @@ public interface UserRepository {
      */
     Optional<User> remove(Long userId);
 
+    User update(User user);
+
 }
