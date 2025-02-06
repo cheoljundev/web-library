@@ -1,4 +1,4 @@
-package com.weblibrary.domain.admin.model;
+package com.weblibrary.domain.user.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

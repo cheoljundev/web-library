@@ -1,8 +1,9 @@
-package com.weblibrary.domain.file.repository;
+package com.weblibrary.infrastructure.persistence.repository.file;
 
 import com.weblibrary.domain.file.exception.NotFoundFileException;
 import com.weblibrary.domain.file.model.UploadFile;
-import com.weblibrary.domain.file.store.FileStore;
+import com.weblibrary.domain.file.repository.UploadFileRepository;
+import com.weblibrary.infrastructure.adapter.file.FileStore;
 import com.weblibrary.web.connection.DBConnectionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

@@ -1,7 +1,9 @@
-package com.weblibrary.domain.rental.repository;
+package com.weblibrary.infrastructure.persistence.repository.rental;
 
 import com.weblibrary.domain.rental.exception.RentalException;
 import com.weblibrary.domain.rental.model.Rental;
+import com.weblibrary.domain.rental.repository.BookRentalRepository;
+import com.weblibrary.domain.rental.repository.DbBookRentalRepository;
 import com.weblibrary.web.connection.DBConnectionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

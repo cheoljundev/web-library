@@ -1,9 +1,8 @@
-package com.weblibrary.domain.file.store;
+package com.weblibrary.infrastructure.adapter.file;
 
 import com.weblibrary.domain.file.model.UploadFile;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

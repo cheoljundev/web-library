@@ -1,7 +1,7 @@
-package com.weblibrary.domain.admin.repository;
+package com.weblibrary.domain.user.repository;
 
-import com.weblibrary.domain.admin.model.Role;
-import com.weblibrary.domain.admin.model.RoleType;
+import com.weblibrary.domain.user.model.Role;
+import com.weblibrary.domain.user.model.RoleType;
 
 import java.util.List;
 import java.util.Optional;

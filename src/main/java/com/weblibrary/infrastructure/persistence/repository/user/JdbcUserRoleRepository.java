@@ -1,7 +1,8 @@
-package com.weblibrary.domain.admin.repository;
+package com.weblibrary.infrastructure.persistence.repository.user;
 
-import com.weblibrary.domain.admin.model.Role;
-import com.weblibrary.domain.admin.model.RoleType;
+import com.weblibrary.domain.user.model.Role;
+import com.weblibrary.domain.user.model.RoleType;
+import com.weblibrary.domain.user.repository.UserRoleRepository;
 import com.weblibrary.web.connection.DBConnectionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -13,7 +14,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class JdbcUserRoleRepository implements UserRoleRepository{
+public class JdbcUserRoleRepository implements UserRoleRepository {
 
     private final DBConnectionUtil dbConnectionUtil;
 

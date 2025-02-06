@@ -1,7 +1,7 @@
 package com.weblibrary.web.admin.controller;
 
 import com.weblibrary.domain.account.service.AccountService;
-import com.weblibrary.domain.admin.model.RoleType;
+import com.weblibrary.domain.user.model.RoleType;
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.user.dto.SetUserDto;
 import com.weblibrary.domain.user.model.User;

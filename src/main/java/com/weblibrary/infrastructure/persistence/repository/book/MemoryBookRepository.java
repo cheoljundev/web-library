@@ -1,8 +1,8 @@
-package com.weblibrary.domain.book.repository;
+package com.weblibrary.infrastructure.persistence.repository.book;
 
 import com.weblibrary.domain.book.model.Book;
+import com.weblibrary.domain.book.repository.BookRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Repository;
 
 import java.util.*;
 

@@ -1,6 +1,6 @@
 package com.weblibrary.web.file.controller;
 
-import com.weblibrary.domain.file.store.FileStore;
+import com.weblibrary.infrastructure.adapter.file.FileStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;

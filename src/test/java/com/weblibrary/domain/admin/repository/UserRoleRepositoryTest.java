@@ -2,11 +2,11 @@ package com.weblibrary.domain.admin.repository;
 
 import com.weblibrary.domain.account.dto.JoinUserForm;
 import com.weblibrary.domain.account.service.AccountService;
-import com.weblibrary.domain.admin.model.Role;
-import com.weblibrary.domain.admin.model.RoleType;
-import com.weblibrary.domain.admin.service.AdminService;
+import com.weblibrary.domain.user.model.Role;
+import com.weblibrary.domain.user.model.RoleType;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
+import com.weblibrary.domain.user.repository.UserRoleRepository;
 import com.weblibrary.domain.user.service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,14 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 class UserRoleRepositoryTest {
 
-    @Autowired UserRoleRepository userRoleRepository;
+    @Autowired
+    UserRoleRepository userRoleRepository;
     @Autowired AccountService accountService;
     @Autowired UserService userService;
     @Autowired UserRepository userRepository;

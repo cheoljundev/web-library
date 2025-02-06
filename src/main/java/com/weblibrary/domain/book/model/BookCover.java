@@ -1,7 +1,5 @@
-package com.weblibrary.domain.bookCover.model;
+package com.weblibrary.domain.book.model;
 
-import com.weblibrary.domain.book.model.Book;
-import com.weblibrary.domain.file.model.UploadFile;
 import lombok.Data;
 
 @Data

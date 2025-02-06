@@ -1,6 +1,7 @@
-package com.weblibrary.domain.rental.repository;
+package com.weblibrary.infrastructure.persistence.repository.rental;
 
 import com.weblibrary.domain.rental.model.Rental;
+import com.weblibrary.domain.rental.repository.BookRentalRepository;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-public class MemoryBookRentRepository implements BookRentalRepository{
+public class MemoryBookRentRepository implements BookRentalRepository {
     private final Map<Long, Rental> rentals = new HashMap<>();
     private final AtomicLong rentalIdGenerator = new AtomicLong(1);
 

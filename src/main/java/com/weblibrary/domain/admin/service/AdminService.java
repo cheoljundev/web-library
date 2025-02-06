@@ -1,8 +1,8 @@
 package com.weblibrary.domain.admin.service;
 
-import com.weblibrary.domain.admin.model.Role;
-import com.weblibrary.domain.admin.model.RoleType;
-import com.weblibrary.domain.admin.repository.UserRoleRepository;
+import com.weblibrary.domain.user.model.Role;
+import com.weblibrary.domain.user.model.RoleType;
+import com.weblibrary.domain.user.repository.UserRoleRepository;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.weblibrary.domain.admin.model.RoleType.ADMIN;
+import static com.weblibrary.domain.user.model.RoleType.ADMIN;
 
 @RequiredArgsConstructor
 /**

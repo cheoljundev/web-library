@@ -1,10 +1,10 @@
-package com.weblibrary.domain.file.repository;
+package com.weblibrary.infrastructure.persistence.repository.file;
 
 import com.weblibrary.domain.file.exception.NotFoundFileException;
 import com.weblibrary.domain.file.model.UploadFile;
-import com.weblibrary.domain.file.store.FileStore;
+import com.weblibrary.domain.file.repository.UploadFileRepository;
+import com.weblibrary.infrastructure.adapter.file.FileStore;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RequiredArgsConstructor
-public class MemoryUploadFileRepository implements UploadFileRepository{
+public class MemoryUploadFileRepository implements UploadFileRepository {
 
     private final FileStore fileStore;
     private final Map<Long, UploadFile> store = new HashMap<>();

@@ -1,6 +1,6 @@
-package com.weblibrary.domain.bookCover.repository;
+package com.weblibrary.domain.book.repository;
 
-import com.weblibrary.domain.bookCover.model.BookCover;
+import com.weblibrary.domain.book.model.BookCover;
 
 import java.util.List;
 import java.util.Optional;

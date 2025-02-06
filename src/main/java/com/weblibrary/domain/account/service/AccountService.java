@@ -1,7 +1,7 @@
 package com.weblibrary.domain.account.service;
 
-import com.weblibrary.domain.admin.model.Role;
-import com.weblibrary.domain.admin.repository.UserRoleRepository;
+import com.weblibrary.domain.user.model.Role;
+import com.weblibrary.domain.user.repository.UserRoleRepository;
 import com.weblibrary.domain.account.dto.JoinUserForm;
 import com.weblibrary.domain.account.dto.LoginUserForm;
 import com.weblibrary.domain.account.exception.InvalidJoinException;
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.weblibrary.domain.admin.model.RoleType.DEFAULT;
+import static com.weblibrary.domain.user.model.RoleType.DEFAULT;
 
 @Slf4j
 @Service

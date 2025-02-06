@@ -1,7 +1,9 @@
-package com.weblibrary.domain.book.repository;
+package com.weblibrary.infrastructure.persistence.repository.book;
 
 import com.weblibrary.domain.book.exception.NotFoundBookException;
 import com.weblibrary.domain.book.model.Book;
+import com.weblibrary.domain.book.repository.BookRepository;
+import com.weblibrary.domain.book.repository.DbBookRepository;
 import com.weblibrary.web.connection.DBConnectionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -14,7 +16,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class JdbcBookRepository implements BookRepository, DbBookRepository{
+public class JdbcBookRepository implements BookRepository, DbBookRepository {
 
     private final DBConnectionUtil dbConnectionUtil;
 
