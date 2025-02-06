@@ -2,12 +2,16 @@ package com.weblibrary.domain.user.repository;
 
 import com.weblibrary.domain.user.exception.NotFoundUserException;
 import com.weblibrary.domain.user.model.User;
-import com.weblibrary.web.connection.DBConnectionUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
-import java.util.ArrayList;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,137 +19,54 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class JdbcUserRepository implements UserRepository {
 
-    private final DBConnectionUtil dbConnectionUtil;
+    private final JdbcTemplate template;
 
     @Override
     public User save(User user) {
         String sql = "insert into users(username, password) values(?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
-        try {
-            con = dbConnectionUtil.getConnection();
-            pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        template.update(con -> {
+            PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, user.getUsername());
             pstmt.setString(2, user.getPassword());
-            int affectedRows = pstmt.executeUpdate();
+            return pstmt;
+        }, keyHolder);
 
-            if (affectedRows > 0) {
-                rs = pstmt.getGeneratedKeys();
-                if (rs.next()) { // 커서를 첫 번째 행으로 이동
-                    Long userId = rs.getLong(1);
-                    user.setUserId(userId);
-                }
-            }
-
-            return user;
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            dbConnectionUtil.close(con, pstmt, rs);
-        }
-
+        user.setUserId(keyHolder.getKey().longValue());
+        return user;
     }
 
     @Override
     public Optional<User> findById(Long id) {
         String sql = "select * from users where user_id = ?";
-
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
         try {
-            con = dbConnectionUtil.getConnection();
-            pstmt = con.prepareStatement(sql);
-            pstmt.setLong(1, id);
-            rs = pstmt.executeQuery();
-
-            User user = null;
-
-            if (rs.next()) {
-                long getUserId = rs.getLong("user_id");
-                String getUsername = rs.getString("username");
-                String getPassword = rs.getString("password");
-                int getRemainingRents = rs.getInt("remaining_rents");
-                user = new User(getUserId, getUsername, getPassword, getRemainingRents);
-            }
-
+            User user = template.queryForObject(sql, getUserRowMapper(), id);
             return Optional.ofNullable(user);
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            dbConnectionUtil.close(con, pstmt, rs);
+        } catch (DataAccessException e) {
+            return Optional.empty();
         }
     }
 
     @Override
     public Optional<User> findByUsername(String username) {
         String sql = "select * from users where username = ?";
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
         try {
-            con = dbConnectionUtil.getConnection();
-            pstmt = con.prepareStatement(sql);
-            pstmt.setString(1, username);
-            rs = pstmt.executeQuery();
-
-            User user = null;
-
-            if (rs.next()) {
-                long getUserId = rs.getLong("user_id");
-                String getUsername = rs.getString("username");
-                String getPassword = rs.getString("password");
-                int getRemainingRents = rs.getInt("remaining_rents");
-                user = new User(getUserId, getUsername, getPassword, getRemainingRents);
-            }
-
+            User user = template.queryForObject(sql, getUserRowMapper(), username);
             return Optional.ofNullable(user);
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            dbConnectionUtil.close(con, pstmt, rs);
+        } catch (DataAccessException e) {
+            return Optional.empty();
         }
     }
 
     @Override
     public List<User> findAll() {
         String sql = "select * from users";
-
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
-        List<User> users = new ArrayList<>();
-
         try {
-            con = dbConnectionUtil.getConnection();
-            pstmt = con.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                long getUserId = rs.getLong("user_id");
-                String getUsername = rs.getString("username");
-                String getPassword = rs.getString("password");
-                int getRemainingRents = rs.getInt("remaining_rents");
-                users.add(new User(getUserId, getUsername, getPassword, getRemainingRents));
-            }
-
-            return users;
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            dbConnectionUtil.close(con, pstmt, rs);
+            return template.query(sql, getUserRowMapper());
+        } catch (DataAccessException e) {
+            return List.of();
         }
-
     }
 
     @Override
@@ -159,52 +80,30 @@ public class JdbcUserRepository implements UserRepository {
                 "remaining_rents = ? " +
                 "where user_id = ?";
 
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
+        template.update(sql, user.getUsername(), user.getPassword(), user.getRemainingRents(), user.getUserId());
 
-        try {
-            con = dbConnectionUtil.getConnection();
-            pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            pstmt.setString(1, user.getUsername());
-            pstmt.setString(2, user.getPassword());
-            pstmt.setInt(3, user.getRemainingRents());
-            pstmt.setLong(4, user.getUserId());
-            pstmt.executeUpdate();
-
-            return oldUser;
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            dbConnectionUtil.close(con, pstmt, rs);
-        }
-
+        return oldUser;
     }
 
     @Override
     public Optional<User> remove(Long userId) {
         String sql = "delete from users where user_id=?";
 
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
+        User user = findById(userId)
+                .orElseThrow(NotFoundUserException::new);
 
-
-        try {
-            User removed = findById(userId).orElse(null);
-
-            dbConnectionUtil.getConnection();
-            pstmt = con.prepareStatement(sql);
-            pstmt.setLong(1, userId);
-            pstmt.executeUpdate();
-
-            return Optional.ofNullable(removed);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            dbConnectionUtil.close(con, pstmt, rs);
-        }
+        template.update(sql, userId);
+        return Optional.of(user);
     }
 
+
+    private static RowMapper<User> getUserRowMapper() {
+        return (rs, rowNum) -> {
+            long getUserId = rs.getLong("user_id");
+            String getUsername = rs.getString("username");
+            String getPassword = rs.getString("password");
+            int getRemainingRents = rs.getInt("remaining_rents");
+            return new User(getUserId, getUsername, getPassword, getRemainingRents);
+        };
+    }
 }
