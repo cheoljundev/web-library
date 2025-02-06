@@ -36,7 +36,6 @@ public class IndexController {
 
         model.addAttribute("bookPage", bookPage);
         model.addAttribute("pageBlock", pageBlock);
-        model.addAttribute("blockSize", blockSize);
 
         return "home/index";
     }

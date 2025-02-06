@@ -47,8 +47,6 @@ public class AdminBookController {
 
         model.addAttribute("bookPage", bookPage);
         model.addAttribute("pageBlock", pageBlock);
-        model.addAttribute("blockSize", blockSize);
-
 
         return "admin/book";
     }
