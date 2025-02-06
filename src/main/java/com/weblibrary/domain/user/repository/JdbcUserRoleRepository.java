@@ -1,8 +1,7 @@
-package com.weblibrary.infra.persistence.repository.user;
+package com.weblibrary.domain.user.repository;
 
 import com.weblibrary.domain.user.model.Role;
 import com.weblibrary.domain.user.model.RoleType;
-import com.weblibrary.domain.user.repository.UserRoleRepository;
 import com.weblibrary.web.connection.DBConnectionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

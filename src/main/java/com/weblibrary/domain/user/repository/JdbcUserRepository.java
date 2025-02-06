@@ -1,9 +1,7 @@
-package com.weblibrary.infra.persistence.repository.user;
+package com.weblibrary.domain.user.repository;
 
 import com.weblibrary.domain.user.exception.NotFoundUserException;
 import com.weblibrary.domain.user.model.User;
-import com.weblibrary.domain.user.repository.DbUserRepository;
-import com.weblibrary.domain.user.repository.UserRepository;
 import com.weblibrary.web.connection.DBConnectionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

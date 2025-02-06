@@ -1,7 +1,6 @@
-package com.weblibrary.infra.persistence.repository.book;
+package com.weblibrary.domain.book.repository;
 
 import com.weblibrary.domain.book.model.BookCover;
-import com.weblibrary.domain.book.repository.BookCoverRepository;
 import com.weblibrary.web.connection.DBConnectionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

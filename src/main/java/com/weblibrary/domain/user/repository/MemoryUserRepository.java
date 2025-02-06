@@ -1,7 +1,6 @@
-package com.weblibrary.infra.persistence.repository.user;
+package com.weblibrary.domain.user.repository;
 
 import com.weblibrary.domain.user.model.User;
-import com.weblibrary.domain.user.repository.UserRepository;
 
 import java.util.*;
 

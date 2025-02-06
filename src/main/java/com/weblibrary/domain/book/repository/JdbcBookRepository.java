@@ -1,9 +1,7 @@
-package com.weblibrary.infra.persistence.repository.book;
+package com.weblibrary.domain.book.repository;
 
 import com.weblibrary.domain.book.exception.NotFoundBookException;
 import com.weblibrary.domain.book.model.Book;
-import com.weblibrary.domain.book.repository.BookRepository;
-import com.weblibrary.domain.book.repository.DbBookRepository;
 import com.weblibrary.web.connection.DBConnectionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

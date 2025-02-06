@@ -1,4 +1,4 @@
-package com.weblibrary.infra.adapter.file;
+package com.weblibrary.domain.file.store;
 
 import com.weblibrary.domain.file.model.UploadFile;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,6 @@
-package com.weblibrary.infra.persistence.repository.book;
+package com.weblibrary.domain.book.repository;
 
 import com.weblibrary.domain.book.model.BookCover;
-import com.weblibrary.domain.book.repository.BookCoverRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
