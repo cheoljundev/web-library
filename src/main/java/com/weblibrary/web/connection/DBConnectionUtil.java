@@ -1,6 +1,5 @@
 package com.weblibrary.web.connection;
 
-import com.zaxxer.hikari.HikariDataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.support.JdbcUtils;
@@ -12,22 +11,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static com.weblibrary.web.connection.ConnectionConst.*;
-
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class DBConnectionUtil {
 
     private final DataSource dataSource;
-
-    public DBConnectionUtil() {
-        HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl(URL);
-        dataSource.setUsername(USERNAME);
-        dataSource.setPassword(PASSWORD);
-        dataSource.setPoolName("WebLibraryPool");
-        this.dataSource = dataSource;
-    }
 
     public Connection getConnection() throws SQLException {
         Connection con = dataSource.getConnection();
