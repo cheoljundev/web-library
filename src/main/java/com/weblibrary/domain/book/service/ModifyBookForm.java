@@ -1,17 +1,19 @@
-package com.weblibrary.domain.book.dto;
+package com.weblibrary.domain.book.service;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class NewBookForm {
+public class ModifyBookForm {
+
+    @NotNull
+    private Long id;
 
     @NotBlank
     private String bookName;

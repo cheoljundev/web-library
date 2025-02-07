@@ -1,6 +1,6 @@
 package com.weblibrary.domain.user.repository;
 
-import com.weblibrary.domain.account.dto.JoinUserForm;
+import com.weblibrary.domain.account.service.JoinUserForm;
 import com.weblibrary.domain.account.service.AccountService;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;

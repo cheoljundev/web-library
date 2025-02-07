@@ -1,12 +1,9 @@
 package com.weblibrary.web.admin.controller;
 
-import com.weblibrary.domain.book.dto.BookListItem;
-import com.weblibrary.domain.book.dto.ModifyBookForm;
-import com.weblibrary.domain.book.dto.ModifyBookViewForm;
-import com.weblibrary.domain.book.dto.NewBookForm;
+import com.weblibrary.domain.book.service.BookListItem;
+import com.weblibrary.domain.book.service.ModifyBookForm;
+import com.weblibrary.domain.book.service.NewBookForm;
 import com.weblibrary.domain.book.service.BookService;
-import com.weblibrary.web.book.validation.BookAddValidator;
-import com.weblibrary.web.book.validation.BookModifyValidator;
 import com.weblibrary.web.response.ErrorResponseUtils;
 import com.weblibrary.web.response.JsonResponse;
 import com.weblibrary.web.util.PageBlock;
@@ -18,15 +15,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Controller

@@ -3,7 +3,7 @@ package com.weblibrary.web.admin.controller;
 import com.weblibrary.domain.account.service.AccountService;
 import com.weblibrary.domain.user.model.RoleType;
 import com.weblibrary.domain.admin.service.AdminService;
-import com.weblibrary.domain.user.dto.UserInfo;
+import com.weblibrary.domain.admin.service.UserInfo;
 import com.weblibrary.domain.user.service.UserService;
 import com.weblibrary.web.response.ErrorResponse;
 import com.weblibrary.web.response.JsonResponse;

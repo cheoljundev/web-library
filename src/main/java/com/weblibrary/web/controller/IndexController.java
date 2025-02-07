@@ -1,6 +1,6 @@
 package com.weblibrary.web.controller;
 
-import com.weblibrary.domain.book.dto.BookListItem;
+import com.weblibrary.domain.book.service.BookListItem;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.web.util.PageBlock;
 import com.weblibrary.web.util.PaginationUtil;
@@ -11,10 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * site home 접속시 처리할 컨트롤러

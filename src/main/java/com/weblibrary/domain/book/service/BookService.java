@@ -1,8 +1,5 @@
 package com.weblibrary.domain.book.service;
 
-import com.weblibrary.domain.book.dto.BookListItem;
-import com.weblibrary.domain.book.dto.ModifyBookForm;
-import com.weblibrary.domain.book.dto.NewBookForm;
 import com.weblibrary.domain.book.exception.DuplicateIsbnException;
 import com.weblibrary.domain.book.exception.NotFoundBookCoverException;
 import com.weblibrary.domain.book.exception.NotFoundBookException;

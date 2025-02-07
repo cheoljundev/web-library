@@ -1,6 +1,5 @@
 package com.weblibrary.domain.admin.service;
 
-import com.weblibrary.domain.user.dto.UserInfo;
 import com.weblibrary.domain.user.model.Role;
 import com.weblibrary.domain.user.model.RoleType;
 import com.weblibrary.domain.user.repository.UserRoleRepository;

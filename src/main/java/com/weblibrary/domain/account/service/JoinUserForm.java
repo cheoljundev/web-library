@@ -1,4 +1,4 @@
-package com.weblibrary.domain.account.dto;
+package com.weblibrary.domain.account.service;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

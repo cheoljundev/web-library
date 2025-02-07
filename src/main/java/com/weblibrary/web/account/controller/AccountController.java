@@ -1,8 +1,8 @@
 package com.weblibrary.web.account.controller;
 
 import com.weblibrary.domain.account.service.AccountService;
-import com.weblibrary.domain.account.dto.JoinUserForm;
-import com.weblibrary.domain.account.dto.LoginUserForm;
+import com.weblibrary.domain.account.service.JoinUserForm;
+import com.weblibrary.domain.account.service.LoginUserForm;
 import com.weblibrary.domain.account.exception.InvalidJoinException;
 import com.weblibrary.domain.account.exception.InvalidLoginException;
 import com.weblibrary.domain.user.model.User;

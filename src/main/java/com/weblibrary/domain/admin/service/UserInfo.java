@@ -1,4 +1,4 @@
-package com.weblibrary.domain.user.dto;
+package com.weblibrary.domain.admin.service;
 
 import lombok.Builder;
 import lombok.Getter;
