@@ -4,6 +4,9 @@ import com.weblibrary.domain.user.exception.NotFoundUserException;
 import com.weblibrary.domain.user.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -60,13 +63,25 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     @Override
-    public List<User> findAll() {
-        String sql = "select * from users";
+    public Page<User> findAll(Pageable pageable) {
+        String sql = "select * from users order by user_id desc limit ? offset ?";
+        List<User> users = null;
         try {
-            return template.query(sql, getUserRowMapper());
+            users = template.query(sql, getUserRowMapper(), pageable.getPageSize(), pageable.getOffset());
         } catch (DataAccessException e) {
-            return List.of();
+            users = List.of();
         }
+
+        // 전체 레코드 수 조회
+        String countSql = "select count(*) from users";
+        int total = 0;
+        try {
+            total = template.queryForObject(countSql, Integer.class);
+        } catch (DataAccessException e) {
+            total = 0;
+        }
+
+        return new PageImpl<>(users, pageable, total);
     }
 
     @Override

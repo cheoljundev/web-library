@@ -1,14 +1,19 @@
 package com.weblibrary.domain.admin.service;
 
+import com.weblibrary.domain.user.dto.UserInfo;
 import com.weblibrary.domain.user.model.Role;
 import com.weblibrary.domain.user.model.RoleType;
 import com.weblibrary.domain.user.repository.UserRoleRepository;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.weblibrary.domain.user.model.RoleType.ADMIN;
@@ -73,8 +78,19 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
+    public Page<UserInfo> findAllUsers(Pageable pageable) {
+        Page<User> userPage = userRepository.findAll(pageable);
+        List<UserInfo> userInfos = new ArrayList<>();
+        userPage.forEach(user -> {
+            RoleType roleType = findUserRoleType(user.getUserId());
+            UserInfo userDto = UserInfo.builder()
+                    .id(user.getUserId())
+                    .username(user.getUsername())
+                    .roleTypeName(roleType.name())
+                    .build();
+            userInfos.add(userDto);
+        });
+        return new PageImpl<>(userInfos, pageable, userPage.getTotalElements());
     }
 
 

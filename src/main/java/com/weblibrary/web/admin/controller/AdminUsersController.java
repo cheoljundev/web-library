@@ -3,19 +3,21 @@ package com.weblibrary.web.admin.controller;
 import com.weblibrary.domain.account.service.AccountService;
 import com.weblibrary.domain.user.model.RoleType;
 import com.weblibrary.domain.admin.service.AdminService;
-import com.weblibrary.domain.user.dto.SetUserDto;
-import com.weblibrary.domain.user.model.User;
+import com.weblibrary.domain.user.dto.UserInfo;
+import com.weblibrary.domain.user.service.UserService;
 import com.weblibrary.web.response.ErrorResponse;
 import com.weblibrary.web.response.JsonResponse;
+import com.weblibrary.web.util.PageBlock;
+import com.weblibrary.web.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -24,45 +26,22 @@ public class AdminUsersController {
 
     private final AdminService adminService;
     private final AccountService accountService;
+    private final UserService userService;
 
     @ModelAttribute("roleTypes")
     public RoleType[] roleTypes() {
         return RoleType.values();
     }
 
-    @ModelAttribute("users")
-    public List<SetUserDto> users() {
-        /* 모든 유저를 가지고 온다 */
-        List<User> findUsers = adminService.findAllUsers();
-
-        /* dto를 담을 list */
-        List<SetUserDto> dtos = new ArrayList<>();
-
-        findUsers.forEach(user -> {
-            log.debug("user={}", user);
-
-            /* 찾은 유저의 가장 높은 RoleType 가져오기 */
-            RoleType roleType = adminService.findUserRoleType(user.getUserId());
-
-            log.debug("roleType={}", roleType);
-            log.debug("roleType.name()={}", roleType.name());
-
-            SetUserDto userDto = SetUserDto.builder()
-                    .id(user.getUserId())
-                    .username(user.getUsername())
-                    .roleTypeName(roleType.name())
-                    .build();
-
-            log.debug("userDto={}", userDto);
-
-            dtos.add(userDto);
-        });
-
-        return dtos;
-    }
-
     @GetMapping("/admin/user")
-    public String adminUserPage() {
+    public String adminUserPage(Pageable pageable, Model model) {
+        Page<UserInfo> userPage = adminService.findAllUsers(pageable);
+        int blockSize = 10; // 한 블록에 표시할 페이지 수
+        PageBlock pageBlock = PaginationUtil.createPageBlock(userPage, blockSize);
+
+        model.addAttribute("userPage", userPage);
+        model.addAttribute("pageBlock", pageBlock);
+
         return "admin/user";
     }
 

@@ -9,7 +9,7 @@ import lombok.ToString;
 @Builder
 @RequiredArgsConstructor
 @ToString
-public class SetUserDto {
+public class UserInfo {
     private final Long id;
     private final String username;
     private final String roleTypeName;

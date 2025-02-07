@@ -1,8 +1,9 @@
 package com.weblibrary.domain.user.repository;
 
 import com.weblibrary.domain.user.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
@@ -30,9 +31,10 @@ public interface UserRepository {
 
     /**
      * 모든 유저 반환
+     *
      * @return List로 모든 유저를 반환
      */
-    List<User> findAll();
+    Page<User> findAll(Pageable pageable);
 
     /**
      * 유저 삭제

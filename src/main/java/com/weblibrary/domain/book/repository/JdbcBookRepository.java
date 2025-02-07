@@ -78,7 +78,7 @@ public class JdbcBookRepository implements BookRepository {
     public Page<Book> findAll(Pageable pageable) {
 
         // 데이터 조회: LIMIT와 OFFSET 사용
-        String sql = "select * from books order by book_id limit ? offset ?";
+        String sql = "select * from books order by book_id desc limit ? offset ?";
         List<Book> books = null;
         try {
             books = template.query(sql, getBookMapper(), pageable.getPageSize(), pageable.getOffset());
