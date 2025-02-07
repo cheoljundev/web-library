@@ -83,12 +83,12 @@ public class AdminService {
         List<UserInfo> userInfos = new ArrayList<>();
         userPage.forEach(user -> {
             RoleType roleType = findUserRoleType(user.getUserId());
-            UserInfo userDto = UserInfo.builder()
+            UserInfo userinfo = UserInfo.builder()
                     .id(user.getUserId())
                     .username(user.getUsername())
                     .roleTypeName(roleType.name())
                     .build();
-            userInfos.add(userDto);
+            userInfos.add(userinfo);
         });
         return new PageImpl<>(userInfos, pageable, userPage.getTotalElements());
     }
