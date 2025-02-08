@@ -1,13 +1,11 @@
 package com.weblibrary.domain.user.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
 public class Role implements Comparable<Role>{
     @Setter
     @EqualsAndHashCode.Include
