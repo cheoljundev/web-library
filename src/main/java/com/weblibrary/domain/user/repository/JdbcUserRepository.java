@@ -2,41 +2,39 @@ package com.weblibrary.domain.user.repository;
 
 import com.weblibrary.domain.user.exception.NotFoundUserException;
 import com.weblibrary.domain.user.model.User;
-import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-@RequiredArgsConstructor
 public class JdbcUserRepository implements UserRepository {
 
     private final JdbcTemplate template;
+    private final SimpleJdbcInsert jdbcInsert;
+
+    public JdbcUserRepository(DataSource dataSource) {
+        this.template = new JdbcTemplate(dataSource);
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("users")
+                .usingGeneratedKeyColumns("user_id");
+    }
 
     @Override
     public User save(User user) {
-        String sql = "insert into users(username, password) values(?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        template.update(con -> {
-            PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            pstmt.setString(1, user.getUsername());
-            pstmt.setString(2, user.getPassword());
-            return pstmt;
-        }, keyHolder);
-
-        user.setUserId(keyHolder.getKey().longValue());
+        SqlParameterSource param = new BeanPropertySqlParameterSource(user);
+        Number userId = jdbcInsert.executeAndReturnKey(param);
+        user.setUserId(userId.longValue());
         return user;
     }
 

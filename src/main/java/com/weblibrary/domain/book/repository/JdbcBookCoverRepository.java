@@ -1,25 +1,37 @@
 package com.weblibrary.domain.book.repository;
 
 import com.weblibrary.domain.book.model.BookCover;
-import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-@RequiredArgsConstructor
 public class JdbcBookCoverRepository implements BookCoverRepository {
 
     private final JdbcTemplate template;
+    private final SimpleJdbcInsert jdbcInsert;
+
+    public JdbcBookCoverRepository(DataSource dataSource) {
+        this.template = new JdbcTemplate(dataSource);
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("book_covers")
+                .usingGeneratedKeyColumns("book_cover_id");
+    }
 
     @Override
-    public void save(BookCover cover) {
-        String sql = "insert into book_covers(book_id, upload_file_id) values(?, ?)";
-        template.update(sql, cover.getBookId(), cover.getUploadFileId());
+    public BookCover save(BookCover cover) {
+        SqlParameterSource param = new BeanPropertySqlParameterSource(cover);
+        Number coverId = jdbcInsert.executeAndReturnKey(param);
+        cover.setBookCoverId(coverId.longValue());
+        return cover;
     }
 
     @Override

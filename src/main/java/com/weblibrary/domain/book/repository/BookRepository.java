@@ -4,7 +4,6 @@ import com.weblibrary.domain.book.model.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface BookRepository {
@@ -39,11 +38,11 @@ public interface BookRepository {
 
     /**
      * 책 삭제
+     *
      * @param bookId : 삭제할 책 id
-     * @return 삭제한 책 리턴
      */
-    Optional<Book> remove(Long bookId);
+    void remove(Long bookId);
 
-    Book update(Book book);
+    void update(Book book);
 
 }

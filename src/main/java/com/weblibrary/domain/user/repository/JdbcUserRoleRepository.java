@@ -2,26 +2,37 @@ package com.weblibrary.domain.user.repository;
 
 import com.weblibrary.domain.user.model.Role;
 import com.weblibrary.domain.user.model.RoleType;
-import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-@RequiredArgsConstructor
 public class JdbcUserRoleRepository implements UserRoleRepository {
 
 
     private final JdbcTemplate template;
+    private final SimpleJdbcInsert jdbcInsert;
+
+    public JdbcUserRoleRepository(DataSource dataSource) {
+        this.template = new JdbcTemplate(dataSource);
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("roles")
+                .usingGeneratedKeyColumns("role_id");
+    }
 
     @Override
     public void save(Role role) {
-        String sql = "insert into roles(user_id, role_type) values(?, ?)";
-        template.update(sql, role.getUserId(), role.getRoleType().name());
+        SqlParameterSource param = new BeanPropertySqlParameterSource(role);
+        Number roleId = jdbcInsert.executeAndReturnKey(param);
+        role.setRoleId(roleId.longValue());
     }
 
     @Override

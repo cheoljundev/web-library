@@ -2,41 +2,42 @@ package com.weblibrary.domain.book.repository;
 
 import com.weblibrary.domain.book.exception.NotFoundBookException;
 import com.weblibrary.domain.book.model.Book;
-import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
 
 @Repository
-@RequiredArgsConstructor
 public class JdbcBookRepository implements BookRepository {
 
 
     private final JdbcTemplate template;
+    private final SimpleJdbcInsert jdbcInsert;
+
+    public JdbcBookRepository(DataSource dataSource) {
+        this.template = new JdbcTemplate(dataSource);
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("books")
+                .usingColumns("book_name", "isbn")
+                .usingGeneratedKeyColumns("book_id");
+    }
 
     @Override
     public Book save(Book book) {
-        String sql = "insert into books(book_name, isbn) values(?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        template.update(con -> {
-            PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            pstmt.setString(1, book.getBookName());
-            pstmt.setString(2, book.getIsbn());
-            return pstmt;
-        }, keyHolder);
-        book.setBookId(keyHolder.getKey().longValue());
+        SqlParameterSource param = new BeanPropertySqlParameterSource(book);
+        Number bookId = jdbcInsert.executeAndReturnKey(param);
+        book.setBookId(bookId.longValue());
         return book;
     }
 
@@ -99,9 +100,7 @@ public class JdbcBookRepository implements BookRepository {
     }
 
     @Override
-    public Book update(Book book) {
-        Book oldBook = findById(book.getBookId())
-                .orElseThrow(NotFoundBookException::new);
+    public void update(Book book) {
 
         String sql = "update books set " +
                 "book_name = ?, " +
@@ -111,16 +110,12 @@ public class JdbcBookRepository implements BookRepository {
 
         template.update(sql, book.getBookName(), book.getIsbn(), book.isRented(), book.getBookId());
 
-        return oldBook;
     }
 
     @Override
-    public Optional<Book> remove(Long bookId) {
+    public void remove(Long bookId) {
         String sql = "delete from books where book_id = ?";
-        Book book = findById(bookId)
-                .orElseThrow(NotFoundBookException::new);
         template.update(sql, bookId);
-        return Optional.of(book);
     }
 
 

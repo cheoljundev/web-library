@@ -52,12 +52,14 @@ public class BookService {
     }
 
     public void deleteBook(Long bookId) {
-        bookRepository.remove(bookId).orElseThrow(NotFoundBookException::new);
-        bookCoverRepository.remove(bookId);
+        Book removedBook = bookRepository.findById(bookId)
+                .orElseThrow(NotFoundBookException::new);
+        removeBookCover(removedBook);
+        bookRepository.remove(bookId);
     }
 
-    public Book updateBook(Book book) {
-        return bookRepository.update(book);
+    public void updateBook(Book book) {
+        bookRepository.update(book);
     }
 
     @Transactional(readOnly = true)

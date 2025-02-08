@@ -2,40 +2,39 @@ package com.weblibrary.domain.rental.repository;
 
 import com.weblibrary.domain.rental.exception.RentalException;
 import com.weblibrary.domain.rental.model.Rental;
-import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 
 @Repository
-@RequiredArgsConstructor
 public class JdbcBookRentalRepository implements BookRentalRepository {
 
     private final JdbcTemplate template;
+    private final SimpleJdbcInsert jdbcInsert;
+
+    public JdbcBookRentalRepository(DataSource dataSource) {
+        this.template = new JdbcTemplate(dataSource);
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("rentals")
+                .usingColumns("book_id", "user_id", "rented_at")
+                .usingGeneratedKeyColumns("rental_id");
+    }
 
     @Override
     public Rental save(Rental rental) {
-        String sql = "insert into rentals(book_id, user_id, rented_at) values(?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        template.update(con -> {
-            PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            pstmt.setLong(1, rental.getBookId());
-            pstmt.setLong(2, rental.getUserId());
-            pstmt.setTimestamp(3, Timestamp.valueOf(rental.getRentedAt()));
-            return pstmt;
-        }, keyHolder);
-        rental.setRentalId(keyHolder.getKey().longValue());
+        SqlParameterSource param = new BeanPropertySqlParameterSource(rental);
+        Number rentalId = jdbcInsert.executeAndReturnKey(param);
+        rental.setRentalId(rentalId.longValue());
         return rental;
     }
 

@@ -2,39 +2,39 @@ package com.weblibrary.domain.file.repository;
 
 import com.weblibrary.domain.file.model.UploadFile;
 import com.weblibrary.domain.file.store.FileStore;
-import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import javax.sql.DataSource;
 import java.util.Optional;
 
 @Repository
-@RequiredArgsConstructor
 public class JdbcUploadFileRepository implements UploadFileRepository {
 
     private final FileStore fileStore;
     private final JdbcTemplate template;
+    private final SimpleJdbcInsert jdbcInsert;
+
+    public JdbcUploadFileRepository(FileStore fileStore, DataSource dataSource) {
+        this.fileStore = fileStore;
+        this.template = new JdbcTemplate(dataSource);
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("upload_files")
+                .usingGeneratedKeyColumns("upload_file_id");
+    }
 
     @Override
     public UploadFile save(MultipartFile multipartFile) {
         UploadFile uploadFile = fileStore.storeFile(multipartFile);
-        String sql = "insert into upload_files(upload_file_name, store_file_name) values(?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        template.update(con -> {
-            PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            pstmt.setString(1, uploadFile.getUploadFileName());
-            pstmt.setString(2, uploadFile.getStoreFileName());
-            return pstmt;
-        }, keyHolder);
-        uploadFile.setUploadFileId(keyHolder.getKey().longValue());
+        SqlParameterSource param = new BeanPropertySqlParameterSource(uploadFile);
+        Number uploadFileId = jdbcInsert.executeAndReturnKey(param);
+        uploadFile.setUploadFileId(uploadFileId.longValue());
         return uploadFile;
     }
 
