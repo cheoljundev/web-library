@@ -6,7 +6,6 @@ import com.weblibrary.domain.rental.model.Rental;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
@@ -36,7 +34,7 @@ class BookRentalRepositoryTest {
         Book book = bookRepository.save(new Book("testBook", "12345"));
 
         //when
-        Rental saved = bookRentalRepository.save(new Rental(book.getBookId(), user.getUserId()));
+        Rental saved = bookRentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
 
         //then
         assertThat(saved.getUserId()).isEqualTo(user.getUserId());
@@ -50,7 +48,7 @@ class BookRentalRepositoryTest {
         //given
         User user = userRepository.save(new User("tester", "1234"));
         Book book = bookRepository.save(new Book("testBook", "12345"));
-        bookRentalRepository.save(new Rental(book.getBookId(), user.getUserId()));
+        bookRentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
 
         //when
         Rental rental = bookRentalRepository.findActiveRentalByBookId(book.getBookId()).get();
@@ -65,7 +63,7 @@ class BookRentalRepositoryTest {
         //given
         User user = userRepository.save(new User("tester", "1234"));
         Book book = bookRepository.save(new Book("testBook", "12345"));
-        Rental saved = bookRentalRepository.save(new Rental(book.getBookId(), user.getUserId()));
+        Rental saved = bookRentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
         saved.returnBook();
         bookRentalRepository.update(saved);
 
@@ -83,9 +81,9 @@ class BookRentalRepositoryTest {
         Book book1 = bookRepository.save(new Book("testBook1", "12345"));
         Book book2 = bookRepository.save(new Book("testBook2", "45678"));
         Book book3 = bookRepository.save(new Book("testBook3", "98765"));
-        bookRentalRepository.save(new Rental(book1.getBookId(), user.getUserId()));
-        bookRentalRepository.save(new Rental(book2.getBookId(), user.getUserId()));
-        bookRentalRepository.save(new Rental(book3.getBookId(), user.getUserId()));
+        bookRentalRepository.save(new Rental(user.getUserId(), book1.getBookId()));
+        bookRentalRepository.save(new Rental(user.getUserId(), book2.getBookId()));
+        bookRentalRepository.save(new Rental(user.getUserId(), book3.getBookId()));
 
         //when
         List<Rental> rentals = bookRentalRepository.findRentalsByUserId(user.getUserId());
@@ -100,7 +98,7 @@ class BookRentalRepositoryTest {
         //given
         User user = userRepository.save(new User("tester", "1234"));
         Book book = bookRepository.save(new Book("testBook", "12345"));
-        Rental saved = bookRentalRepository.save(new Rental(book.getBookId(), user.getUserId()));
+        Rental saved = bookRentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
 
         //when
         Rental rental = bookRentalRepository.findById(saved.getRentalId()).get();
@@ -114,7 +112,7 @@ class BookRentalRepositoryTest {
         //given
         User user = userRepository.save(new User("tester", "1234"));
         Book book = bookRepository.save(new Book("testBook", "12345"));
-        Rental saved = bookRentalRepository.save(new Rental(book.getBookId(), user.getUserId()));
+        Rental saved = bookRentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
 
         //when
         saved.returnBook();
@@ -130,7 +128,7 @@ class BookRentalRepositoryTest {
         //given
         User user = userRepository.save(new User("tester", "1234"));
         Book book = bookRepository.save(new Book("testBook", "12345"));
-        Rental saved = bookRentalRepository.save(new Rental(book.getBookId(), user.getUserId()));
+        Rental saved = bookRentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
 
         //when
         bookRentalRepository.delete(saved.getRentalId());

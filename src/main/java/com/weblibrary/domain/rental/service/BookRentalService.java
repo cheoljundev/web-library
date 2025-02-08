@@ -39,10 +39,10 @@ public class BookRentalService {
         bookService.updateBook(book);
         userService.update(user);
 
-        return bookRentalRepository.save(new Rental(book.getBookId(), user.getUserId()));
+        return bookRentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
     }
 
-    public void returnBook(User user, Book book) {
+    public Rental returnBook(User user, Book book) {
         User rendtedUser = findUserByBookId(book.getBookId());
         if (!user.equals(rendtedUser)) {
             log.debug("rendtedUser={}", rendtedUser);
@@ -59,6 +59,7 @@ public class BookRentalService {
         bookService.updateBook(book);
         userService.update(user);
         bookRentalRepository.update(rental);
+        return rental;
     }
 
     @Transactional(readOnly = true)

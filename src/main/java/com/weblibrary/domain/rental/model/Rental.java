@@ -16,9 +16,9 @@ public class Rental {
     private final LocalDateTime rentedAt;
     private LocalDateTime returnedAt;
 
-    public Rental(Long bookId, Long userId) {
-        this.bookId = bookId;
+    public Rental(Long userId, Long bookId) {
         this.userId = userId;
+        this.bookId = bookId;
         this.rentedAt = LocalDateTime.now();
     }
 
