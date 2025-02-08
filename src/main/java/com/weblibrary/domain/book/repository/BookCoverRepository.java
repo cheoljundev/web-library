@@ -10,5 +10,4 @@ public interface BookCoverRepository {
     void remove(Long coverId);
     Optional<BookCover> findById(Long coverId);
     Optional<BookCover> findByBookId(Long bookId);
-    List<BookCover> findAll();
 }
