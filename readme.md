@@ -42,5 +42,8 @@
 - [x] 파일 업로드 구현
 - [x] DB
   - [x] jdbc
+    - [x] jdbc 템플릿
+    - [x] NamedParameterJdbcTemplate
+    - [x] SimpleJdbcInsert
   - [x] 트랜잭션 적용
   - [x] 페이지네이션 구현
