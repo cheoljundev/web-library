@@ -61,8 +61,8 @@ public class LocalFileStore implements FileStore {
     }
 
     @Override
-    public void deleteFile(String storeFileName) {
+    public boolean deleteFile(String storeFileName) {
         File file = new File(getFullPath(storeFileName));
-        file.delete();
+        return file.delete();
     }
 }
