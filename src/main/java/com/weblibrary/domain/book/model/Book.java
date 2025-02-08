@@ -6,8 +6,10 @@ import lombok.*;
 @ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Book {
     @Setter
+    @EqualsAndHashCode.Include
     private Long bookId;
     private String bookName;
     private String isbn;
