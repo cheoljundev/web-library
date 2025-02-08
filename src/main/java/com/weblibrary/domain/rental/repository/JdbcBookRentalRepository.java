@@ -70,7 +70,7 @@ public class JdbcBookRentalRepository implements BookRentalRepository {
             Rental rental = template.queryForObject(sql, param, getRentalRowMapper());
             return Optional.ofNullable(rental);
         } catch (DataAccessException e) {
-            throw new RuntimeException(e);
+            return Optional.empty();
         }
     }
 
