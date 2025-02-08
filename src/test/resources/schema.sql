@@ -1,0 +1,44 @@
+CREATE TABLE IF NOT EXISTS users (
+user_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+username VARCHAR(255) NOT NULL UNIQUE,
+password VARCHAR(255) NOT NULL,
+remaining_rents INT NOT NULL DEFAULT 3
+);
+
+CREATE TABLE IF NOT EXISTS roles (
+role_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+user_id BIGINT NOT NULL,
+role_type VARCHAR(50) NOT NULL,
+CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+CREATE TABLE IF NOT EXISTS upload_files (
+upload_file_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+upload_file_name VARCHAR(255) NOT NULL,
+store_file_name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS books (
+book_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+book_name VARCHAR(255) NOT NULL,
+isbn VARCHAR(255) NOT NULL UNIQUE,
+rented BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+CREATE TABLE IF NOT EXISTS book_covers (
+id BIGINT PRIMARY KEY AUTO_INCREMENT,
+book_id BIGINT NOT NULL,
+upload_file_id BIGINT NOT NULL,
+CONSTRAINT fk_book FOREIGN KEY (book_id) REFERENCES books(book_id),
+CONSTRAINT fk_upload_file FOREIGN KEY (upload_file_id) REFERENCES upload_files(upload_file_id)
+);
+
+CREATE TABLE IF NOT EXISTS rentals (
+rental_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+book_id BIGINT NOT NULL,
+user_id BIGINT NOT NULL,
+rented_at TIMESTAMP NOT NULL,
+returned_at TIMESTAMP,
+CONSTRAINT fk_rental_book FOREIGN KEY (book_id) REFERENCES books(book_id),
+CONSTRAINT fk_rental_user FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
