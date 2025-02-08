@@ -67,7 +67,7 @@ public class AdminBookController {
             return errorResponseUtils.handleValidationErrors(bindingResult);
         }
 
-        bookService.addBook(form);
+        bookService.save(form);
 
         return ResponseEntity.ok().body(JsonResponse.builder()
                 .message("정상 등록되었습니다.")
@@ -100,7 +100,7 @@ public class AdminBookController {
             return errorResponseUtils.handleValidationErrors(bindingResult);
         }
 
-        bookService.modifyBook(form);
+        bookService.modify(form);
 
         return ResponseEntity.ok().body(JsonResponse.builder()
                 .message("정상 수정되었습니다.")
