@@ -11,7 +11,7 @@ public class Book {
     private Long bookId;
     private String bookName;
     private String isbn;
-    private boolean isRented;
+    private boolean rented;
 
     public Book(String bookName, String isbn) {
         this.bookName = bookName;
@@ -28,7 +28,7 @@ public class Book {
         this.bookId = book.getBookId();
         this.bookName = book.getBookName();
         this.isbn = book.getIsbn();
-        this.isRented = book.isRented();
+        this.rented = book.isRented();
     }
 
     /**
@@ -49,7 +49,7 @@ public class Book {
      *
      */
     public void rentBook() {
-        isRented = true;
+        rented = true;
     }
 
     /**
@@ -57,6 +57,6 @@ public class Book {
      *
      */
     public void returnBook() {
-        isRented = false;
+        rented = false;
     }
 }
