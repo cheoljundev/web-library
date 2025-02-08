@@ -29,13 +29,14 @@ public class BookService {
     private final BookCoverRepository bookCoverRepository;
     private final UploadFileRepository uploadFileRepository;
 
-    public void addBook(NewBookForm newBookForm) {
+    public Book save(NewBookForm newBookForm) {
         Book book = new Book(newBookForm.getBookName(), newBookForm.getIsbn());
         Book savedBook = bookRepository.save(book);
         saveBookCover(savedBook, newBookForm.getCoverImage());
+        return savedBook;
     }
 
-    public void modifyBook(ModifyBookForm form) {
+    public void modify(ModifyBookForm form) {
         findBookById(form.getId()).ifPresentOrElse(book -> {
 
             if (isDuplicated(book.getIsbn(), form.getIsbn())) {
