@@ -25,6 +25,7 @@ export const fetchRequest = async (url, method, body = null) => {
 
     const options = {
         method: method,
+
     };
 
     // body가 FormData일 경우, JSON.stringify를 사용하지 않도록 처리
@@ -33,6 +34,9 @@ export const fetchRequest = async (url, method, body = null) => {
             options.body = body; // FormData는 그대로 사용
         } else {
             options.body = JSON.stringify(body); // 그 외에는 JSON으로 변환
+            options.headers = {
+                "Content-Type": "application/json",
+            };
         }
     }
 
@@ -42,7 +46,7 @@ export const fetchRequest = async (url, method, body = null) => {
     const contentType = response.headers.get("Content-Type");
     if (contentType && contentType.startsWith("text/html")) {
         location.href = response.url;
-        return { redirected: true }; // 리다이렉트를 명시적으로 반환
+        return {redirected: true}; // 리다이렉트를 명시적으로 반환
     }
 
     // 리디렉션이 아닌 다른 응답 처리

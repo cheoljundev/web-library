@@ -38,11 +38,11 @@ public interface UserRepository {
 
     /**
      * 유저 삭제
+     *
      * @param userId : 삭제할 유저 id
-     * @return 삭제한 유저 반환
      */
-    Optional<User> remove(Long userId);
+    void remove(Long userId);
 
-    User update(User user);
+    void update(User user);
 
 }

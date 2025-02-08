@@ -37,8 +37,8 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public User update(User user) {
-        return userRepository.update(user);
+    public void update(User user) {
+        userRepository.update(user);
     }
 
 

@@ -1,11 +1,10 @@
 package com.weblibrary.domain.rental.repository;
 
-import com.weblibrary.domain.rental.exception.RentalException;
 import com.weblibrary.domain.rental.model.Rental;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -13,17 +12,18 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
 @Repository
 public class JdbcBookRentalRepository implements BookRentalRepository {
 
-    private final JdbcTemplate template;
+    private final NamedParameterJdbcTemplate template;
     private final SimpleJdbcInsert jdbcInsert;
 
     public JdbcBookRentalRepository(DataSource dataSource) {
-        this.template = new JdbcTemplate(dataSource);
+        this.template = new NamedParameterJdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("rentals")
                 .usingColumns("book_id", "user_id", "rented_at")
@@ -40,9 +40,10 @@ public class JdbcBookRentalRepository implements BookRentalRepository {
 
     @Override
     public Optional<Rental> findActiveRentalByBookId(Long bookId) {
-        String sql = "select * from rentals where book_id = ? and returned_at is null";
+        String sql = "select * from rentals where book_id = :bookId and returned_at is null";
         try {
-            Rental rental = template.queryForObject(sql, getRentalRowMapper(), bookId);
+            Map<String, Long> param = Map.of("bookId", bookId);
+            Rental rental = template.queryForObject(sql, param, getRentalRowMapper());
             return Optional.ofNullable(rental);
         } catch (DataAccessException e) {
             return Optional.empty();
@@ -51,9 +52,10 @@ public class JdbcBookRentalRepository implements BookRentalRepository {
 
     @Override
     public List<Rental> findRentalsByUserId(Long userId) {
-        String sql = "select * from rentals where user_id = ?";
+        String sql = "select * from rentals where user_id = :userId";
         try {
-            return template.query(sql, getRentalRowMapper(), userId);
+            Map<String, Long> param = Map.of("userId", userId);
+            return template.query(sql, param, getRentalRowMapper());
         } catch (DataAccessException e) {
             return List.of();
         }
@@ -62,9 +64,10 @@ public class JdbcBookRentalRepository implements BookRentalRepository {
 
     @Override
     public Optional<Rental> findById(Long rental_id) {
-        String sql = "select * from rentals where rental_id = ?";
+        String sql = "select * from rentals where rental_id = :rental_id";
         try {
-            Rental rental = template.queryForObject(sql, getRentalRowMapper(), rental_id);
+            Map<String, Long> param = Map.of("rental_id", rental_id);
+            Rental rental = template.queryForObject(sql, param, getRentalRowMapper());
             return Optional.ofNullable(rental);
         } catch (DataAccessException e) {
             throw new RuntimeException(e);
@@ -72,28 +75,27 @@ public class JdbcBookRentalRepository implements BookRentalRepository {
     }
 
     @Override
-    public Rental update(Rental rental) {
+    public void update(Rental rental) {
 
-        Rental oldRental = findById(rental.getRentalId())
-                .orElseThrow(() -> new RentalException("존재하지 않는 대출건입니다."));
+        SqlParameterSource param = new BeanPropertySqlParameterSource(rental);
 
         String sql = "update rentals set " +
-                "book_id = ?, " +
-                "user_id = ?, " +
-                "rented_at = ?, " +
-                "returned_at = ? " +
-                "where rental_id = ?";
+                "book_id = :bookId, " +
+                "user_id = :userId, " +
+                "rented_at = :rentedAt, " +
+                "returned_at = :returnedAt " +
+                "where rental_id = :rentalId";
 
-        template.update(sql, rental.getBookId(), rental.getUserId(), rental.getRentedAt(), rental.getReturnedAt(), rental.getRentalId());
+        template.update(sql, param);
 
-        return oldRental;
 
     }
 
     @Override
     public void delete(Long rental_id) {
-        String sql = "delete from rentals where rental_id = ?";
-        template.update(sql, rental_id);
+        String sql = "delete from rentals where rental_id = :rental_id";
+        Map<String, Long> param = Map.of("rental_id", rental_id);
+        template.update(sql, param);
     }
 
     private RowMapper<Rental> getRentalRowMapper() {
