@@ -11,6 +11,5 @@ public interface UserRoleRepository {
     Optional<Role> findById(Long roleId);
     Optional<Role> findRoleByUserIdAndRoleType(Long userId, RoleType roleType);
     List<Role> findRolesByUserId(Long userId);
-    List<Role> findAll();
     boolean remove(Long roleId);
 }

@@ -57,13 +57,6 @@ class UserRoleRepositoryTest {
     }
 
     @Test
-    void findAll() {
-        accountService.join(new JoinUserForm("tester", "1234"));
-        List<Role> roles = userRoleRepository.findAll();
-        assertThat(roles.size()).isEqualTo(1);
-    }
-
-    @Test
     void remove() {
         User tester = accountService.join(new JoinUserForm("tester", "1234"));
 
@@ -71,7 +64,7 @@ class UserRoleRepositoryTest {
             userRoleRepository.remove(role.getRoleId());
         });
 
-        List<Role> roles = userRoleRepository.findAll();
+        List<Role> roles = userRoleRepository.findRolesByUserId(tester.getUserId());
         assertThat(roles.size()).isEqualTo(0);
     }
 }

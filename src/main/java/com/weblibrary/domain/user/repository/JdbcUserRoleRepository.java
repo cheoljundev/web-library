@@ -76,16 +76,6 @@ public class JdbcUserRoleRepository implements UserRoleRepository {
     }
 
     @Override
-    public List<Role> findAll() {
-        String sql = "select * from roles";
-        try {
-            return template.query(sql, getRoleMapper());
-        } catch (DataAccessException e) {
-            return List.of();
-        }
-    }
-
-    @Override
     public boolean remove(Long roleId) {
         String sql = "delete from roles where role_id = :roleId";
         Map<String, Long> param = Map.of("roleId", roleId);
