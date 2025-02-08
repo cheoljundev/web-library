@@ -28,7 +28,7 @@ class UploadFileRepositoryTest {
         UploadFile saved = uploadFileRepository.save(multipartFile);
 
         //then
-        assertThat(saved.getUploadFileName()).isEqualTo(multipartFile.getName());
+        assertThat(saved.getUploadFileName()).isEqualTo(multipartFile.getOriginalFilename());
 
         //cleanup
         uploadFileRepository.remove(saved.getUploadFileId());
