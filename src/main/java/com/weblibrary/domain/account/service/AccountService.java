@@ -30,13 +30,14 @@ public class AccountService {
     /**
      * 가입 처리 서비스 계층 메서드
      */
-    public void join(JoinUserForm form) {
+    public User join(JoinUserForm form) {
         if (!isUniqueUsername(form.getUsername())) {
             throw new InvalidJoinException("이미 존재하는 유저이름입니다.", form);
         }
         User savedUser = userService.save(new User(form.getUsername(), form.getPassword()));
         Role role = new Role(savedUser.getUserId(), DEFAULT);
         userRoleRepository.save(role);
+        return savedUser;
     }
 
     /**

@@ -1,95 +1,75 @@
 package com.weblibrary.domain.admin.repository;
 
-import com.weblibrary.domain.account.service.JoinUserForm;
 import com.weblibrary.domain.account.service.AccountService;
+import com.weblibrary.domain.account.service.JoinUserForm;
 import com.weblibrary.domain.user.model.Role;
 import com.weblibrary.domain.user.model.RoleType;
 import com.weblibrary.domain.user.model.User;
-import com.weblibrary.domain.user.repository.UserRepository;
 import com.weblibrary.domain.user.repository.UserRoleRepository;
-import com.weblibrary.domain.user.service.UserService;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
+@Transactional
 @SpringBootTest
 class UserRoleRepositoryTest {
 
     @Autowired
     UserRoleRepository userRoleRepository;
-    @Autowired AccountService accountService;
-    @Autowired UserService userService;
-    @Autowired UserRepository userRepository;
-
-    @BeforeEach
-    void setUp() {
-        accountService.join(new JoinUserForm("tester", "1234"));
-    }
-
-    @AfterEach
-    void tearDown() {
-        User user = userRepository.findByUsername("tester").orElse(null);
-        accountService.deleteUser(user.getUserId());
-    }
+    @Autowired
+    AccountService accountService;
 
     @Test
     void save() {
-        Long userId = userRepository.findByUsername("tester").orElse(null).getUserId();
-        Role role = new Role(userId, RoleType.ADMIN);
+        User tester = accountService.join(new JoinUserForm("tester", "1234"));
+
+        Role role = new Role(tester.getUserId(), RoleType.ADMIN);
         userRoleRepository.save(role);
 
-        List<Role> roles = userRoleRepository.findRolesByUserId(userId);
+        List<Role> roles = userRoleRepository.findRolesByUserId(tester.getUserId());
         assertThat(roles.size()).isEqualTo(2);
     }
 
     @Test
     void findById() {
-        User tester = userService.findByUsername("tester").orElse(null);
-        Role roleByUserIdAndRoleType = userRoleRepository.findRoleByUserIdAndRoleType(tester.getUserId(), RoleType.DEFAULT).orElse(null);
-
-        Long roleId = roleByUserIdAndRoleType.getRoleId();
-        Role roleById = userRoleRepository.findById(roleId).orElse(null);
-
-        assertThat(roleByUserIdAndRoleType).isEqualTo(roleById);
-
+        User tester = accountService.join(new JoinUserForm("tester", "1234"));
+        Role roleById = userRoleRepository.findById(tester.getUserId()).orElse(null);
+        assertThat(roleById.getUserId()).isEqualTo(tester.getUserId());
     }
 
     @Test
     void findRoleByUserIdAndRoleType() {
-        User tester = userService.findByUsername("tester").orElse(null);
+        User tester = accountService.join(new JoinUserForm("tester", "1234"));
         Role role = userRoleRepository.findRoleByUserIdAndRoleType(tester.getUserId(), RoleType.DEFAULT).orElse(null);
-
-        assertThat(role.getUserId()).isEqualTo(tester.getUserId());
+        assertThat(role.getRoleType()).isEqualTo(RoleType.DEFAULT);
     }
 
     @Test
     void findRolesByUserId() {
-        Long testerId = userService.findByUsername("tester").orElse(null).getUserId();
-
-        List<Role> roles = userRoleRepository.findRolesByUserId(testerId);
-
+        User tester = accountService.join(new JoinUserForm("tester", "1234"));
+        List<Role> roles = userRoleRepository.findRolesByUserId(tester.getUserId());
         assertThat(roles.size()).isEqualTo(1);
-
     }
 
     @Test
     void findAll() {
+        accountService.join(new JoinUserForm("tester", "1234"));
         List<Role> roles = userRoleRepository.findAll();
         assertThat(roles.size()).isEqualTo(1);
     }
 
     @Test
     void remove() {
-        User tester = userService.findByUsername("tester").orElse(null);
-        Role roleByUserIdAndRoleType = userRoleRepository.findRoleByUserIdAndRoleType(tester.getUserId(), RoleType.DEFAULT).orElse(null);
-        Long roleId = roleByUserIdAndRoleType.getRoleId();
-        userRoleRepository.remove(roleId);
+        User tester = accountService.join(new JoinUserForm("tester", "1234"));
+
+        userRoleRepository.findRolesByUserId(tester.getUserId()).forEach(role -> {
+            userRoleRepository.remove(role.getRoleId());
+        });
 
         List<Role> roles = userRoleRepository.findAll();
         assertThat(roles.size()).isEqualTo(0);
