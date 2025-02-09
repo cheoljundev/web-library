@@ -29,7 +29,7 @@ class BookServiceTest {
     void save() {
         //given
         MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
-        NewBookForm newBookForm = new NewBookForm("test", "12345", multipartFile);
+        NewBookForm newBookForm = new NewBookForm("test", "testAuthor", "12345", multipartFile);
 
         //when
         Book savedBook = bookService.save(newBookForm);
@@ -46,7 +46,7 @@ class BookServiceTest {
     void modify() {
         //given
         MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
-        NewBookForm newBookForm = new NewBookForm("test", "12345", multipartFile);
+        NewBookForm newBookForm = new NewBookForm("test", "testAuthor", "12345", multipartFile);
         Book savedBook = bookService.save(newBookForm);
 
         //when
@@ -65,7 +65,7 @@ class BookServiceTest {
     void deleteBook() {
         //given
         MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
-        NewBookForm newBookForm = new NewBookForm("test", "12345", multipartFile);
+        NewBookForm newBookForm = new NewBookForm("test", "testAuthor", "12345", multipartFile);
         Book savedBook = bookService.save(newBookForm);
 
         //when
@@ -80,11 +80,11 @@ class BookServiceTest {
     void updateBook() {
         //given
         MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
-        NewBookForm newBookForm = new NewBookForm("test", "12345", multipartFile);
+        NewBookForm newBookForm = new NewBookForm("test", "testAuthor", "12345", multipartFile);
         Book savedBook = bookService.save(newBookForm);
 
         //when
-        Book updateBook = new Book("update", "update12345");
+        Book updateBook = new Book("update", "update12345", "49291");
         updateBook.setBookId(savedBook.getBookId());
         bookService.updateBook(updateBook);
 
@@ -100,7 +100,7 @@ class BookServiceTest {
     void findBookById() {
         //given
         MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
-        NewBookForm newBookForm = new NewBookForm("test", "12345", multipartFile);
+        NewBookForm newBookForm = new NewBookForm("test", "testAuthor", "12345", multipartFile);
         Book savedBook = bookService.save(newBookForm);
 
         //when
@@ -117,7 +117,7 @@ class BookServiceTest {
     void findBookByName() {
         //given
         MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
-        NewBookForm newBookForm = new NewBookForm("test", "12345", multipartFile);
+        NewBookForm newBookForm = new NewBookForm("test", "testAuthor", "12345", multipartFile);
         Book savedBook = bookService.save(newBookForm);
 
         //when
@@ -134,7 +134,7 @@ class BookServiceTest {
     void findBookByIsbn() {
         //given
         MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
-        NewBookForm newBookForm = new NewBookForm("test", "12345", multipartFile);
+        NewBookForm newBookForm = new NewBookForm("test", "testAuthor", "12345", multipartFile);
         Book savedBook = bookService.save(newBookForm);
 
         //when
@@ -155,7 +155,7 @@ class BookServiceTest {
 
         for (int i = 0; i < 10; i++) {
             MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
-            NewBookForm newBookForm = new NewBookForm("test" + i, "12345" + i , multipartFile);
+            NewBookForm newBookForm = new NewBookForm("test" + i, "testAuthor" + i, "12345" + i , multipartFile);
             Book book = bookService.save(newBookForm);
             books.add(book);
         }

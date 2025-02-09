@@ -31,7 +31,7 @@ class RentalRepositoryTest {
     void save() {
         //given
         User user = userRepository.save(new User("tester", "1234"));
-        Book book = bookRepository.save(new Book("testBook", "12345"));
+        Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345"));
 
         //when
         Rental saved = rentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
@@ -47,7 +47,7 @@ class RentalRepositoryTest {
     void findActiveRentalByBookId_ok() {
         //given
         User user = userRepository.save(new User("tester", "1234"));
-        Book book = bookRepository.save(new Book("testBook", "12345"));
+        Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345"));
         rentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
 
         //when
@@ -62,7 +62,7 @@ class RentalRepositoryTest {
     void findActiveRentalByBookId_fail() {
         //given
         User user = userRepository.save(new User("tester", "1234"));
-        Book book = bookRepository.save(new Book("testBook", "12345"));
+        Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345"));
         Rental saved = rentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
         saved.returnBook();
         rentalRepository.update(saved);
@@ -78,9 +78,9 @@ class RentalRepositoryTest {
     void findRentalsByUserId() {
         //given
         User user = userRepository.save(new User("tester", "1234"));
-        Book book1 = bookRepository.save(new Book("testBook1", "12345"));
-        Book book2 = bookRepository.save(new Book("testBook2", "45678"));
-        Book book3 = bookRepository.save(new Book("testBook3", "98765"));
+        Book book1 = bookRepository.save(new Book("testBook1", "testAuthor1", "12345"));
+        Book book2 = bookRepository.save(new Book("testBook2", "testAuthor2","45678"));
+        Book book3 = bookRepository.save(new Book("testBook3", "testAuthor3","98765"));
         rentalRepository.save(new Rental(user.getUserId(), book1.getBookId()));
         rentalRepository.save(new Rental(user.getUserId(), book2.getBookId()));
         rentalRepository.save(new Rental(user.getUserId(), book3.getBookId()));
@@ -97,7 +97,7 @@ class RentalRepositoryTest {
     void findById() {
         //given
         User user = userRepository.save(new User("tester", "1234"));
-        Book book = bookRepository.save(new Book("testBook", "12345"));
+        Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345"));
         Rental saved = rentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
 
         //when
@@ -111,7 +111,7 @@ class RentalRepositoryTest {
     void update() {
         //given
         User user = userRepository.save(new User("tester", "1234"));
-        Book book = bookRepository.save(new Book("testBook", "12345"));
+        Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345"));
         Rental saved = rentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
 
         //when
@@ -127,7 +127,7 @@ class RentalRepositoryTest {
     void delete() {
         //given
         User user = userRepository.save(new User("tester", "1234"));
-        Book book = bookRepository.save(new Book("testBook", "12345"));
+        Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345"));
         Rental saved = rentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
 
         //when
