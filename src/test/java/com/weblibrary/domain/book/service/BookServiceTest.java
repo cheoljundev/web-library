@@ -50,7 +50,7 @@ class BookServiceTest {
         Book savedBook = bookService.save(newBookForm);
 
         //when
-        ModifyBookForm modifyBookForm = new ModifyBookForm(savedBook.getBookId(), "modify", "modify12345", multipartFile);
+        ModifyBookForm modifyBookForm = new ModifyBookForm(savedBook.getBookId(), "modify", "modifyAuthor", "modify12345", multipartFile);
         bookService.modify(modifyBookForm);
 
         //then
