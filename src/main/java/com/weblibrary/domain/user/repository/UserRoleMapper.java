@@ -2,15 +2,17 @@ package com.weblibrary.domain.user.repository;
 
 import com.weblibrary.domain.user.model.Role;
 import com.weblibrary.domain.user.model.RoleType;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface UserRoleRepository {
+@Mapper
+public interface UserRoleMapper {
     void save(Role role);
     Optional<Role> findById(Long roleId);
-    Optional<Role> findRoleByUserIdAndRoleType(Long userId, RoleType roleType);
+    Optional<Role> findRoleByUserIdAndRoleType(@Param("userId") Long userId, @Param("roleType") RoleType roleType);
     List<Role> findRolesByUserId(Long userId);
     int remove(Long roleId);
 }
