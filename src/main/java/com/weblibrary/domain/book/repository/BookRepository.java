@@ -1,9 +1,8 @@
 package com.weblibrary.domain.book.repository;
 
 import com.weblibrary.domain.book.model.Book;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface BookRepository {
@@ -31,10 +30,14 @@ public interface BookRepository {
 
     /**
      * 페이징 처리된 책 리스트 리턴
-     * @param pageable : 페이징 정보
+     *
+     * @param limit
+     * @param offset
      * @return
      */
-    Page<Book> findAll(Pageable pageable);
+    List<Book> findAll(Number limit, Number offset);
+
+    int countAll();
 
     /**
      * 책 삭제

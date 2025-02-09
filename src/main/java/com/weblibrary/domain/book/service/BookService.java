@@ -80,11 +80,14 @@ public class BookService {
 
     @Transactional(readOnly = true)
     public Page<BookListItem> findAll(Pageable pageable) {
-        // Repository에서 Page<Book>을 조회
-        Page<Book> bookPage = bookRepository.findAll(pageable);
+        // 페이징 처리된 책 리스트 조회
+        List<Book> books = bookRepository.findAll(pageable.getPageSize(), pageable.getOffset());
+
+        // 전체 책 수 조회
+        int total = bookRepository.countAll();
 
         // 각 Book을 BookListItem으로 변환
-        List<BookListItem> bookListItems = bookPage.getContent().stream()
+        List<BookListItem> bookListItems = books.stream()
                 .map(book -> {
                     UploadFile image = bookCoverRepository.findByBookId(book.getBookId())
                             .flatMap(bookCover -> uploadFileRepository.findById(bookCover.getUploadFileId()))
@@ -94,7 +97,7 @@ public class BookService {
                 .collect(Collectors.toList());
 
         // 변환된 결과와 페이징 정보를 이용해 새로운 Page 객체 생성
-        return new PageImpl<>(bookListItems, pageable, bookPage.getTotalElements());
+        return new PageImpl<>(bookListItems, pageable, total);
     }
 
     private void removeBookCover(Book book) {

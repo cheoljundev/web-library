@@ -1,7 +1,6 @@
 package com.weblibrary.domain.book.repository;
 
 import com.weblibrary.domain.book.model.Book;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,8 +9,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
@@ -85,13 +85,28 @@ class BookRepositoryTest {
 
         //when
         Pageable pageable = PageRequest.of(0, 2);
-        Page<Book> books = bookRepository.findAll(pageable);
+        List<Book> books = bookRepository.findAll(pageable.getPageSize(), pageable.getOffset());
 
         //then
-        assertThat(books.getTotalElements()).isEqualTo(3);
-        assertThat(books.getContent().size()).isEqualTo(2);
+        assertThat(books.size()).isEqualTo(2);
+    }
 
+    @Test
+    void countAll() {
+        //given
+        Book book1 = new Book("test1", "12345");
+        Book book2 = new Book("test2", "45678");
+        Book book3 = new Book("test3", "60431");
 
+        bookRepository.save(book1);
+        bookRepository.save(book2);
+        bookRepository.save(book3);
+
+        //when
+        int total = bookRepository.countAll();
+
+        //then
+        assertThat(total).isEqualTo(3);
     }
 
     @Test
