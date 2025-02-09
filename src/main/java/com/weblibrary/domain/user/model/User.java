@@ -7,6 +7,8 @@ import java.util.Objects;
 @Getter
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class User {
     @Setter
     @EqualsAndHashCode.Include
@@ -14,18 +16,6 @@ public class User {
     private final String username;
     private final String password;
     private int remainingRents = 3; // 남은 대출 가능 권수
-
-    public User(Long userId, String username, String password, int remainingRents) {
-        this.userId = userId;
-        this.username = username;
-        this.password = password;
-        this.remainingRents = remainingRents;
-    }
-
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
 
     public User(User user) {
         this.userId = user.getUserId();

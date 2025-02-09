@@ -1,19 +1,21 @@
 package com.weblibrary.domain.user.repository;
 
 import com.weblibrary.domain.user.model.User;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface UserRepository {
+@Mapper
+public interface UserMapper {
     /**
      * 회원 가입
      *
      * @param user
      * @return
      */
-    User save(User user);
+    void save(User user);
 
     /**
      * id로 회원 찾기
@@ -25,7 +27,6 @@ public interface UserRepository {
 
     /**
      * username으로 회원 찾기
-     *
      * @param username : String username
      * @return User
      */
@@ -36,7 +37,7 @@ public interface UserRepository {
      *
      * @return List로 모든 유저를 반환
      */
-    List<User> findAll(Number limit, Number offset);
+    List<User> findAll(@Param("limit") Number limit, @Param("offset") Number offset);
 
     int countAll();
 

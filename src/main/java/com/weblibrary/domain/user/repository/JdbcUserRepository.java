@@ -2,21 +2,18 @@ package com.weblibrary.domain.user.repository;
 
 import com.weblibrary.domain.user.model.User;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Repository
 public class JdbcUserRepository implements UserRepository {
 
     private final NamedParameterJdbcTemplate template;
@@ -38,10 +35,10 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findById(Long id) {
+    public Optional<User> findById(Long userId) {
         String sql = "select * from users where user_id = :userId";
         try {
-            Map<String, Long> param = Map.of("userId", id);
+            Map<String, Long> param = Map.of("userId", userId);
             User user = template.queryForObject(sql, param, getUserRowMapper());
             return Optional.ofNullable(user);
         } catch (DataAccessException e) {
