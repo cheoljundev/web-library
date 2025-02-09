@@ -2,6 +2,7 @@ package com.weblibrary.domain.rental.model;
 
 import lombok.*;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Getter
@@ -20,6 +21,11 @@ public class Rental {
         this.userId = userId;
         this.bookId = bookId;
         this.rentedAt = LocalDateTime.now();
+    }
+
+    public Rental(Long rentalId, Long bookId, Long userId, Timestamp rentedAt, Timestamp returnedAt) {
+        this(rentalId, bookId, userId,rentedAt.toLocalDateTime(),
+                returnedAt != null ? returnedAt.toLocalDateTime() : null);
     }
 
     public void returnBook() {

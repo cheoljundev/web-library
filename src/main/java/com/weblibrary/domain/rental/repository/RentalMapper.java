@@ -1,11 +1,13 @@
 package com.weblibrary.domain.rental.repository;
 
 import com.weblibrary.domain.rental.model.Rental;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface RentalRepository {
+@Mapper
+public interface RentalMapper {
 
     /**
      * 대출 정보 저장 (새로운 Rental 객체 저장)
@@ -13,7 +15,7 @@ public interface RentalRepository {
      * @param rental 대출 정보
      * @return 저장된 Rental 객체 (ID 포함)
      */
-    Rental save(Rental rental);
+    void save(Rental rental);
 
     /**
      * 특정 책을 대출한 사용자 ID 조회

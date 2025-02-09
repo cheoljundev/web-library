@@ -131,7 +131,7 @@ class RentalRepositoryTest {
         Rental saved = rentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
 
         //when
-        rentalRepository.delete(saved.getRentalId());
+        rentalRepository.remove(saved.getRentalId());
 
         //then
         Rental rental = rentalRepository.findById(saved.getRentalId()).orElse(null);
