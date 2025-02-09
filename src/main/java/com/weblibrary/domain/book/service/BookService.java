@@ -103,7 +103,6 @@ public class BookService {
     private void removeBookCover(Book book) {
         BookCover bookCover = bookCoverRepository.findByBookId(book.getBookId())
                 .orElseThrow(NotFoundBookCoverException::new);
-        bookCoverRepository.remove(bookCover.getBookCoverId());
         uploadFileRepository.remove(bookCover.getUploadFileId());
     }
 

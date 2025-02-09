@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class BookRentalService {
+public class RentalService {
     private final RentalRepository rentalRepository;
     private final BookService bookService;
     private final UserService userService;

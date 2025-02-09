@@ -14,10 +14,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
 @SpringBootTest
-class BookRentalServiceTest {
+class RentalServiceTest {
 
     @Autowired
-    BookRentalService bookRentalService;
+    RentalService rentalService;
     @Autowired
     BookRepository bookRepository;
     @Autowired
@@ -30,7 +30,7 @@ class BookRentalServiceTest {
         Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345"));
 
         //when
-        Rental rental = bookRentalService.rentBook(user, book);
+        Rental rental = rentalService.rentBook(user, book);
 
         //then
         assertThat(rental.getUserId()).isEqualTo(user.getUserId());
@@ -44,10 +44,10 @@ class BookRentalServiceTest {
         //given
         User user = userRepository.save(new User("tester", "1234"));
         Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345"));
-        bookRentalService.rentBook(user, book);
+        rentalService.rentBook(user, book);
 
         //when
-        Rental rental = bookRentalService.returnBook(user, book);
+        Rental rental = rentalService.returnBook(user, book);
 
         //then
         assertThat(rental.getUserId()).isEqualTo(user.getUserId());
@@ -61,10 +61,10 @@ class BookRentalServiceTest {
         //given
         User user = userRepository.save(new User("tester", "1234"));
         Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345"));
-        bookRentalService.rentBook(user, book);
+        rentalService.rentBook(user, book);
 
         //when
-        User findUser = bookRentalService.findUserByBookId(book.getBookId());
+        User findUser = rentalService.findUserByBookId(book.getBookId());
 
         //then
         assertThat(findUser.getUserId()).isEqualTo(user.getUserId());
