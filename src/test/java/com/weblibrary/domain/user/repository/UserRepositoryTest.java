@@ -9,6 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
@@ -75,12 +77,33 @@ class UserRepositoryTest {
 
         //when
         Pageable pageable = PageRequest.of(0, 10);
-        Page<User> page = userRepository.findAll(pageable);
+        List<User> page = userRepository.findAll(pageable.getPageSize(), pageable.getOffset());
 
         //then
-        assertThat(page.getTotalElements()).isEqualTo(12);
-        assertThat(page.getTotalPages()).isEqualTo(2);
-        assertThat(page.getContent().size()).isEqualTo(10);
+        assertThat(page.size()).isEqualTo(10);
+    }
+
+    @Test
+    void countAll() {
+        //given
+        userRepository.save(new User("user1", "1234"));
+        userRepository.save(new User("user2", "1234"));
+        userRepository.save(new User("user3", "1234"));
+        userRepository.save(new User("user4", "1234"));
+        userRepository.save(new User("user5", "1234"));
+        userRepository.save(new User("user6", "1234"));
+        userRepository.save(new User("user7", "1234"));
+        userRepository.save(new User("user8", "1234"));
+        userRepository.save(new User("user9", "1234"));
+        userRepository.save(new User("user10", "1234"));
+        userRepository.save(new User("user11", "1234"));
+        userRepository.save(new User("user12", "1234"));
+
+        //when
+        int total = userRepository.countAll();
+
+        //then
+        assertThat(total).isEqualTo(12);
     }
 
     @Test

@@ -2,9 +2,7 @@ package com.weblibrary.domain.user.repository;
 
 import com.weblibrary.domain.user.model.User;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -64,28 +62,25 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     @Override
-    public Page<User> findAll(Pageable pageable) {
+    public List<User> findAll(Number limit, Number offset) {
         String sql = "select * from users order by user_id desc limit :limit offset :offset";
         List<User> users = null;
         try {
             SqlParameterSource param = new MapSqlParameterSource()
-                    .addValue("limit", pageable.getPageSize())
-                    .addValue("offset", pageable.getOffset());
+                    .addValue("limit", limit)
+                    .addValue("offset", offset);
             users = template.query(sql, param, getUserRowMapper());
         } catch (DataAccessException e) {
             users = List.of();
         }
 
-        // 전체 레코드 수 조회
-        String countSql = "select count(*) from users";
-        int total = 0;
-        try {
-            total = template.queryForObject(countSql, Map.of(), Integer.class);
-        } catch (DataAccessException e) {
-            total = 0;
-        }
+        return users;
+    }
 
-        return new PageImpl<>(users, pageable, total);
+    @Override
+    public int countAll() {
+        String sql = "select count(*) from users";
+        return template.queryForObject(sql, Map.of(), Integer.class);
     }
 
     @Override

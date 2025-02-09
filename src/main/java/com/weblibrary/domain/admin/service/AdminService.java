@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.weblibrary.domain.user.model.RoleType.ADMIN;
 
@@ -78,18 +79,17 @@ public class AdminService {
 
     @Transactional(readOnly = true)
     public Page<UserInfo> findAllUsers(Pageable pageable) {
-        Page<User> userPage = userRepository.findAll(pageable);
-        List<UserInfo> userInfos = new ArrayList<>();
-        userPage.forEach(user -> {
+        List<User> users = userRepository.findAll(pageable.getPageSize(), pageable.getOffset());
+        int total = userRepository.countAll();
+        List<UserInfo> userInfos = users.stream().map(user -> {
             RoleType roleType = findUserRoleType(user.getUserId());
-            UserInfo userinfo = UserInfo.builder()
+            return UserInfo.builder()
                     .id(user.getUserId())
                     .username(user.getUsername())
                     .roleTypeName(roleType.name())
                     .build();
-            userInfos.add(userinfo);
-        });
-        return new PageImpl<>(userInfos, pageable, userPage.getTotalElements());
+        }).collect(Collectors.toList());
+        return new PageImpl<>(userInfos, pageable, total);
     }
 
 
