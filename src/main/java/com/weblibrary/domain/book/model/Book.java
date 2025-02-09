@@ -1,5 +1,6 @@
 package com.weblibrary.domain.book.model;
 
+import com.weblibrary.domain.book.service.ModifyBookForm;
 import lombok.*;
 
 @Getter
@@ -40,10 +41,11 @@ public class Book {
      *
      * @return 기존 정보를담은 Book
      */
-    public Book modify(String bookName, String isbn) {
+    public Book modify(ModifyBookForm form) {
         Book oldBook = new Book(this);
-        this.bookName = bookName;
-        this.isbn = isbn;
+        this.bookName = form.getBookName();
+        this.author = form.getAuthor();
+        this.isbn = form.getIsbn();
 
         return oldBook;
     }

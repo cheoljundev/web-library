@@ -43,7 +43,7 @@ public class BookService {
                 throw new DuplicateIsbnException();
             }
 
-            book.modify(form.getBookName(), form.getIsbn());
+            book.modify(form);
             updateBook(book);
             modifyBookCover(form, book);
 
@@ -92,7 +92,7 @@ public class BookService {
                     UploadFile image = bookCoverRepository.findByBookId(book.getBookId())
                             .flatMap(bookCover -> uploadFileRepository.findById(bookCover.getUploadFileId()))
                             .orElseThrow(NotFoundBookCoverException::new);
-                    return new BookListItem(book.getBookId(), book.getBookName(), book.getIsbn(), image);
+                    return new BookListItem(book.getBookId(), book.getBookName(), book.getAuthor(), book.getIsbn(), image);
                 })
                 .collect(Collectors.toList());
 

@@ -15,6 +15,11 @@
             <div class="error bookName">
                 <p>책 이름 오류</p>
             </div>
+            <label for="addAuthor" th:text="#{label.bookName}">저자 이름</label>
+            <input type="text" class="form-control mb-2" id="addAuthor" th:field="*{author}" th:placeholder="#{placeholder.author}" placeholder="도서 저자 입력">
+            <div class="error author">
+                <p>저자 이름 오류</p>
+            </div>
             <label for="addBookIsbn" th:text="#{label.isbn}">isbn</label>
             <input type="text" class="form-control mb-2" id="addBookIsbn" th:field="*{isbn}" th:placeholder="#{placeholder.isbn}" placeholder="ISBN 입력">
             <div class="error isbn">
@@ -35,10 +40,16 @@
                 <div>
                     <img class="book-cover" th:src="@{/images/{filename}(filename=*{coverImage.storeFileName})}" th:alt="@{/images/{filename}(filename=*{coverImage.storeFileName})}">
                     <span th:text="|#{book.name} *{name}|">책 이름</span>
+                    <span th:text="|#{book.author} *{author}|">책 이름</span>
                     <small class="text-muted ms-2" th:text="|#{book.isbn} *{isbn}|">isbn</small>
                 </div>
                 <div class="btn-group">
-                    <button class="btn btn-warning" th:data-id="*{id}" th:data-name="*{name}" th:data-isbn="*{isbn}" th:data-cover="@{/images/{filename}(filename=*{coverImage.storeFileName})}" onclick="setModifySection(this)" th:text="#{button.edit}">수정</button>
+                    <button class="btn btn-warning"
+                            th:data-id="*{id}"
+                            th:data-name="*{name}"
+                            th:data-isbn="*{isbn}"
+                            th:data-author="*{author}"
+                            th:data-cover="@{/images/{filename}(filename=*{coverImage.storeFileName})}" onclick="setModifySection(this)" th:text="#{button.edit}">수정</button>
                     <button class="btn btn-danger" th:onclick="'deleteBook(' + *{id} + ')'" th:text="#{button.delete}">삭제</button>
                 </div>
             </li>
@@ -84,6 +95,10 @@
             <input type="text" class="form-control mb-2" th:field="*{bookName}" id="modifyBookName" th:placeholder="#{placeholder.bookName}" placeholder="도서 이름 수정">
             <div class="error bookName">
                 <p>책 이름 오류</p>
+            </div>
+            <input type="text" class="form-control mb-2" id="modifyAuthor" data-th-field="*{author}" th:field="*{author}" th:placeholder="#{placeholder.author}" placeholder="저자 수정">
+            <div class="error author">
+                <p>저자 오류</p>
             </div>
             <input type="text" class="form-control mb-2" id="modifyIsbn" data-th-field="*{isbn}" th:field="*{isbn}" th:placeholder="#{placeholder.isbn}" placeholder="ISBN 수정">
             <div class="error isbn">

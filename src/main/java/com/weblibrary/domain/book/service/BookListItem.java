@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 public class BookListItem {
     private final Long id;
     private final String name;
+    private final String author;
     private final String isbn;
     private final UploadFile coverImage;
 }

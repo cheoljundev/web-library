@@ -30,6 +30,7 @@
                     <img class="book-cover" th:src="|/images/*{coverImage.storeFileName}|"
                          th:alt="*{coverImage.uploadFileName}">
                     <span th:text="*{name}">책 이름</span>
+                    <small class="text-muted ms-2">(저자: <span th:text="*{author}">책 저자</span>)</small>
                     <small class="text-muted ms-2">(ISBN: <span th:text="*{isbn}">책 isbn</span>)</small>
                 </div>
                 <div class="btn-container">
