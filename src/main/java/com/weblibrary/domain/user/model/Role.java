@@ -6,6 +6,7 @@ import lombok.*;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
+@AllArgsConstructor
 public class Role implements Comparable<Role>{
     @Setter
     @EqualsAndHashCode.Include

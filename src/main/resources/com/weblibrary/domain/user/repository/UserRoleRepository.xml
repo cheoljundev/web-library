@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weblibrary.domain.user.repository.UserRoleRepository">
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="roleId">
+        insert into roles (user_id, role_type)
+        values (#{userId}, #{roleType})
+    </insert>
+
+    <select id="findById" resultType="Role">
+        select role_id, user_id, role_type
+        from roles
+        where role_id = #{roleId}
+
+    </select>
+
+    <select id="findRoleByUserIdAndRoleType" resultType="Role">
+        select role_id, user_id, role_type
+        from roles
+        where user_id = #{userId} and role_type = #{roleType}
+    </select>
+
+    <select id="findRolesByUserId" resultType="Role">
+        select role_id, user_id, role_type
+        from roles
+        where user_id = #{userId}
+    </select>
+
+    <update id="remove">
+        delete from roles
+        where role_id = #{roleId}
+    </update>
+
+</mapper>

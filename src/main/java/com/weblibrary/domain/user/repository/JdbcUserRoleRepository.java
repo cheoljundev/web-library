@@ -8,14 +8,12 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Repository
 public class JdbcUserRoleRepository implements UserRoleRepository {
 
 
@@ -76,10 +74,10 @@ public class JdbcUserRoleRepository implements UserRoleRepository {
     }
 
     @Override
-    public boolean remove(Long roleId) {
+    public int remove(Long roleId) {
         String sql = "delete from roles where role_id = :roleId";
         Map<String, Long> param = Map.of("roleId", roleId);
-        return template.update(sql, param) > 0;
+        return template.update(sql, param);
 
     }
 
