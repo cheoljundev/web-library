@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weblibrary.domain.file.repository.UploadFileMapper">
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="uploadFileId">
+        insert into upload_files(upload_file_name, store_file_name)
+        values (#{uploadFileName}, #{storeFileName})
+    </insert>
+
+    <select id="findById" resultType="UploadFile">
+        select upload_file_id, upload_file_name, store_file_name
+        from upload_files
+        where upload_file_id = #{uploadFileId}
+    </select>
+
+    <update id="remove">
+        delete from upload_files
+        where upload_file_id = #{uploadFileId}
+    </update>
+</mapper>
