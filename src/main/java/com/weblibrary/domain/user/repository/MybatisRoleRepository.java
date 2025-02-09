@@ -10,9 +10,9 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class MybatisUserRoleRepository implements UserRoleRepository {
+public class MybatisRoleRepository implements RoleRepository {
 
-    private final UserRoleMapper mapper;
+    private final RoleMapper mapper;
 
     @Override
     public void save(Role role) {

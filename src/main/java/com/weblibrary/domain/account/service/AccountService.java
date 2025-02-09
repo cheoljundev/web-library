@@ -1,7 +1,7 @@
 package com.weblibrary.domain.account.service;
 
 import com.weblibrary.domain.user.model.Role;
-import com.weblibrary.domain.user.repository.UserRoleRepository;
+import com.weblibrary.domain.user.repository.RoleRepository;
 import com.weblibrary.domain.account.exception.InvalidJoinException;
 import com.weblibrary.domain.account.exception.InvalidLoginException;
 import com.weblibrary.domain.user.exception.NotFoundUserException;
@@ -25,7 +25,7 @@ public class AccountService {
 
     private final UserRepository userRepository;
     private final UserService userService;
-    private final UserRoleRepository userRoleRepository;
+    private final RoleRepository roleRepository;
 
     /**
      * 가입 처리 서비스 계층 메서드
@@ -36,7 +36,7 @@ public class AccountService {
         }
         User savedUser = userService.save(new User(form.getUsername(), form.getPassword()));
         Role role = new Role(savedUser.getUserId(), DEFAULT);
-        userRoleRepository.save(role);
+        roleRepository.save(role);
         return savedUser;
     }
 
@@ -62,8 +62,8 @@ public class AccountService {
         userService.findById(userId)
                 .orElseThrow(NotFoundUserException::new);
 
-        userRoleRepository.findRolesByUserId(userId).forEach(role -> {
-            userRoleRepository.remove(role.getRoleId());
+        roleRepository.findRolesByUserId(userId).forEach(role -> {
+            roleRepository.remove(role.getRoleId());
         });
 
         userRepository.remove(userId);

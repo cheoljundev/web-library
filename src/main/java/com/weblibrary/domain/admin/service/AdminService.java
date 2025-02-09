@@ -2,7 +2,7 @@ package com.weblibrary.domain.admin.service;
 
 import com.weblibrary.domain.user.model.Role;
 import com.weblibrary.domain.user.model.RoleType;
-import com.weblibrary.domain.user.repository.UserRoleRepository;
+import com.weblibrary.domain.user.repository.RoleRepository;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +26,7 @@ import static com.weblibrary.domain.user.model.RoleType.ADMIN;
 public class AdminService {
 
     private final UserRepository userRepository;
-    private final UserRoleRepository userRoleRepository;
+    private final RoleRepository roleRepository;
 
     public boolean setUserAsAdmin(Long userId) {
         if (isAdmin(userId)) {
@@ -38,7 +37,7 @@ public class AdminService {
 
     @Transactional(readOnly = true)
     public RoleType findUserRoleType(Long userId) {
-        List<Role> roles = userRoleRepository.findRolesByUserId(userId);
+        List<Role> roles = roleRepository.findRolesByUserId(userId);
 
         /* 가장 높은 권한 순서로 sort <- Comparable<Role> */
         roles.sort(null);
@@ -57,9 +56,9 @@ public class AdminService {
     }
 
     private boolean removeAdminRole(Long userId) {
-        return userRoleRepository.findRoleByUserIdAndRoleType(userId, ADMIN)
+        return roleRepository.findRoleByUserIdAndRoleType(userId, ADMIN)
                 .map(role -> {
-                    userRoleRepository.remove(role.getRoleId());
+                    roleRepository.remove(role.getRoleId());
                     return true;
                 }).orElse(false);
     }
@@ -71,7 +70,7 @@ public class AdminService {
                             user.getUserId(),
                             ADMIN
                     );
-                    userRoleRepository.save(adminRole);
+                    roleRepository.save(adminRole);
                     return true;
                 })
                 .orElse(false); // userId에 해당하는 사용자가 없으면 false 반환
@@ -95,6 +94,6 @@ public class AdminService {
 
     @Transactional(readOnly = true)
     public boolean isAdmin(Long userId) {
-        return userRoleRepository.findRoleByUserIdAndRoleType(userId, ADMIN).isPresent();
+        return roleRepository.findRoleByUserIdAndRoleType(userId, ADMIN).isPresent();
     }
 }

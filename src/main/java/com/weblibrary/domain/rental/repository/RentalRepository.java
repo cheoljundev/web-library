@@ -5,7 +5,7 @@ import com.weblibrary.domain.rental.model.Rental;
 import java.util.List;
 import java.util.Optional;
 
-public interface BookRentalRepository {
+public interface RentalRepository {
 
     /**
      * 대출 정보 저장 (새로운 Rental 객체 저장)

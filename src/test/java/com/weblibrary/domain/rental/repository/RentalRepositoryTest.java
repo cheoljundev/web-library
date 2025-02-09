@@ -18,10 +18,10 @@ import static org.assertj.core.api.Assertions.*;
 @Transactional
 @SpringBootTest
 @Slf4j
-class BookRentalRepositoryTest {
+class RentalRepositoryTest {
 
     @Autowired
-    BookRentalRepository bookRentalRepository;
+    RentalRepository rentalRepository;
     @Autowired
     BookRepository bookRepository;
     @Autowired
@@ -34,7 +34,7 @@ class BookRentalRepositoryTest {
         Book book = bookRepository.save(new Book("testBook", "12345"));
 
         //when
-        Rental saved = bookRentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
+        Rental saved = rentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
 
         //then
         assertThat(saved.getUserId()).isEqualTo(user.getUserId());
@@ -48,10 +48,10 @@ class BookRentalRepositoryTest {
         //given
         User user = userRepository.save(new User("tester", "1234"));
         Book book = bookRepository.save(new Book("testBook", "12345"));
-        bookRentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
+        rentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
 
         //when
-        Rental rental = bookRentalRepository.findActiveRentalByBookId(book.getBookId()).get();
+        Rental rental = rentalRepository.findActiveRentalByBookId(book.getBookId()).get();
 
         //then
         assertThat(rental.getUserId()).isEqualTo(user.getUserId());
@@ -63,12 +63,12 @@ class BookRentalRepositoryTest {
         //given
         User user = userRepository.save(new User("tester", "1234"));
         Book book = bookRepository.save(new Book("testBook", "12345"));
-        Rental saved = bookRentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
+        Rental saved = rentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
         saved.returnBook();
-        bookRentalRepository.update(saved);
+        rentalRepository.update(saved);
 
         //when
-        Rental rental = bookRentalRepository.findActiveRentalByBookId(book.getBookId()).orElse(null);
+        Rental rental = rentalRepository.findActiveRentalByBookId(book.getBookId()).orElse(null);
 
         //then
         assertThat(rental).isNull();
@@ -81,12 +81,12 @@ class BookRentalRepositoryTest {
         Book book1 = bookRepository.save(new Book("testBook1", "12345"));
         Book book2 = bookRepository.save(new Book("testBook2", "45678"));
         Book book3 = bookRepository.save(new Book("testBook3", "98765"));
-        bookRentalRepository.save(new Rental(user.getUserId(), book1.getBookId()));
-        bookRentalRepository.save(new Rental(user.getUserId(), book2.getBookId()));
-        bookRentalRepository.save(new Rental(user.getUserId(), book3.getBookId()));
+        rentalRepository.save(new Rental(user.getUserId(), book1.getBookId()));
+        rentalRepository.save(new Rental(user.getUserId(), book2.getBookId()));
+        rentalRepository.save(new Rental(user.getUserId(), book3.getBookId()));
 
         //when
-        List<Rental> rentals = bookRentalRepository.findRentalsByUserId(user.getUserId());
+        List<Rental> rentals = rentalRepository.findRentalsByUserId(user.getUserId());
 
         //then
         assertThat(rentals.size()).isEqualTo(3);
@@ -98,10 +98,10 @@ class BookRentalRepositoryTest {
         //given
         User user = userRepository.save(new User("tester", "1234"));
         Book book = bookRepository.save(new Book("testBook", "12345"));
-        Rental saved = bookRentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
+        Rental saved = rentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
 
         //when
-        Rental rental = bookRentalRepository.findById(saved.getRentalId()).get();
+        Rental rental = rentalRepository.findById(saved.getRentalId()).get();
 
         //then
         assertThat(rental.getRentalId()).isEqualTo(saved.getRentalId());
@@ -112,14 +112,14 @@ class BookRentalRepositoryTest {
         //given
         User user = userRepository.save(new User("tester", "1234"));
         Book book = bookRepository.save(new Book("testBook", "12345"));
-        Rental saved = bookRentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
+        Rental saved = rentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
 
         //when
         saved.returnBook();
-        bookRentalRepository.update(saved);
+        rentalRepository.update(saved);
 
         //then
-        Rental rental = bookRentalRepository.findById(saved.getRentalId()).get();
+        Rental rental = rentalRepository.findById(saved.getRentalId()).get();
         assertThat(rental.getReturnedAt()).isNotNull();
     }
 
@@ -128,13 +128,13 @@ class BookRentalRepositoryTest {
         //given
         User user = userRepository.save(new User("tester", "1234"));
         Book book = bookRepository.save(new Book("testBook", "12345"));
-        Rental saved = bookRentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
+        Rental saved = rentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
 
         //when
-        bookRentalRepository.delete(saved.getRentalId());
+        rentalRepository.delete(saved.getRentalId());
 
         //then
-        Rental rental = bookRentalRepository.findById(saved.getRentalId()).orElse(null);
+        Rental rental = rentalRepository.findById(saved.getRentalId()).orElse(null);
         assertThat(rental).isNull();
     }
 }

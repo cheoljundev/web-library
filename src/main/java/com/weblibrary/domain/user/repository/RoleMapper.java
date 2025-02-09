@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Mapper
-public interface UserRoleMapper {
+public interface RoleMapper {
     void save(Role role);
     Optional<Role> findById(Long roleId);
     Optional<Role> findRoleByUserIdAndRoleType(@Param("userId") Long userId, @Param("roleType") RoleType roleType);

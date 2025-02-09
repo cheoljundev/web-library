@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class JdbcUserRoleRepository implements UserRoleRepository {
+public class JdbcRoleRepository implements RoleRepository {
 
 
     private final NamedParameterJdbcTemplate template;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public JdbcUserRoleRepository(DataSource dataSource) {
+    public JdbcRoleRepository(DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("roles")

@@ -16,10 +16,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
 @SpringBootTest
-class UserRoleRepositoryTest {
+class RoleRepositoryTest {
 
     @Autowired
-    UserRoleRepository userRoleRepository;
+    RoleRepository roleRepository;
     @Autowired
     AccountService accountService;
 
@@ -30,10 +30,10 @@ class UserRoleRepositoryTest {
         Role role = new Role(tester.getUserId(), RoleType.ADMIN);
 
         //when
-        userRoleRepository.save(role);
+        roleRepository.save(role);
 
         //then
-        List<Role> roles = userRoleRepository.findRolesByUserId(tester.getUserId());
+        List<Role> roles = roleRepository.findRolesByUserId(tester.getUserId());
         assertThat(roles.size()).isEqualTo(2);
     }
 
@@ -41,10 +41,10 @@ class UserRoleRepositoryTest {
     void findById() {
         //given
         User tester = accountService.join(new JoinUserForm("tester", "1234"));
-        Role findByUserId = userRoleRepository.findRolesByUserId(tester.getUserId()).get(0);
+        Role findByUserId = roleRepository.findRolesByUserId(tester.getUserId()).get(0);
 
         //when
-        Role role = userRoleRepository.findById(findByUserId.getRoleId()).get();
+        Role role = roleRepository.findById(findByUserId.getRoleId()).get();
 
         //then
         assertThat(role.getUserId()).isEqualTo(findByUserId.getUserId());
@@ -56,7 +56,7 @@ class UserRoleRepositoryTest {
         User tester = accountService.join(new JoinUserForm("tester", "1234"));
 
         //when
-        Role role = userRoleRepository.findRoleByUserIdAndRoleType(tester.getUserId(), RoleType.DEFAULT).orElse(null);
+        Role role = roleRepository.findRoleByUserIdAndRoleType(tester.getUserId(), RoleType.DEFAULT).orElse(null);
 
         //then
         assertThat(role.getRoleType()).isEqualTo(RoleType.DEFAULT);
@@ -68,7 +68,7 @@ class UserRoleRepositoryTest {
         User tester = accountService.join(new JoinUserForm("tester", "1234"));
 
         //when
-        List<Role> roles = userRoleRepository.findRolesByUserId(tester.getUserId());
+        List<Role> roles = roleRepository.findRolesByUserId(tester.getUserId());
 
         //then
         assertThat(roles.size()).isEqualTo(1);
@@ -80,12 +80,12 @@ class UserRoleRepositoryTest {
         User tester = accountService.join(new JoinUserForm("tester", "1234"));
 
         //when
-        userRoleRepository.findRolesByUserId(tester.getUserId()).forEach(role -> {
-            userRoleRepository.remove(role.getRoleId());
+        roleRepository.findRolesByUserId(tester.getUserId()).forEach(role -> {
+            roleRepository.remove(role.getRoleId());
         });
 
         //then
-        List<Role> roles = userRoleRepository.findRolesByUserId(tester.getUserId());
+        List<Role> roles = roleRepository.findRolesByUserId(tester.getUserId());
         assertThat(roles.size()).isEqualTo(0);
     }
 }

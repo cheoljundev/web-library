@@ -17,12 +17,12 @@ import java.util.Optional;
 
 
 @Repository
-public class JdbcBookRentalRepository implements BookRentalRepository {
+public class JdbcRentalRepository implements RentalRepository {
 
     private final NamedParameterJdbcTemplate template;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public JdbcBookRentalRepository(DataSource dataSource) {
+    public JdbcRentalRepository(DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("rentals")

@@ -4,7 +4,7 @@ import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.rental.exception.RentalException;
 import com.weblibrary.domain.rental.model.Rental;
-import com.weblibrary.domain.rental.repository.BookRentalRepository;
+import com.weblibrary.domain.rental.repository.RentalRepository;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class BookRentalService {
-    private final BookRentalRepository bookRentalRepository;
+    private final RentalRepository rentalRepository;
     private final BookService bookService;
     private final UserService userService;
 
@@ -39,7 +39,7 @@ public class BookRentalService {
         bookService.updateBook(book);
         userService.update(user);
 
-        return bookRentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
+        return rentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
     }
 
     public Rental returnBook(User user, Book book) {
@@ -49,7 +49,7 @@ public class BookRentalService {
             throw new RentalException("빌리지 않은 도서입니다.");
         }
 
-        Rental rental = bookRentalRepository.findActiveRentalByBookId(book.getBookId())
+        Rental rental = rentalRepository.findActiveRentalByBookId(book.getBookId())
                 .orElseThrow(() -> new RentalException("이미 대출중인 도서입니다."));
 
 
@@ -58,13 +58,13 @@ public class BookRentalService {
         rental.returnBook();
         bookService.updateBook(book);
         userService.update(user);
-        bookRentalRepository.update(rental);
+        rentalRepository.update(rental);
         return rental;
     }
 
     @Transactional(readOnly = true)
     public User findUserByBookId(Long bookId) {
-        return bookRentalRepository.findActiveRentalByBookId(bookId)
+        return rentalRepository.findActiveRentalByBookId(bookId)
                 .flatMap(rental -> userService.findById(rental.getUserId()))
                 .orElse(null);
     }
