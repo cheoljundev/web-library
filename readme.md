@@ -47,3 +47,4 @@
     - [x] SimpleJdbcInsert
   - [x] 트랜잭션 적용
   - [x] 페이지네이션 구현
+  - [x] Mybatis 적용

@@ -2,22 +2,18 @@ package com.weblibrary.domain.book.repository;
 
 import com.weblibrary.domain.book.model.Book;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-
-@Repository
 public class JdbcBookRepository implements BookRepository {
 
 

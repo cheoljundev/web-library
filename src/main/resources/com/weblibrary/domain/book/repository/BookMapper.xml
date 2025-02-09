@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weblibrary.domain.book.repository.BookMapper">
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="bookId">
+        insert into books (book_name, isbn)
+        values (#{bookName}, #{isbn})
+    </insert>
+
+    <select id="findById" resultType="Book">
+        select book_id, book_name, isbn
+        from books
+        where book_id = #{bookId}
+    </select>
+
+    <select id="findByName" resultType="Book">
+        select book_id, book_name, isbn
+        from books
+        where book_name = #{bookName}
+    </select>
+
+    <select id="findByIsbn" resultType="Book">
+        select book_id, book_name, isbn
+        from books
+        where isbn = #{isbn}
+    </select>
+
+    <select id="findAll" resultType="Book">
+        select book_id, book_name, isbn
+        from books
+        limit #{limit} offset #{offset}
+    </select>
+
+    <select id="countAll" resultType="int">
+        select count(*)
+        from books
+    </select>
+
+    <update id="remove">
+        delete from books
+        where book_id = #{bookId}
+    </update>
+
+    <update id="update">
+        update books
+        set book_name = #{bookName}, isbn = #{isbn}, rented = #{rented}
+        where book_id = #{bookId}
+    </update>
+</mapper>
