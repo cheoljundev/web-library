@@ -5,8 +5,6 @@ import com.weblibrary.domain.file.store.FileStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.support.TransactionSynchronization;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
@@ -20,7 +18,7 @@ public class MybatisUploadFileRepository implements UploadFileRepository {
 
     @Override
     public UploadFile save(MultipartFile multipartFile) {
-        UploadFile uploadFile = fileStore.storeFile(multipartFile);
+        UploadFile uploadFile = fileStore.storeFile(multipartFile); // 이 안에 afterCommit이 있음
         mapper.save(uploadFile);
         return uploadFile;
     }
@@ -34,18 +32,9 @@ public class MybatisUploadFileRepository implements UploadFileRepository {
     public void remove(Long uploadFileId) {
         mapper.findById(uploadFileId).ifPresent(uploadFile -> {
                     mapper.remove(uploadFileId);
-                    deleteFile(uploadFile);
+                    fileStore.deleteFile(uploadFile.getStoreFileName());
                 }
         );
-    }
-
-    private void deleteFile(UploadFile uploadFile) {
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                fileStore.deleteFile(uploadFile.getStoreFileName());
-            }
-        });
     }
 
 }
