@@ -23,7 +23,7 @@ class BookRepositoryTest {
     @Test
     void save() {
         //given
-        Book book = new Book("test", "12345");
+        Book book = new Book("testBook", "testAuthor", "12345");
 
         //when
         Book savedBook = bookRepository.save(book);
@@ -36,7 +36,7 @@ class BookRepositoryTest {
     @Test
     void findById() {
         //given
-        Book book = new Book("test", "12345");
+        Book book = new Book("testBook", "testAuthor", "12345");
         Book savedBook = bookRepository.save(book);
 
         //when
@@ -49,7 +49,7 @@ class BookRepositoryTest {
     @Test
     void findByName() {
         //given
-        Book book = new Book("test", "12345");
+        Book book = new Book("testBook", "testAuthor", "12345");
         Book savedBook = bookRepository.save(book);
 
         //when
@@ -62,7 +62,7 @@ class BookRepositoryTest {
     @Test
     void findByIsbn() {
         //given
-        Book book = new Book("test", "12345");
+        Book book = new Book("testBook", "testAuthor", "12345");
         Book savedBook = bookRepository.save(book);
 
         //when
@@ -75,9 +75,9 @@ class BookRepositoryTest {
     @Test
     void findAll() {
         //given
-        Book book1 = new Book("test1", "12345");
-        Book book2 = new Book("test2", "45678");
-        Book book3 = new Book("test3", "60431");
+        Book book1 = new Book("test1", "testAuthor1", "12345");
+        Book book2 = new Book("test2", "testAuthor2", "45678");
+        Book book3 = new Book("test3", "testAuthor3", "60431");
 
         bookRepository.save(book1);
         bookRepository.save(book2);
@@ -94,9 +94,9 @@ class BookRepositoryTest {
     @Test
     void countAll() {
         //given
-        Book book1 = new Book("test1", "12345");
-        Book book2 = new Book("test2", "45678");
-        Book book3 = new Book("test3", "60431");
+        Book book1 = new Book("test1", "testAuthor1", "12345");
+        Book book2 = new Book("test2", "testAuthor2", "45678");
+        Book book3 = new Book("test3", "testAuthor3", "60431");
 
         bookRepository.save(book1);
         bookRepository.save(book2);
@@ -112,7 +112,7 @@ class BookRepositoryTest {
     @Test
     void remove() {
         //given
-        Book book = new Book("test", "12345");
+        Book book = new Book("testBook", "testAuthor", "12345");
         Book savedBook = bookRepository.save(book);
 
         //when
@@ -125,17 +125,18 @@ class BookRepositoryTest {
     @Test
     void update() {
         //given
-        Book book = new Book("test", "12345");
+        Book book = new Book("testBook", "testAuthor", "12345");
         Book savedBook = bookRepository.save(book);
 
         //when
-        Book updateBook = new Book("update", "54321");
+        Book updateBook = new Book("update", "updateAuthor", "54321");
         updateBook.setBookId(savedBook.getBookId());
         bookRepository.update(updateBook);
 
         //then
         Book findBook = bookRepository.findById(savedBook.getBookId()).get();
         assertThat(findBook.getBookName()).isEqualTo(updateBook.getBookName());
+        assertThat(findBook.getAuthor()).isEqualTo(updateBook.getAuthor());
         assertThat(findBook.getIsbn()).isEqualTo(updateBook.getIsbn());
     }
 }

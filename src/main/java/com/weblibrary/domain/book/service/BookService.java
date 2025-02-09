@@ -30,7 +30,7 @@ public class BookService {
     private final UploadFileRepository uploadFileRepository;
 
     public Book save(NewBookForm newBookForm) {
-        Book book = new Book(newBookForm.getBookName(), newBookForm.getIsbn());
+        Book book = new Book(newBookForm.getBookName(), newBookForm.getAuthor(), newBookForm.getIsbn());
         Book savedBook = bookRepository.save(book);
         saveBookCover(savedBook, newBookForm.getCoverImage());
         return savedBook;
@@ -43,7 +43,7 @@ public class BookService {
                 throw new DuplicateIsbnException();
             }
 
-            book.modify(form.getBookName(), form.getIsbn());
+            book.modify(form);
             updateBook(book);
             modifyBookCover(form, book);
 
@@ -92,7 +92,7 @@ public class BookService {
                     UploadFile image = bookCoverRepository.findByBookId(book.getBookId())
                             .flatMap(bookCover -> uploadFileRepository.findById(bookCover.getUploadFileId()))
                             .orElseThrow(NotFoundBookCoverException::new);
-                    return new BookListItem(book.getBookId(), book.getBookName(), book.getIsbn(), image);
+                    return new BookListItem(book.getBookId(), book.getBookName(), book.getAuthor(), book.getIsbn(), image);
                 })
                 .collect(Collectors.toList());
 
@@ -103,7 +103,6 @@ public class BookService {
     private void removeBookCover(Book book) {
         BookCover bookCover = bookCoverRepository.findByBookId(book.getBookId())
                 .orElseThrow(NotFoundBookCoverException::new);
-        bookCoverRepository.remove(bookCover.getBookCoverId());
         uploadFileRepository.remove(bookCover.getUploadFileId());
     }
 

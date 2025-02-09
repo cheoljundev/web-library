@@ -3,11 +3,13 @@ package com.weblibrary.domain.file.repository;
 import com.weblibrary.domain.file.model.UploadFile;
 import com.weblibrary.domain.file.store.FileStore;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class MybatisUploadFileRepository implements UploadFileRepository {
@@ -16,7 +18,7 @@ public class MybatisUploadFileRepository implements UploadFileRepository {
 
     @Override
     public UploadFile save(MultipartFile multipartFile) {
-        UploadFile uploadFile = fileStore.storeFile(multipartFile);
+        UploadFile uploadFile = fileStore.storeFile(multipartFile); // 이 안에 afterCommit이 있음
         mapper.save(uploadFile);
         return uploadFile;
     }
@@ -28,7 +30,11 @@ public class MybatisUploadFileRepository implements UploadFileRepository {
 
     @Override
     public void remove(Long uploadFileId) {
-        mapper.findById(uploadFileId).ifPresent(uploadFile -> fileStore.deleteFile(uploadFile.getStoreFileName()));
-        mapper.remove(uploadFileId);
+        mapper.findById(uploadFileId).ifPresent(uploadFile -> {
+                    mapper.remove(uploadFileId);
+                    fileStore.deleteFile(uploadFile.getStoreFileName());
+                }
+        );
     }
+
 }

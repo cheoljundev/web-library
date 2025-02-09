@@ -27,7 +27,7 @@ class BookCoverRepositoryTest {
     @Test
     void save() {
         //given
-        Book book = bookRepository.save(new Book("testBook", "12345"));
+        Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345"));
         MultipartFile multipartFile = new MockMultipartFile("test.jpg", "test.jpg", "image/jpg", "test data".getBytes());
         UploadFile uploadFile = uploadFileRepository.save(multipartFile);
         BookCover bookCover = new BookCover(book.getBookId(), uploadFile.getUploadFileId());
@@ -46,7 +46,7 @@ class BookCoverRepositoryTest {
     @Test
     void remove() {
         //given
-        Book book = bookRepository.save(new Book("testBook", "12345"));
+        Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345"));
         MultipartFile multipartFile = new MockMultipartFile("test.jpg", "test.jpg", "image/jpg", "test data".getBytes());
         UploadFile uploadFile = uploadFileRepository.save(multipartFile);
         BookCover bookCover = new BookCover(book.getBookId(), uploadFile.getUploadFileId());
@@ -65,7 +65,7 @@ class BookCoverRepositoryTest {
     @Test
     void findById() {
         //given
-        Book book = bookRepository.save(new Book("testBook", "12345"));
+        Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345"));
         MultipartFile multipartFile = new MockMultipartFile("test.jpg", "test.jpg", "image/jpg", "test data".getBytes());
         UploadFile uploadFile = uploadFileRepository.save(multipartFile);
         BookCover bookCover = new BookCover(book.getBookId(), uploadFile.getUploadFileId());
@@ -85,7 +85,7 @@ class BookCoverRepositoryTest {
     @Test
     void findByBookId() {
         //given
-        Book book = bookRepository.save(new Book("testBook", "12345"));
+        Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345"));
         MultipartFile multipartFile = new MockMultipartFile("test.jpg", "test.jpg", "image/jpg", "test data".getBytes());
         UploadFile uploadFile = uploadFileRepository.save(multipartFile);
         BookCover bookCover = new BookCover(book.getBookId(), uploadFile.getUploadFileId());

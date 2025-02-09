@@ -4,6 +4,8 @@ import com.weblibrary.domain.file.model.UploadFile;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -50,19 +52,29 @@ public class LocalFileStore implements FileStore {
 
         String storeFileName = FileStore.createStoreFileName(originalFilename);
 
-        //getfullpath : nullfillname
-        try {
-            multipartFile.transferTo(new File(getFullPath(storeFileName)));
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                //getfullpath : nullfillname
+                try {
+                    multipartFile.transferTo(new File(getFullPath(storeFileName)));
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            }
+        });
 
         return new UploadFile(originalFilename, storeFileName);
     }
 
     @Override
-    public boolean deleteFile(String storeFileName) {
-        File file = new File(getFullPath(storeFileName));
-        return file.delete();
+    public void deleteFile(String storeFileName) {
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                File file = new File(getFullPath(storeFileName));
+                file.delete();
+            }
+        });
     }
 }

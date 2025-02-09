@@ -6,12 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.UncheckedIOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Transactional
 @SpringBootTest
@@ -96,29 +100,18 @@ class FileStoreTest {
     }
 
     @Test
-    void deleteFile_ok() {
+    @Commit
+    void deleteFile() {
         //given
         MultipartFile multipartFile = new MockMultipartFile("test.txt", "test.txt", "text/plain", "hello file".getBytes());
         UploadFile uploadFile = fileStore.storeFile(multipartFile);
 
         //when
-        boolean result = fileStore.deleteFile(uploadFile.getStoreFileName());
-
-        //then
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    void deleteFile_fail() {
-        //given
-        MultipartFile multipartFile = new MockMultipartFile("test.txt", "test.txt", "text/plain", "hello file".getBytes());
-        UploadFile uploadFile = fileStore.storeFile(multipartFile);
         fileStore.deleteFile(uploadFile.getStoreFileName());
 
-        //when
-        boolean result = fileStore.deleteFile(uploadFile.getStoreFileName());
-
         //then
-        assertThat(result).isFalse();
+        File file = new File(urlPrefix + fileDir + uploadFile.getStoreFileName());
+        assertThat(file.exists()).isFalse();
+
     }
 }

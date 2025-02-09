@@ -3,6 +3,7 @@ import {fetchRequest, handleError} from "./util.js";
 const addBook = async errorContainer => {
     const bookInfo = {
         bookName : document.getElementById("addBookName").value,
+        author : document.getElementById("addAuthor").value,
         isbn : document.getElementById("addBookIsbn").value,
     }
 
@@ -47,11 +48,13 @@ const deleteBook = async id => {
 const setModifySection = btn => {
     const idInput = document.getElementById("modifyBookId");
     const bookNameInput = document.getElementById("modifyBookName");
+    const authorInput = document.getElementById("modifyAuthor");
     const isbnInput = document.getElementById("modifyIsbn");
     const coverImage = document.getElementById("modifyBookPreview");
     coverImage.style.display = "block";
 
     bookNameInput.value = btn.dataset.name;
+    authorInput.value = btn.dataset.author;
     isbnInput.value = btn.dataset.isbn;
     idInput.value = btn.dataset.id;
     coverImage.src = btn.dataset.cover;
@@ -62,6 +65,7 @@ const modifyBook = async errorContainer => {
     const bookInfo = {
         id : document.getElementById("modifyBookId").value,
         bookName : document.getElementById("modifyBookName").value,
+        author : document.getElementById("modifyAuthor").value,
         isbn : document.getElementById("modifyIsbn").value,
     }
 

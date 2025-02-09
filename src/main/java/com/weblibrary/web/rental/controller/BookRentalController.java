@@ -4,7 +4,7 @@ import com.weblibrary.domain.book.exception.NotFoundBookException;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.rental.exception.RentalException;
-import com.weblibrary.domain.rental.service.BookRentalService;
+import com.weblibrary.domain.rental.service.RentalService;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.web.argumentresolver.Login;
 import com.weblibrary.web.response.ErrorResponse;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class BookRentalController {
     private final BookService bookService;
-    private final BookRentalService bookRentalService;
+    private final RentalService rentalService;
     private final ErrorResponseUtils errorResponseUtils;
 
     @PostMapping("/{bookId}/rent")
@@ -37,7 +37,7 @@ public class BookRentalController {
         log.debug("rent by user={}", user);
         log.debug("rent findBook={}", findBook);
 
-        bookRentalService.rentBook(user, findBook);
+        rentalService.rentBook(user, findBook);
 
         return ResponseEntity.ok().body(JsonResponse.builder()
                 .message("정상 대출되었습니다.")
@@ -53,7 +53,7 @@ public class BookRentalController {
         log.debug("return by user={}", user);
         log.debug("return findBook={}", findBook);
 
-        bookRentalService.returnBook(user, findBook);
+        rentalService.returnBook(user, findBook);
 
         return ResponseEntity.ok().body(JsonResponse.builder()
                 .message("정상 반납되었습니다.")

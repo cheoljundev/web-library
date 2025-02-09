@@ -29,5 +29,5 @@ public interface FileStore {
         //"123.123.123.123.png"
     }
 
-    boolean deleteFile(String storeFileName);
+    void deleteFile(String storeFileName);
 }

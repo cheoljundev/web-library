@@ -123,9 +123,10 @@ public class JdbcBookRepository implements BookRepository {
         return (rs, rowNum) -> {
             long bookId = rs.getLong("book_id");
             String bookName = rs.getString("book_name");
+            String author = rs.getString("author");
             String isbn = rs.getString("isbn");
             boolean rented = rs.getBoolean("rented");
-            return new Book(bookId, bookName, isbn, rented);
+            return new Book(bookId, bookName, author, isbn, rented);
         };
     }
 }

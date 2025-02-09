@@ -7,6 +7,7 @@ import lombok.Data;
 public class ModifyBookViewForm {
     private Long id;
     private String bookName;
+    private String author;
     private String isbn;
     private UploadFile coverImage;
 }

@@ -19,6 +19,9 @@ public class ModifyBookForm {
     private String bookName;
 
     @NotBlank
+    private String author;
+
+    @NotBlank
     private String isbn;
 
     private MultipartFile coverImage;
