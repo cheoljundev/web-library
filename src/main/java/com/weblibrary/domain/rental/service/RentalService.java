@@ -40,7 +40,6 @@ public class RentalService {
         book.rentBook();
         user.rentBook();
 
-        bookService.updateBook(book);
         return rentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
     }
 
@@ -54,12 +53,10 @@ public class RentalService {
         Rental rental = rentalQueryRepository.findActiveRentalByBookId(book.getBookId())
                 .orElseThrow(() -> new RentalException("이미 대출중인 도서입니다."));
 
-
         book.returnBook();
         user.returnBook();
         rental.returnBook();
 
-        bookService.updateBook(book);
         return rental;
     }
 

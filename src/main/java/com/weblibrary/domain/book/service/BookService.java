@@ -6,10 +6,10 @@ import com.weblibrary.domain.book.exception.NotFoundBookException;
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.BookCover;
 import com.weblibrary.domain.book.repository.BookCoverRepository;
+import com.weblibrary.domain.book.repository.BookQueryRepository;
 import com.weblibrary.domain.book.repository.BookRepository;
 import com.weblibrary.domain.book.repository.BookSearchCond;
 import com.weblibrary.domain.file.model.UploadFile;
-import com.weblibrary.domain.file.repository.UploadFileRepository;
 import com.weblibrary.domain.file.service.UploadFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BookService {
     private final BookRepository bookRepository;
+    private final BookQueryRepository bookQueryRepository;
     private final BookCoverRepository bookCoverRepository;
     private final UploadFileService uploadFileService;
 
@@ -48,7 +49,6 @@ public class BookService {
             }
 
             book.modify(form);
-            updateBook(book);
             modifyBookCover(form, book);
 
         }, () -> {
@@ -60,11 +60,7 @@ public class BookService {
         Book removedBook = bookRepository.findById(bookId)
                 .orElseThrow(NotFoundBookException::new);
         removeBookCover(removedBook);
-        bookRepository.remove(bookId);
-    }
-
-    public void updateBook(Book book) {
-        bookRepository.update(book);
+        bookRepository.delete(removedBook);
     }
 
     @Transactional(readOnly = true)
@@ -74,7 +70,7 @@ public class BookService {
 
     @Transactional(readOnly = true)
     public Optional<Book> findBookByName(String name) {
-        return bookRepository.findByName(name);
+        return bookRepository.findByBookName(name);
     }
 
     @Transactional(readOnly = true)
@@ -85,10 +81,10 @@ public class BookService {
     @Transactional(readOnly = true)
     public Page<BookListItem> findAll(BookSearchCond cond, Pageable pageable) {
         // 페이징 처리된 책 리스트 조회
-        List<Book> books = bookRepository.findAll(cond, pageable.getPageSize(), pageable.getOffset());
+        List<Book> books = bookQueryRepository.findAll(cond, pageable.getPageSize(), pageable.getOffset());
 
         // 전체 책 수 조회
-        int total = bookRepository.countAll(cond);
+        long total = bookQueryRepository.count(cond);
 
         // 각 Book을 BookListItem으로 변환
         List<BookListItem> bookListItems = books.stream()

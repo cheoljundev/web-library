@@ -2,15 +2,12 @@ package com.weblibrary.domain.book.service;
 
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.repository.BookSearchCond;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,8 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
 @SpringBootTest
@@ -79,25 +75,6 @@ class BookServiceTest {
         assertThat(findBook).isEmpty();
     }
 
-    @Test
-    void updateBook() {
-        //given
-        MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
-        NewBookForm newBookForm = new NewBookForm("test", "testAuthor", "12345", multipartFile);
-        Book savedBook = bookService.save(newBookForm);
-
-        //when
-        Book updateBook = new Book("update", "update12345", "49291");
-        updateBook.setBookId(savedBook.getBookId());
-        bookService.updateBook(updateBook);
-
-        //then
-        Book findBook = bookService.findBookById(savedBook.getBookId()).get();
-        assertThat(findBook.getBookName()).isEqualTo("update");
-
-        //cleanUp
-        bookService.deleteBook(savedBook.getBookId());
-    }
 
     @Test
     void findBookById() {
@@ -159,7 +136,7 @@ class BookServiceTest {
         MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
 
         for (int i = 0; i < 10; i++) {
-            NewBookForm newBookForm = new NewBookForm("test" + i, "testAuthor" + i, "12345" + i , multipartFile);
+            NewBookForm newBookForm = new NewBookForm("test" + i, "testAuthor" + i, "12345" + i, multipartFile);
             Book book = bookService.save(newBookForm);
             books.add(book);
         }
@@ -188,7 +165,7 @@ class BookServiceTest {
         MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
 
         for (int i = 0; i < 10; i++) {
-            NewBookForm newBookForm = new NewBookForm("test" + i, "testAuthor" + i, "12345" + i , multipartFile);
+            NewBookForm newBookForm = new NewBookForm("test" + i, "testAuthor" + i, "12345" + i, multipartFile);
             Book book = bookService.save(newBookForm);
             books.add(book);
         }
@@ -223,7 +200,7 @@ class BookServiceTest {
         MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
 
         for (int i = 0; i < 10; i++) {
-            NewBookForm newBookForm = new NewBookForm("test" + i, "testAuthor" + i, "12345" + i , multipartFile);
+            NewBookForm newBookForm = new NewBookForm("test" + i, "testAuthor" + i, "12345" + i, multipartFile);
             Book book = bookService.save(newBookForm);
             books.add(book);
         }
@@ -258,7 +235,7 @@ class BookServiceTest {
         MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
 
         for (int i = 0; i < 10; i++) {
-            NewBookForm newBookForm = new NewBookForm("test" + i, "testAuthor" + i, "12345" + i , multipartFile);
+            NewBookForm newBookForm = new NewBookForm("test" + i, "testAuthor" + i, "12345" + i, multipartFile);
             Book book = bookService.save(newBookForm);
             books.add(book);
         }
@@ -291,7 +268,7 @@ class BookServiceTest {
         MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
 
         for (int i = 0; i < 10; i++) {
-            NewBookForm newBookForm = new NewBookForm("test" + i, "testAuthor" + i, "12345" + i , multipartFile);
+            NewBookForm newBookForm = new NewBookForm("test" + i, "testAuthor" + i, "12345" + i, multipartFile);
             Book book = bookService.save(newBookForm);
             books.add(book);
         }

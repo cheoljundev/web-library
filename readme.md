@@ -49,3 +49,6 @@
   - [x] 페이지네이션 구현
   - [x] Mybatis 적용
   - [x] 도서 검색 기능 구현
+  - [x] JPA 적용
+    - [x] Spring Data JPA 적용
+    - [x] QueryDSL 적용

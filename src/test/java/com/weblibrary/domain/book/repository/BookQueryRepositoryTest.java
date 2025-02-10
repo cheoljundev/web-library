@@ -1,7 +1,6 @@
 package com.weblibrary.domain.book.repository;
 
 import com.weblibrary.domain.book.model.Book;
-import com.weblibrary.domain.book.service.NewBookForm;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,62 +14,13 @@ import static org.assertj.core.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
-class BookRepositoryTest {
+class BookQueryRepositoryTest {
 
+    @Autowired
+    BookQueryRepository bookQueryRepository;
     @Autowired
     BookRepository bookRepository;
 
-    @Test
-    void save() {
-        //given
-        Book book = new Book("testBook", "testAuthor", "12345");
-
-        //when
-        Book savedBook = bookRepository.save(book);
-
-        //then
-        Book findBook = bookRepository.findById(savedBook.getBookId()).get();
-        assertThat(findBook).isEqualTo(savedBook);
-    }
-
-    @Test
-    void findById() {
-        //given
-        Book book = new Book("testBook", "testAuthor", "12345");
-        Book savedBook = bookRepository.save(book);
-
-        //when
-        Book findBook = bookRepository.findById(savedBook.getBookId()).get();
-
-        //then
-        assertThat(findBook).isEqualTo(savedBook);
-    }
-
-    @Test
-    void findByName() {
-        //given
-        Book book = new Book("testBook", "testAuthor", "12345");
-        Book savedBook = bookRepository.save(book);
-
-        //when
-        Book findBook = bookRepository.findByName(savedBook.getBookName()).get();
-
-        //then
-        assertThat(findBook).isEqualTo(savedBook);
-    }
-
-    @Test
-    void findByIsbn() {
-        //given
-        Book book = new Book("testBook", "testAuthor", "12345");
-        Book savedBook = bookRepository.save(book);
-
-        //when
-        Book findBook = bookRepository.findByIsbn(savedBook.getIsbn()).get();
-
-        //then
-        assertThat(findBook).isEqualTo(savedBook);
-    }
 
     @Test
     void findAll_no_cond() {
@@ -82,7 +32,7 @@ class BookRepositoryTest {
         //when
         Pageable pageable = PageRequest.of(0, 2);
         BookSearchCond cond = new BookSearchCond();
-        List<Book> books = bookRepository.findAll(cond, pageable.getPageSize(), pageable.getOffset());
+        List<Book> books = bookQueryRepository.findAll(cond, pageable.getPageSize(), pageable.getOffset());
 
         //then
         assertThat(books.size()).isEqualTo(2);
@@ -105,7 +55,7 @@ class BookRepositoryTest {
         //when
         Pageable pageable = PageRequest.of(0, 10);
         BookSearchCond cond = new BookSearchCond("newBook", null, null);
-        List<Book> books = bookRepository.findAll(cond, pageable.getPageSize(), pageable.getOffset());
+        List<Book> books = bookQueryRepository.findAll(cond, pageable.getPageSize(), pageable.getOffset());
 
         //then
         assertThat(books.size()).isEqualTo(2);
@@ -128,7 +78,7 @@ class BookRepositoryTest {
         //when
         Pageable pageable = PageRequest.of(0, 10);
         BookSearchCond cond = new BookSearchCond(null, "김철준", null);
-        List<Book> books = bookRepository.findAll(cond, pageable.getPageSize(), pageable.getOffset());
+        List<Book> books = bookQueryRepository.findAll(cond, pageable.getPageSize(), pageable.getOffset());
 
         //then
         assertThat(books.size()).isEqualTo(3);
@@ -147,7 +97,7 @@ class BookRepositoryTest {
         //when
         Pageable pageable = PageRequest.of(0, 10);
         BookSearchCond cond = new BookSearchCond(null, null, "94932");
-        List<Book> books = bookRepository.findAll(cond, pageable.getPageSize(), pageable.getOffset());
+        List<Book> books = bookQueryRepository.findAll(cond, pageable.getPageSize(), pageable.getOffset());
 
         //then
         assertThat(books.size()).isEqualTo(1);
@@ -171,7 +121,7 @@ class BookRepositoryTest {
         //when
         Pageable pageable = PageRequest.of(0, 10);
         BookSearchCond cond = new BookSearchCond("unique book", "김철준", "94932");
-        List<Book> books = bookRepository.findAll(cond, pageable.getPageSize(), pageable.getOffset());
+        List<Book> books = bookQueryRepository.findAll(cond, pageable.getPageSize(), pageable.getOffset());
 
         //then
         assertThat(books.size()).isEqualTo(1);
@@ -188,7 +138,7 @@ class BookRepositoryTest {
 
         //when
         BookSearchCond cond = new BookSearchCond();
-        int total = bookRepository.countAll(cond);
+        long total = bookQueryRepository.count(cond);
 
         //then
         assertThat(total).isEqualTo(3);
@@ -209,7 +159,7 @@ class BookRepositoryTest {
 
         //when
         BookSearchCond cond = new BookSearchCond("newBook", null, null);
-        int total = bookRepository.countAll(cond);
+        long total = bookQueryRepository.count(cond);
 
         //then
         assertThat(total).isEqualTo(2);
@@ -230,7 +180,7 @@ class BookRepositoryTest {
 
         //when
         BookSearchCond cond = new BookSearchCond(null, "김철준", null);
-        int total = bookRepository.countAll(cond);
+        long total = bookQueryRepository.count(cond);
 
         //then
         assertThat(total).isEqualTo(3);
@@ -249,7 +199,7 @@ class BookRepositoryTest {
 
         //when
         BookSearchCond cond = new BookSearchCond(null, null, "94932");
-        int total = bookRepository.countAll(cond);
+        long total = bookQueryRepository.count(cond);
 
         //then
         assertThat(total).isEqualTo(1);
@@ -271,40 +221,10 @@ class BookRepositoryTest {
 
         //when
         BookSearchCond cond = new BookSearchCond("unique book", "김철준", "94932");
-        int total = bookRepository.countAll(cond);
+        long total = bookQueryRepository.count(cond);
 
         //then
         assertThat(total).isEqualTo(1);
     }
 
-    @Test
-    void remove() {
-        //given
-        Book book = new Book("testBook", "testAuthor", "12345");
-        Book savedBook = bookRepository.save(book);
-
-        //when
-        bookRepository.remove(savedBook.getBookId());
-
-        //then
-        assertThat(bookRepository.findById(savedBook.getBookId())).isEmpty();
-    }
-
-    @Test
-    void update() {
-        //given
-        Book book = new Book("testBook", "testAuthor", "12345");
-        Book savedBook = bookRepository.save(book);
-
-        //when
-        Book updateBook = new Book("update", "updateAuthor", "54321");
-        updateBook.setBookId(savedBook.getBookId());
-        bookRepository.update(updateBook);
-
-        //then
-        Book findBook = bookRepository.findById(savedBook.getBookId()).get();
-        assertThat(findBook.getBookName()).isEqualTo(updateBook.getBookName());
-        assertThat(findBook.getAuthor()).isEqualTo(updateBook.getAuthor());
-        assertThat(findBook.getIsbn()).isEqualTo(updateBook.getIsbn());
-    }
 }
