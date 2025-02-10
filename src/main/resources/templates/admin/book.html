@@ -7,6 +7,38 @@
 <body>
 <div id="content">
     <!-- 도서 관리 -->
+
+    <section class="container mt-5 my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h4>도서 검색</h4>
+                    </div>
+                    <div class="card-body">
+                        <form th:action method="get" th:object="${cond}">
+                            <div class="mb-3">
+                                <label for="bookName" class="form-label">책 이름</label>
+                                <input type="text" class="form-control" id="bookName" th:field="*{bookName}" placeholder="책 이름을 입력하세요">
+                            </div>
+                            <div class="mb-3">
+                                <label for="author" class="form-label">저자</label>
+                                <input type="text" class="form-control" id="author" th:field="*{author}" placeholder="저자를 입력하세요">
+                            </div>
+                            <div class="mb-3">
+                                <label for="isbn" class="form-label">ISBN</label>
+                                <input type="text" class="form-control" id="isbn" th:field="*{isbn}" placeholder="ISBN을 입력하세요">
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">검색하기</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="section">
         <h2 th:text="#{admin.manage.book.title}">도서 관리</h2>
         <div class="mb-3" th:object="${addBook}" id="addBook">
