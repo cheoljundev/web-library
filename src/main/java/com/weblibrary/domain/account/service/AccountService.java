@@ -60,15 +60,10 @@ public class AccountService {
     }
 
     public void deleteUser(Long userId) {
-
         userService.findById(userId)
                 .orElseThrow(NotFoundUserException::new);
 
-        roleRepository.findRolesByUserId(userId).forEach(role -> {
-            roleRepository.removeByRoleId(role.getRoleId());
-        });
-
-        userRepository.removeByUserId(userId);
+        userRepository.deleteById(userId);
     }
 
     private boolean isUniqueUsername(String username) {
