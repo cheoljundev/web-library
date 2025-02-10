@@ -23,6 +23,7 @@
     <select id="findAll" resultType="User">
         select user_id, username, password, remaining_rents
         from users
+        order by user_id desc
         limit #{limit} offset #{offset}
     </select>
 
