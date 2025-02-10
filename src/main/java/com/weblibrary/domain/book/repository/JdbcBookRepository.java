@@ -1,6 +1,7 @@
 package com.weblibrary.domain.book.repository;
 
 import com.weblibrary.domain.book.model.Book;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -8,12 +9,15 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 public class JdbcBookRepository implements BookRepository {
 
 
@@ -24,7 +28,7 @@ public class JdbcBookRepository implements BookRepository {
         this.template = new NamedParameterJdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("books")
-                .usingColumns("book_name", "isbn")
+                .usingColumns("book_name", "author", "isbn")
                 .usingGeneratedKeyColumns("book_id");
     }
 
@@ -77,13 +81,33 @@ public class JdbcBookRepository implements BookRepository {
     public List<Book> findAll(BookSearchCond cond, Number limit, Number offset) {
 
         // 데이터 조회: LIMIT와 OFFSET 사용
-        String sql = "select * from books order by book_id desc limit :limit offset :offset";
+        StringBuilder sql = new StringBuilder("select * from books");
         List<Book> books = null;
+        SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("limit", limit)
+                .addValue("offset", offset)
+                .addValue("bookName", cond.getBookName())
+                .addValue("author", cond.getAuthor())
+                .addValue("isbn", cond.getIsbn());
+
+        List<String> conditions = new ArrayList<>();
+        if (StringUtils.hasText(cond.getBookName())) {
+            conditions.add("book_name like concat('%', :bookName, '%')");
+        }
+        if (StringUtils.hasText(cond.getAuthor())) {
+            conditions.add("author like concat('%', :author, '%')");
+        }
+        if (StringUtils.hasText(cond.getIsbn())) {
+            conditions.add("isbn = :isbn");
+        }
+
+        if (!conditions.isEmpty()) {
+            sql.append(" where ").append(String.join(" and ", conditions));
+        }
+
+        sql.append(" order by book_id desc limit :limit offset :offset");
         try {
-            SqlParameterSource param = new MapSqlParameterSource()
-                    .addValue("limit", limit)
-                    .addValue("offset", offset);
-            books = template.query(sql, param, getBookMapper());
+            books = template.query(sql.toString(), param, getBookMapper());
         } catch (DataAccessException e) {
             books = List.of();
         }
@@ -93,8 +117,27 @@ public class JdbcBookRepository implements BookRepository {
 
     @Override
     public int countAll(BookSearchCond cond) {
-        String sql = "select count(*) from books";
-        return template.queryForObject(sql, Map.of(), Integer.class);
+
+        // 데이터 조회: LIMIT와 OFFSET 사용
+        StringBuilder sql = new StringBuilder("select count(*) from books");
+        SqlParameterSource param = new BeanPropertySqlParameterSource(cond);
+
+        List<String> conditions = new ArrayList<>();
+        if (StringUtils.hasText(cond.getBookName())) {
+            conditions.add("book_name like concat('%', :bookName, '%')");
+        }
+        if (StringUtils.hasText(cond.getAuthor())) {
+            conditions.add("author like concat('%', :author, '%')");
+        }
+        if (StringUtils.hasText(cond.getIsbn())) {
+            conditions.add("isbn = :isbn");
+        }
+
+        if (!conditions.isEmpty()) {
+            sql.append(" where ").append(String.join(" and ", conditions));
+        }
+
+        return template.queryForObject(sql.toString(), param, Integer.class);
     }
 
     @Override
@@ -103,6 +146,7 @@ public class JdbcBookRepository implements BookRepository {
         SqlParameterSource param = new BeanPropertySqlParameterSource(book);
 
         String sql = "update books set book_name = :bookName, " +
+                "author = :author, " +
                 "isbn = :isbn, " +
                 "rented = :rented " +
                 "where book_id = :bookId";
