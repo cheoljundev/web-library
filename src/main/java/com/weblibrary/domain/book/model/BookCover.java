@@ -12,10 +12,15 @@ import lombok.*;
 @Table(name = "book_covers")
 public class BookCover {
     @EqualsAndHashCode.Include
-    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookCoverId;
     private final Long bookId;
-    private final Long uploadFileId;
+    @Setter
+    private Long uploadFileId;
+
+    public BookCover(Long bookId, Long uploadFileId) {
+        this.bookId = bookId;
+        this.uploadFileId = uploadFileId;
+    }
 }

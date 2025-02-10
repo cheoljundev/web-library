@@ -107,7 +107,7 @@ public class BookService {
     private void removeBookCover(Book book) {
         BookCover bookCover = bookCoverRepository.findByBookId(book.getBookId())
                 .orElseThrow(NotFoundBookCoverException::new);
-        bookCoverRepository.remove(bookCover.getBookId());
+        bookCoverRepository.delete(bookCover);
         uploadFileService.remove(bookCover.getUploadFileId());
     }
 
@@ -125,14 +125,10 @@ public class BookService {
             // 4. 기존 커버 객체의 uploadFileId를 새 이미지의 uploadFileId로 변경한다
             // 5. 기존 이미지를 삭제한다.
             UploadFile updateImage = uploadFileService.save(form.getCoverImage());
-            bookCoverRepository.findByBookId(book.getBookId())
+            bookCoverRepository.findById(book.getBookId())
                     .ifPresent(bookCover -> {
                         Long oldUploadFileId = bookCover.getUploadFileId();
-                        BookCover newBookCover = new BookCover(
-                                bookCover.getBookCoverId(),
-                                book.getBookId(),
-                                updateImage.getUploadFileId());
-                        bookCoverRepository.update(newBookCover);
+                        bookCover.setUploadFileId(updateImage.getUploadFileId());
                         uploadFileService.remove(oldUploadFileId);
                     });
         }
