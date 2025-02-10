@@ -5,7 +5,10 @@ import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.rental.exception.RentalException;
 import com.weblibrary.domain.rental.service.RentalService;
+import com.weblibrary.domain.user.exception.NotFoundUserException;
 import com.weblibrary.domain.user.model.User;
+import com.weblibrary.domain.user.service.UserService;
+import com.weblibrary.web.account.controller.LoginUser;
 import com.weblibrary.web.argumentresolver.Login;
 import com.weblibrary.web.response.ErrorResponse;
 import com.weblibrary.web.response.ErrorResponseUtils;
@@ -26,13 +29,19 @@ public class BookRentalController {
     private final BookService bookService;
     private final RentalService rentalService;
     private final ErrorResponseUtils errorResponseUtils;
+    private final UserService userService;
 
     @PostMapping("/{bookId}/rent")
-    public ResponseEntity<JsonResponse> rentBook(@Login User user, @PathVariable("bookId") Long bookId) {
+    public ResponseEntity<JsonResponse> rentBook(@Login LoginUser loginUser, @PathVariable("bookId") Long bookId) {
 
         // Optional로 Book을 안전하게 처리
         Book findBook = bookService.findBookById(bookId)
                 .orElseThrow(NotFoundBookException::new);
+
+        log.debug("userInfo={}", loginUser);
+
+        User user = userService.findById(loginUser.getUserId())
+                .orElseThrow(NotFoundUserException::new);
 
         log.debug("rent by user={}", user);
         log.debug("rent findBook={}", findBook);
@@ -45,10 +54,14 @@ public class BookRentalController {
     }
 
     @PostMapping("/{bookId}/return")
-    public ResponseEntity<JsonResponse> returnBook(@Login User user, @PathVariable("bookId") Long bookId) {
+    public ResponseEntity<JsonResponse> returnBook(@Login LoginUser loginUser, @PathVariable("bookId") Long bookId) {
 
         Book findBook = bookService.findBookById(bookId)
                 .orElseThrow(NotFoundBookException::new);
+
+        User user = userService.findById(loginUser.getUserId())
+                .orElseThrow(NotFoundUserException::new);
+
 
         log.debug("return by user={}", user);
         log.debug("return findBook={}", findBook);

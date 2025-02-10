@@ -1,6 +1,7 @@
 package com.weblibrary.web;
 
 import com.weblibrary.domain.admin.service.AdminService;
+import com.weblibrary.domain.user.service.UserService;
 import com.weblibrary.web.argumentresolver.LoginUserArgumentResolver;
 import com.weblibrary.web.interceptor.RestAdminCheckInterceptor;
 import com.weblibrary.web.interceptor.RestLoginCheckInterceptor;

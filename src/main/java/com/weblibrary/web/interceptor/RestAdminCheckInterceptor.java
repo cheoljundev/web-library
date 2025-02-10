@@ -1,8 +1,8 @@
 package com.weblibrary.web.interceptor;
 
 import com.weblibrary.domain.admin.service.AdminService;
-import com.weblibrary.domain.user.model.User;
 import com.weblibrary.web.SessionConst;
+import com.weblibrary.web.account.controller.LoginUser;
 import com.weblibrary.web.exception.UnauthorizedAccessException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,7 +21,7 @@ public class RestAdminCheckInterceptor implements HandlerInterceptor {
         }
 
         HttpSession session = request.getSession(false);
-        User user = (User) session.getAttribute(SessionConst.LOGIN_USER);
+        LoginUser user = (LoginUser) session.getAttribute(SessionConst.LOGIN_USER);
         if (!adminService.isAdmin(user.getUserId())) {
                 session.invalidate();
                 throw new UnauthorizedAccessException("관리자가 아닙니다.");

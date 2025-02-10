@@ -6,6 +6,7 @@ import com.weblibrary.domain.account.service.LoginUserForm;
 import com.weblibrary.domain.account.exception.InvalidJoinException;
 import com.weblibrary.domain.account.exception.InvalidLoginException;
 import com.weblibrary.domain.user.model.User;
+import com.weblibrary.domain.user.service.UserService;
 import com.weblibrary.web.argumentresolver.Login;
 import com.weblibrary.web.response.ErrorResponse;
 import com.weblibrary.web.response.JsonResponse;
@@ -33,6 +34,7 @@ import java.util.List;
 public class AccountController {
 
     private final AccountService accountService;
+    private final UserService userService;
 
     /* join form 보여주기 */
     @GetMapping("/join")
@@ -87,8 +89,10 @@ public class AccountController {
     }
 
     @PostMapping("/signout")
-    public ResponseEntity<JsonResponse> signOut(HttpServletRequest request, @Login User user) {
+    public ResponseEntity<JsonResponse> signOut(HttpServletRequest request, @Login LoginUser loginUser) {
         HttpSession session = request.getSession(false);
+
+        User user = userService.findById(loginUser.getUserId()).orElse(null);
 
         log.debug("login user={}", user);
 

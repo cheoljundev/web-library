@@ -1,8 +1,8 @@
 package com.weblibrary.web.interceptor;
 
 import com.weblibrary.domain.admin.service.AdminService;
-import com.weblibrary.domain.user.model.User;
 import com.weblibrary.web.SessionConst;
+import com.weblibrary.web.account.controller.LoginUser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -15,7 +15,7 @@ public class SsrAdminCheckInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession(false);
-        User user = (User) session.getAttribute(SessionConst.LOGIN_USER);
+        LoginUser user = (LoginUser) session.getAttribute(SessionConst.LOGIN_USER);
         String requestURI = request.getRequestURI();
         if (!adminService.isAdmin(user.getUserId())) {
                 session.invalidate();

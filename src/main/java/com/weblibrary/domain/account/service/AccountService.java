@@ -9,6 +9,7 @@ import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
 import com.weblibrary.domain.user.service.UserService;
 import com.weblibrary.web.SessionConst;
+import com.weblibrary.web.account.controller.LoginUser;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,8 +51,9 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public void login(HttpSession session, LoginUserForm form) {
-        User loginUser = userService.findByUsername(form.getUsername())
+        LoginUser loginUser = userService.findByUsername(form.getUsername())
                 .filter(user -> user.getPassword().equals(form.getPassword()))
+                .map(user -> new LoginUser(user.getUserId(), user.getUsername()))
                 .orElseThrow(() -> new InvalidLoginException("로그인에 실패했습니다. 아이디 및 비밀번호를 확인하세요.", form));
 
         session.setAttribute(SessionConst.LOGIN_USER, loginUser);

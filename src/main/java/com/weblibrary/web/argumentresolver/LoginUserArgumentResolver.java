@@ -1,7 +1,7 @@
 package com.weblibrary.web.argumentresolver;
 
-import com.weblibrary.domain.user.model.User;
 import com.weblibrary.web.SessionConst;
+import com.weblibrary.web.account.controller.LoginUser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.core.MethodParameter;
@@ -14,7 +14,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         boolean hasParameterAnnotation = parameter.hasParameterAnnotation(Login.class);
-        boolean hasUserType = User.class.isAssignableFrom(parameter.getParameterType());
+        boolean hasUserType = LoginUser.class.isAssignableFrom(parameter.getParameterType());
 
         return hasParameterAnnotation && hasUserType;
     }
