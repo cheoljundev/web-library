@@ -1,5 +1,7 @@
 package com.weblibrary.domain.rental.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -9,8 +11,11 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @ToString
 @AllArgsConstructor
+@Entity
+@NoArgsConstructor(force = true)
 public class Rental {
     @Setter
+    @Id
     private Long rentalId; // 고유 대출 ID
     private final Long bookId;
     private final Long userId;

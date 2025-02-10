@@ -1,5 +1,7 @@
 package com.weblibrary.domain.user.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.*;
 
 import java.util.Objects;
@@ -9,9 +11,12 @@ import java.util.Objects;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 @RequiredArgsConstructor
+@Entity
+@NoArgsConstructor(force = true)
 public class User {
     @Setter
     @EqualsAndHashCode.Include
+    @Id
     private Long userId;
     private final String username;
     private final String password;
