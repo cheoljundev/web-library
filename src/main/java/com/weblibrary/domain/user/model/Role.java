@@ -19,6 +19,7 @@ public class Role implements Comparable<Role>{
 
     private Long roleId;
     private final Long userId;
+    @Enumerated(EnumType.STRING)
     private final RoleType roleType;
 
     @Override

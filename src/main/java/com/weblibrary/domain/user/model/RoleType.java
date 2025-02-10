@@ -10,7 +10,8 @@ import lombok.ToString;
  * Admin: 관리자 유저
  */
 @Getter
-@RequiredArgsConstructor @ToString
+@RequiredArgsConstructor
+@ToString
 public enum RoleType {
     ADMIN("관리자"), DEFAULT("일반 유저");
 
