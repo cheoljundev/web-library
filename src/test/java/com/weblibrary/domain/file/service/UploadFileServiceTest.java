@@ -1,7 +1,7 @@
-package com.weblibrary.domain.file.repository;
+package com.weblibrary.domain.file.service;
 
 import com.weblibrary.domain.file.model.UploadFile;
-import org.assertj.core.api.Assertions;
+import com.weblibrary.domain.file.repository.UploadFileRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,14 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
-class UploadFileRepositoryTest {
+class UploadFileServiceTest {
 
     @Autowired
-    UploadFileRepository uploadFileRepository;
+    UploadFileService uploadFileService;
 
     @Test
     void save() {
@@ -25,41 +24,41 @@ class UploadFileRepositoryTest {
         MultipartFile multipartFile = new MockMultipartFile("test.jpg", "test.jpg", "image/jpg", "test data".getBytes());
 
         //when
-        UploadFile saved = uploadFileRepository.save(multipartFile);
+        UploadFile saved = uploadFileService.save(multipartFile);
 
         //then
         assertThat(saved.getUploadFileName()).isEqualTo(multipartFile.getOriginalFilename());
 
         //cleanup
-        uploadFileRepository.remove(saved.getUploadFileId());
+        uploadFileService.remove(saved.getUploadFileId());
     }
 
     @Test
     void findById() {
         //given
         MultipartFile multipartFile = new MockMultipartFile("test.jpg", "test.jpg", "image/jpg", "test data".getBytes());
-        UploadFile saved = uploadFileRepository.save(multipartFile);
+        UploadFile saved = uploadFileService.save(multipartFile);
 
         //when
-        UploadFile find = uploadFileRepository.findById(saved.getUploadFileId()).get();
+        UploadFile find = uploadFileService.findById(saved.getUploadFileId()).get();
 
         //then
         assertThat(find).isEqualTo(saved);
 
         //cleanup
-        uploadFileRepository.remove(saved.getUploadFileId());
+        uploadFileService.remove(saved.getUploadFileId());
     }
 
     @Test
     void remove() {
         //given
         MultipartFile multipartFile = new MockMultipartFile("test.jpg", "test.jpg", "image/jpg", "test data".getBytes());
-        UploadFile saved = uploadFileRepository.save(multipartFile);
+        UploadFile saved = uploadFileService.save(multipartFile);
 
         //when
-        uploadFileRepository.remove(saved.getUploadFileId());
+        uploadFileService.remove(saved.getUploadFileId());
 
         //then
-        assertThat(uploadFileRepository.findById(saved.getUploadFileId())).isEmpty();
+        assertThat(uploadFileService.findById(saved.getUploadFileId())).isEmpty();
     }
 }

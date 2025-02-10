@@ -10,6 +10,7 @@ import com.weblibrary.domain.book.repository.BookRepository;
 import com.weblibrary.domain.book.repository.BookSearchCond;
 import com.weblibrary.domain.file.model.UploadFile;
 import com.weblibrary.domain.file.repository.UploadFileRepository;
+import com.weblibrary.domain.file.service.UploadFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 public class BookService {
     private final BookRepository bookRepository;
     private final BookCoverRepository bookCoverRepository;
-    private final UploadFileRepository uploadFileRepository;
+    private final UploadFileService uploadFileService;
 
     public Book save(NewBookForm newBookForm) {
         Book book = new Book(newBookForm.getBookName(), newBookForm.getAuthor(), newBookForm.getIsbn());
@@ -93,7 +94,7 @@ public class BookService {
         List<BookListItem> bookListItems = books.stream()
                 .map(book -> {
                     UploadFile image = bookCoverRepository.findByBookId(book.getBookId())
-                            .flatMap(bookCover -> uploadFileRepository.findById(bookCover.getUploadFileId()))
+                            .flatMap(bookCover -> uploadFileService.findById(bookCover.getUploadFileId()))
                             .orElseThrow(NotFoundBookCoverException::new);
                     return new BookListItem(book.getBookId(), book.getBookName(), book.getAuthor(), book.getIsbn(), image);
                 })
@@ -107,11 +108,11 @@ public class BookService {
         BookCover bookCover = bookCoverRepository.findByBookId(book.getBookId())
                 .orElseThrow(NotFoundBookCoverException::new);
         bookCoverRepository.remove(bookCover.getBookId());
-        uploadFileRepository.remove(bookCover.getUploadFileId());
+        uploadFileService.remove(bookCover.getUploadFileId());
     }
 
     private void saveBookCover(Book book, MultipartFile multipartFile) {
-        UploadFile image = uploadFileRepository.save(multipartFile);
+        UploadFile image = uploadFileService.save(multipartFile);
         BookCover newBookCover = new BookCover(book.getBookId(), image.getUploadFileId());
         bookCoverRepository.save(newBookCover);
     }
@@ -123,7 +124,7 @@ public class BookService {
             // 3. 기존 커버 객체에서 uploadFileId를 변수에 임시 저장해둔다
             // 4. 기존 커버 객체의 uploadFileId를 새 이미지의 uploadFileId로 변경한다
             // 5. 기존 이미지를 삭제한다.
-            UploadFile updateImage = uploadFileRepository.save(form.getCoverImage());
+            UploadFile updateImage = uploadFileService.save(form.getCoverImage());
             bookCoverRepository.findByBookId(book.getBookId())
                     .ifPresent(bookCover -> {
                         Long oldUploadFileId = bookCover.getUploadFileId();
@@ -132,7 +133,7 @@ public class BookService {
                                 book.getBookId(),
                                 updateImage.getUploadFileId());
                         bookCoverRepository.update(newBookCover);
-                        uploadFileRepository.remove(oldUploadFileId);
+                        uploadFileService.remove(oldUploadFileId);
                     });
         }
     }

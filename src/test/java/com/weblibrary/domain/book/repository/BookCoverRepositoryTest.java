@@ -4,6 +4,7 @@ import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.BookCover;
 import com.weblibrary.domain.file.model.UploadFile;
 import com.weblibrary.domain.file.repository.UploadFileRepository;
+import com.weblibrary.domain.file.service.UploadFileService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +21,7 @@ class BookCoverRepositoryTest {
     @Autowired
     BookCoverRepository bookCoverRepository;
     @Autowired
-    UploadFileRepository uploadFileRepository;
+    UploadFileService uploadFileService;
     @Autowired
     BookRepository bookRepository;
 
@@ -29,7 +30,7 @@ class BookCoverRepositoryTest {
         //given
         Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345"));
         MultipartFile multipartFile = new MockMultipartFile("test.jpg", "test.jpg", "image/jpg", "test data".getBytes());
-        UploadFile uploadFile = uploadFileRepository.save(multipartFile);
+        UploadFile uploadFile = uploadFileService.save(multipartFile);
         BookCover bookCover = new BookCover(book.getBookId(), uploadFile.getUploadFileId());
 
         //when
@@ -40,7 +41,7 @@ class BookCoverRepositoryTest {
 
         //cleanup
         bookCoverRepository.remove(saved.getBookCoverId());
-        uploadFileRepository.remove(uploadFile.getUploadFileId());
+        uploadFileService.remove(uploadFile.getUploadFileId());
     }
 
     @Test
@@ -48,7 +49,7 @@ class BookCoverRepositoryTest {
         //given
         Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345"));
         MultipartFile multipartFile = new MockMultipartFile("test.jpg", "test.jpg", "image/jpg", "test data".getBytes());
-        UploadFile uploadFile = uploadFileRepository.save(multipartFile);
+        UploadFile uploadFile = uploadFileService.save(multipartFile);
         BookCover bookCover = new BookCover(book.getBookId(), uploadFile.getUploadFileId());
         BookCover saved = bookCoverRepository.save(bookCover);
 
@@ -59,7 +60,7 @@ class BookCoverRepositoryTest {
         assertThat(bookCoverRepository.findById(saved.getBookCoverId())).isEmpty();
 
         //cleanup
-        uploadFileRepository.remove(uploadFile.getUploadFileId());
+        uploadFileService.remove(uploadFile.getUploadFileId());
     }
 
     @Test
@@ -67,7 +68,7 @@ class BookCoverRepositoryTest {
         //given
         Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345"));
         MultipartFile multipartFile = new MockMultipartFile("test.jpg", "test.jpg", "image/jpg", "test data".getBytes());
-        UploadFile uploadFile = uploadFileRepository.save(multipartFile);
+        UploadFile uploadFile = uploadFileService.save(multipartFile);
         BookCover bookCover = new BookCover(book.getBookId(), uploadFile.getUploadFileId());
         BookCover saved = bookCoverRepository.save(bookCover);
 
@@ -79,7 +80,7 @@ class BookCoverRepositoryTest {
 
         //cleanup
         bookCoverRepository.remove(saved.getBookCoverId());
-        uploadFileRepository.remove(uploadFile.getUploadFileId());
+        uploadFileService.remove(uploadFile.getUploadFileId());
     }
 
     @Test
@@ -87,7 +88,7 @@ class BookCoverRepositoryTest {
         //given
         Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345"));
         MultipartFile multipartFile = new MockMultipartFile("test.jpg", "test.jpg", "image/jpg", "test data".getBytes());
-        UploadFile uploadFile = uploadFileRepository.save(multipartFile);
+        UploadFile uploadFile = uploadFileService.save(multipartFile);
         BookCover bookCover = new BookCover(book.getBookId(), uploadFile.getUploadFileId());
         BookCover saved = bookCoverRepository.save(bookCover);
 
@@ -99,7 +100,7 @@ class BookCoverRepositoryTest {
 
         //cleanup
         bookCoverRepository.remove(saved.getBookCoverId());
-        uploadFileRepository.remove(uploadFile.getUploadFileId());
+        uploadFileService.remove(uploadFile.getUploadFileId());
     }
 
 }
