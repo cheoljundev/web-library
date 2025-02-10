@@ -81,7 +81,7 @@ class RoleRepositoryTest {
 
         //when
         roleRepository.findRolesByUserId(tester.getUserId()).forEach(role -> {
-            roleRepository.remove(role.getRoleId());
+            roleRepository.removeByRoleId(role.getRoleId());
         });
 
         //then

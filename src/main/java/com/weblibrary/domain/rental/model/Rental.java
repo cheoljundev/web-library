@@ -1,6 +1,8 @@
 package com.weblibrary.domain.rental.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 public class Rental {
     @Setter
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long rentalId; // 고유 대출 ID
     private final Long bookId;
     private final Long userId;

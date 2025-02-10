@@ -63,7 +63,7 @@ public class AccountService {
                 .orElseThrow(NotFoundUserException::new);
 
         roleRepository.findRolesByUserId(userId).forEach(role -> {
-            roleRepository.remove(role.getRoleId());
+            roleRepository.removeByRoleId(role.getRoleId());
         });
 
         userRepository.remove(userId);

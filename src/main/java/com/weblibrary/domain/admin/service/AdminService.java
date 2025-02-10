@@ -58,7 +58,7 @@ public class AdminService {
     private boolean removeAdminRole(Long userId) {
         return roleRepository.findRoleByUserIdAndRoleType(userId, ADMIN)
                 .map(role -> {
-                    roleRepository.remove(role.getRoleId());
+                    roleRepository.removeByRoleId(role.getRoleId());
                     return true;
                 }).orElse(false);
     }

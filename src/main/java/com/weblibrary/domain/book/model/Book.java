@@ -2,6 +2,8 @@ package com.weblibrary.domain.book.model;
 
 import com.weblibrary.domain.book.service.ModifyBookForm;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
@@ -15,6 +17,7 @@ public class Book {
     @Setter
     @EqualsAndHashCode.Include
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookId;
     private String bookName;
     private String author;
