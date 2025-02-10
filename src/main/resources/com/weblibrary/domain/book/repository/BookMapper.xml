@@ -29,12 +29,34 @@
     <select id="findAll" resultType="Book">
         select book_id, book_name, author, isbn
         from books
+        <where>
+            <if test="cond.bookName != null and cond.bookName != ''">
+                and book_name like concat('%',#{cond.bookName},'%')
+            </if>
+            <if test="cond.author != null and cond.author != ''">
+                and author like concat('%',#{cond.author},'%')
+            </if>
+            <if test="cond.isbn != null and cond.isbn != ''">
+                and isbn = #{cond.isbn}
+            </if>
+        </where>
         limit #{limit} offset #{offset}
     </select>
 
     <select id="countAll" resultType="int">
         select count(*)
         from books
+        <where>
+            <if test="bookName != null and bookName != ''">
+                and book_name like concat('%',#{bookName},'%')
+            </if>
+            <if test="author != null and author != ''">
+                and author like concat('%',#{author},'%')
+            </if>
+            <if test="isbn != null and isbn != ''">
+                and isbn = #{isbn}
+            </if>
+        </where>
     </select>
 
     <update id="remove">

@@ -1,5 +1,6 @@
 package com.weblibrary.web.controller;
 
+import com.weblibrary.domain.book.repository.BookSearchCond;
 import com.weblibrary.domain.book.service.BookListItem;
 import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.web.util.PageBlock;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 /**
  * site home 접속시 처리할 컨트롤러
@@ -23,9 +25,9 @@ public class IndexController {
     private final BookService bookService;
 
     @GetMapping("/")
-    public String index(Model model, Pageable pageable) {
+    public String index(Model model, Pageable pageable, @ModelAttribute("cond") BookSearchCond cond) {
         log.debug("pageable={}", pageable);
-        Page<BookListItem> bookPage = bookService.findAll(pageable);
+        Page<BookListItem> bookPage = bookService.findAll(cond, pageable);
 
         int blockSize = 10; // 한 블록에 표시할 페이지 수
         PageBlock pageBlock = PaginationUtil.createPageBlock(bookPage, blockSize);

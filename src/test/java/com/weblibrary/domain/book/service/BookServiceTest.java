@@ -1,12 +1,14 @@
 package com.weblibrary.domain.book.service;
 
 import com.weblibrary.domain.book.model.Book;
+import com.weblibrary.domain.book.repository.BookSearchCond;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -148,25 +150,168 @@ class BookServiceTest {
     }
 
     @Test
-    void findAll() {
+    void findAll_no_cond() {
         //given
 
         List<Book> books = new ArrayList<>();
 
+        MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
+
         for (int i = 0; i < 10; i++) {
-            MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
             NewBookForm newBookForm = new NewBookForm("test" + i, "testAuthor" + i, "12345" + i , multipartFile);
             Book book = bookService.save(newBookForm);
             books.add(book);
         }
 
         //when
-        Page<BookListItem> bookPage = bookService.findAll(PageRequest.of(0, 5));
+        BookSearchCond cond = new BookSearchCond();
+        PageRequest pageable = PageRequest.of(0, 5);
+        Page<BookListItem> bookPage = bookService.findAll(cond, pageable);
 
         //then
         assertThat(bookPage.getContent().size()).isEqualTo(5);
         assertThat(bookPage.getTotalElements()).isEqualTo(10);
         assertThat(bookPage.getTotalPages()).isEqualTo(2);
+
+        //cleanUp
+        for (Book book : books) {
+            bookService.deleteBook(book.getBookId());
+        }
+    }
+
+    @Test
+    void findAll_cond_bookName() {
+        //given
+        List<Book> books = new ArrayList<>();
+
+        MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
+
+        for (int i = 0; i < 10; i++) {
+            NewBookForm newBookForm = new NewBookForm("test" + i, "testAuthor" + i, "12345" + i , multipartFile);
+            Book book = bookService.save(newBookForm);
+            books.add(book);
+        }
+
+        for (int i = 0; i < 2; i++) {
+            NewBookForm newBookForm = new NewBookForm("good newBook" + i, "testAuthor" + i, "23456" + i, multipartFile);
+            Book book = bookService.save(newBookForm);
+            books.add(book);
+        }
+
+        //when
+        BookSearchCond cond = new BookSearchCond("newBook", null, null);
+        PageRequest pageable = PageRequest.of(0, 5);
+        Page<BookListItem> bookPage = bookService.findAll(cond, pageable);
+
+        //then
+        assertThat(bookPage.getContent().size()).isEqualTo(2);
+        assertThat(bookPage.getTotalElements()).isEqualTo(2);
+        assertThat(bookPage.getTotalPages()).isEqualTo(1);
+
+        //cleanUp
+        for (Book book : books) {
+            bookService.deleteBook(book.getBookId());
+        }
+    }
+
+    @Test
+    void findAll_cond_author() {
+        //given
+        List<Book> books = new ArrayList<>();
+
+        MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
+
+        for (int i = 0; i < 10; i++) {
+            NewBookForm newBookForm = new NewBookForm("test" + i, "testAuthor" + i, "12345" + i , multipartFile);
+            Book book = bookService.save(newBookForm);
+            books.add(book);
+        }
+
+        for (int i = 0; i < 2; i++) {
+            NewBookForm newBookForm = new NewBookForm("good newBook" + i, "김철준" + i, "23456" + i, multipartFile);
+            Book book = bookService.save(newBookForm);
+            books.add(book);
+        }
+
+        //when
+        BookSearchCond cond = new BookSearchCond(null, "김철준", null);
+        PageRequest pageable = PageRequest.of(0, 5);
+        Page<BookListItem> bookPage = bookService.findAll(cond, pageable);
+
+        //then
+        assertThat(bookPage.getContent().size()).isEqualTo(2);
+        assertThat(bookPage.getTotalElements()).isEqualTo(2);
+        assertThat(bookPage.getTotalPages()).isEqualTo(1);
+
+        //cleanUp
+        for (Book book : books) {
+            bookService.deleteBook(book.getBookId());
+        }
+    }
+
+    @Test
+    void findAll_cond_isbn() {
+        //given
+        List<Book> books = new ArrayList<>();
+
+        MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
+
+        for (int i = 0; i < 10; i++) {
+            NewBookForm newBookForm = new NewBookForm("test" + i, "testAuthor" + i, "12345" + i , multipartFile);
+            Book book = bookService.save(newBookForm);
+            books.add(book);
+        }
+
+        NewBookForm findBookForm = new NewBookForm("good newBook", "김철준", "23456", multipartFile);
+        Book findBook = bookService.save(findBookForm);
+        books.add(findBook);
+
+        //when
+        BookSearchCond cond = new BookSearchCond(null, null, "23456");
+        PageRequest pageable = PageRequest.of(0, 5);
+        Page<BookListItem> bookPage = bookService.findAll(cond, pageable);
+
+        //then
+        assertThat(bookPage.getContent().size()).isEqualTo(1);
+        assertThat(bookPage.getTotalElements()).isEqualTo(1);
+        assertThat(bookPage.getTotalPages()).isEqualTo(1);
+
+        //cleanUp
+        for (Book book : books) {
+            bookService.deleteBook(book.getBookId());
+        }
+    }
+
+    @Test
+    void findAll_cond_and() {
+        //given
+        List<Book> books = new ArrayList<>();
+
+        MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
+
+        for (int i = 0; i < 10; i++) {
+            NewBookForm newBookForm = new NewBookForm("test" + i, "testAuthor" + i, "12345" + i , multipartFile);
+            Book book = bookService.save(newBookForm);
+            books.add(book);
+        }
+
+        NewBookForm findBookForm = new NewBookForm("good newBook", "김철준", "23456", multipartFile);
+        Book findBook = bookService.save(findBookForm);
+        books.add(findBook);
+
+        NewBookForm likeBookForm = new NewBookForm("not good newBook", "김철준 유사 작가", "234564", multipartFile);
+        Book likeBook = bookService.save(likeBookForm);
+        books.add(likeBook);
+
+        //when
+        BookSearchCond cond = new BookSearchCond("good newBook", "김철준", "23456");
+        PageRequest pageable = PageRequest.of(0, 5);
+        Page<BookListItem> bookPage = bookService.findAll(cond, pageable);
+
+        //then
+        assertThat(bookPage.getContent().size()).isEqualTo(1);
+        assertThat(bookPage.getTotalElements()).isEqualTo(1);
+        assertThat(bookPage.getTotalPages()).isEqualTo(1);
 
         //cleanUp
         for (Book book : books) {

@@ -40,9 +40,9 @@ public interface BookMapper {
      * @param offset
      * @return
      */
-    List<Book> findAll(@Param("limit") Number limit, @Param("offset") Number offset);
+    List<Book> findAll(@Param("cond") BookSearchCond cond, @Param("limit") Number limit, @Param("offset") Number offset);
 
-    int countAll();
+    int countAll(BookSearchCond cond);
 
     /**
      * 책 삭제
