@@ -1,9 +1,6 @@
 package com.weblibrary.domain.book.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
@@ -12,6 +9,7 @@ import lombok.*;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
+@Table(name = "book_covers")
 public class BookCover {
     @EqualsAndHashCode.Include
     @Setter

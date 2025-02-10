@@ -1,9 +1,6 @@
 package com.weblibrary.domain.file.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
@@ -12,6 +9,7 @@ import lombok.*;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @NoArgsConstructor(force = true)
+@Table(name = "upload_files")
 public class UploadFile {
     @EqualsAndHashCode.Include
     @Setter

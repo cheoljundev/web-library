@@ -66,7 +66,7 @@ public class AccountService {
             roleRepository.removeByRoleId(role.getRoleId());
         });
 
-        userRepository.remove(userId);
+        userRepository.removeByUserId(userId);
     }
 
     private boolean isUniqueUsername(String username) {

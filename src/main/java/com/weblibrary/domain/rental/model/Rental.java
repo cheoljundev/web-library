@@ -1,9 +1,6 @@
 package com.weblibrary.domain.rental.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -15,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @NoArgsConstructor(force = true)
+@Table(name = "rentals")
 public class Rental {
     @Setter
     @Id

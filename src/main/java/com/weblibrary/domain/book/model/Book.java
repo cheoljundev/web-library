@@ -1,10 +1,7 @@
 package com.weblibrary.domain.book.model;
 
 import com.weblibrary.domain.book.service.ModifyBookForm;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
@@ -13,6 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
+@Table(name = "books")
 public class Book {
     @Setter
     @EqualsAndHashCode.Include

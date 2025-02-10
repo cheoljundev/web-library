@@ -4,8 +4,8 @@
 <mapper namespace="com.weblibrary.domain.book.repository.BookMapper">
 
     <insert id="save" useGeneratedKeys="true" keyProperty="bookId">
-        insert into books (book_name, author, isbn)
-        values (#{bookName}, #{author}, #{isbn})
+        insert into books (book_name, author, isbn, rented)
+        values (#{bookName}, #{author}, #{isbn}, false)
     </insert>
 
     <select id="findById" resultType="Book">

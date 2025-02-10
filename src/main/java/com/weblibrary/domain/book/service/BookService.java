@@ -11,6 +11,7 @@ import com.weblibrary.domain.book.repository.BookSearchCond;
 import com.weblibrary.domain.file.model.UploadFile;
 import com.weblibrary.domain.file.repository.UploadFileRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 @Transactional
+@Slf4j
 public class BookService {
     private final BookRepository bookRepository;
     private final BookCoverRepository bookCoverRepository;
@@ -104,6 +106,7 @@ public class BookService {
     private void removeBookCover(Book book) {
         BookCover bookCover = bookCoverRepository.findByBookId(book.getBookId())
                 .orElseThrow(NotFoundBookCoverException::new);
+        bookCoverRepository.remove(bookCover.getBookId());
         uploadFileRepository.remove(bookCover.getUploadFileId());
     }
 
@@ -115,8 +118,22 @@ public class BookService {
 
     private void modifyBookCover(ModifyBookForm form, Book book) {
         if (form.getCoverImage() != null) {
-            removeBookCover(book);
-            saveBookCover(book, form.getCoverImage());
+            // 1. 새 이미지를 저장한다
+            // 2. 기존 커버 객체를 가져온다
+            // 3. 기존 커버 객체에서 uploadFileId를 변수에 임시 저장해둔다
+            // 4. 기존 커버 객체의 uploadFileId를 새 이미지의 uploadFileId로 변경한다
+            // 5. 기존 이미지를 삭제한다.
+            UploadFile updateImage = uploadFileRepository.save(form.getCoverImage());
+            bookCoverRepository.findByBookId(book.getBookId())
+                    .ifPresent(bookCover -> {
+                        Long oldUploadFileId = bookCover.getUploadFileId();
+                        BookCover newBookCover = new BookCover(
+                                bookCover.getBookCoverId(),
+                                book.getBookId(),
+                                updateImage.getUploadFileId());
+                        bookCoverRepository.update(newBookCover);
+                        uploadFileRepository.remove(oldUploadFileId);
+                    });
         }
     }
 

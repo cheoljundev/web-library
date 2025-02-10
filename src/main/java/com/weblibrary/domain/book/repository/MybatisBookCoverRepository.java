@@ -32,4 +32,9 @@ public class MybatisBookCoverRepository implements BookCoverRepository {
     public Optional<BookCover> findByBookId(Long bookId) {
         return mapper.findByBookId(bookId);
     }
+
+    @Override
+    public void update(BookCover cover) {
+        mapper.update(cover);
+    }
 }

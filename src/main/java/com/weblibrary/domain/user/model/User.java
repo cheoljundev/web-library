@@ -1,9 +1,6 @@
 package com.weblibrary.domain.user.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Objects;
@@ -14,15 +11,15 @@ import java.util.Objects;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Entity
-@NoArgsConstructor(force = true)
+@Table(name = "users")
 public class User {
     @Setter
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
-    private final String username;
-    private final String password;
+    private String username;
+    private String password;
     private int remainingRents = 3; // 남은 대출 가능 권수
 
     public User(User user) {
@@ -30,6 +27,11 @@ public class User {
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.remainingRents = user.getRemainingRents();
+    }
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
     public void rentBook(){
@@ -46,5 +48,12 @@ public class User {
 
     private void incrementRemainingRents() {
         remainingRents++;
+    }
+
+    public void update(User updateUser) {
+        this.userId = updateUser.getUserId();
+        this.username = updateUser.getUsername();
+        this.password = updateUser.getPassword();
+        this.remainingRents = updateUser.getRemainingRents();
     }
 }

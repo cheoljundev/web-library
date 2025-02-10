@@ -1,5 +1,6 @@
 package com.weblibrary.domain.user.service;
 
+import com.weblibrary.domain.user.exception.NotFoundUserException;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +21,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    /**
-     * username으로 유저를 찾음
-     *
-     * @param username : String
-     * @return : User
-     */
-
     @Transactional(readOnly = true)
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -34,11 +28,13 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
+        return userRepository.findByUserId(id);
     }
 
     public void update(User user) {
-        userRepository.update(user);
+        User findUser = userRepository.findByUserId(user.getUserId())
+                .orElseThrow(NotFoundUserException::new);
+        findUser.update(user);
     }
 
 

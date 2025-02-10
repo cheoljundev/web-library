@@ -10,5 +10,6 @@ public interface BookCoverMapper {
     void save(BookCover cover);
     Optional<BookCover> findById(Long coverId);
     Optional<BookCover> findByBookId(Long bookId);
+    void update(BookCover cover);
     void remove(Long coverId);
 }

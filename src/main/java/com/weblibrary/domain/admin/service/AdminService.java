@@ -4,6 +4,7 @@ import com.weblibrary.domain.user.model.Role;
 import com.weblibrary.domain.user.model.RoleType;
 import com.weblibrary.domain.user.repository.RoleRepository;
 import com.weblibrary.domain.user.model.User;
+import com.weblibrary.domain.user.repository.UserQueryRepository;
 import com.weblibrary.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,7 @@ import static com.weblibrary.domain.user.model.RoleType.ADMIN;
 public class AdminService {
 
     private final UserRepository userRepository;
+    private final UserQueryRepository userQueryRepository;
     private final RoleRepository roleRepository;
 
     public boolean setUserAsAdmin(Long userId) {
@@ -64,7 +66,7 @@ public class AdminService {
     }
 
     private boolean addAdminRole(Long userId) {
-        return userRepository.findById(userId)
+        return userRepository.findByUserId(userId)
                 .map(user -> {
                     Role adminRole = new Role(
                             user.getUserId(),
@@ -78,8 +80,8 @@ public class AdminService {
 
     @Transactional(readOnly = true)
     public Page<UserInfo> findAllUsers(Pageable pageable) {
-        List<User> users = userRepository.findAll(pageable.getPageSize(), pageable.getOffset());
-        int total = userRepository.countAll();
+        List<User> users = userQueryRepository.findAll(pageable.getPageSize(), pageable.getOffset());
+        long total = userQueryRepository.count();
         List<UserInfo> userInfos = users.stream().map(user -> {
             RoleType roleType = findUserRoleType(user.getUserId());
             return UserInfo.builder()

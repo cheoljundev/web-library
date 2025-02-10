@@ -19,6 +19,12 @@
         where book_id = #{bookId}
     </select>
 
+    <update id="update">
+        update book_covers
+        set book_id = #{bookId}, upload_file_id = #{uploadFileId}
+        where book_cover_id = #{bookCoverId}
+    </update>
+
     <update id="remove">
         delete from book_covers
         where book_cover_id = #{bookCoverId}
