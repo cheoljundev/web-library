@@ -31,13 +31,14 @@ public interface BookRepository {
     /**
      * 페이징 처리된 책 리스트 리턴
      *
+     * @param cond
      * @param limit
      * @param offset
      * @return
      */
-    List<Book> findAll(Number limit, Number offset);
+    List<Book> findAll(BookSearchCond cond, Number limit, Number offset);
 
-    int countAll();
+    int countAll(BookSearchCond cond);
 
     /**
      * 책 삭제

@@ -7,6 +7,7 @@ import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.model.BookCover;
 import com.weblibrary.domain.book.repository.BookCoverRepository;
 import com.weblibrary.domain.book.repository.BookRepository;
+import com.weblibrary.domain.book.repository.BookSearchCond;
 import com.weblibrary.domain.file.model.UploadFile;
 import com.weblibrary.domain.file.repository.UploadFileRepository;
 import lombok.RequiredArgsConstructor;
@@ -79,12 +80,12 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public Page<BookListItem> findAll(Pageable pageable) {
+    public Page<BookListItem> findAll(BookSearchCond cond, Pageable pageable) {
         // 페이징 처리된 책 리스트 조회
-        List<Book> books = bookRepository.findAll(pageable.getPageSize(), pageable.getOffset());
+        List<Book> books = bookRepository.findAll(cond, pageable.getPageSize(), pageable.getOffset());
 
         // 전체 책 수 조회
-        int total = bookRepository.countAll();
+        int total = bookRepository.countAll(cond);
 
         // 각 Book을 BookListItem으로 변환
         List<BookListItem> bookListItems = books.stream()

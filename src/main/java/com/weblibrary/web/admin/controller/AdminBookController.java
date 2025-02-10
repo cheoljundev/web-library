@@ -1,5 +1,6 @@
 package com.weblibrary.web.admin.controller;
 
+import com.weblibrary.domain.book.repository.BookSearchCond;
 import com.weblibrary.domain.book.service.BookListItem;
 import com.weblibrary.domain.book.service.ModifyBookForm;
 import com.weblibrary.domain.book.service.NewBookForm;
@@ -30,9 +31,11 @@ public class AdminBookController {
 
     @GetMapping("/admin/book")
     public String adminBookPage(@ModelAttribute("addBook") NewBookForm newBookForm,
-                                @ModelAttribute("modifyBook") ModifyBookViewForm modifyBookViewForm, Pageable pageable, Model model) {
+                                @ModelAttribute("modifyBook") ModifyBookViewForm modifyBookViewForm,
+                                @ModelAttribute("cond") BookSearchCond cond,
+                                Pageable pageable, Model model) {
 
-        Page<BookListItem> bookPage = bookService.findAll(pageable);
+        Page<BookListItem> bookPage = bookService.findAll(cond, pageable);
 
         int blockSize = 10; // 한 블록에 표시할 페이지 수
         PageBlock pageBlock = PaginationUtil.createPageBlock(bookPage, blockSize);

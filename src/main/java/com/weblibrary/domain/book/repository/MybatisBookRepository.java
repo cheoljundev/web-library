@@ -35,13 +35,13 @@ public class MybatisBookRepository implements BookRepository {
     }
 
     @Override
-    public List<Book> findAll(Number limit, Number offset) {
-        return mapper.findAll(limit, offset);
+    public List<Book> findAll(BookSearchCond cond, Number limit, Number offset) {
+        return mapper.findAll(cond, limit, offset);
     }
 
     @Override
-    public int countAll() {
-        return mapper.countAll();
+    public int countAll(BookSearchCond cond) {
+        return mapper.countAll(cond);
     }
 
     @Override

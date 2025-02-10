@@ -74,7 +74,7 @@ public class JdbcBookRepository implements BookRepository {
     }
 
     @Override
-    public List<Book> findAll(Number limit, Number offset) {
+    public List<Book> findAll(BookSearchCond cond, Number limit, Number offset) {
 
         // 데이터 조회: LIMIT와 OFFSET 사용
         String sql = "select * from books order by book_id desc limit :limit offset :offset";
@@ -92,7 +92,7 @@ public class JdbcBookRepository implements BookRepository {
     }
 
     @Override
-    public int countAll() {
+    public int countAll(BookSearchCond cond) {
         String sql = "select count(*) from books";
         return template.queryForObject(sql, Map.of(), Integer.class);
     }
