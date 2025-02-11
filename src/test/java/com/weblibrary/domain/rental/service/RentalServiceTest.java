@@ -27,7 +27,7 @@ class RentalServiceTest {
     void rentBook() {
         //given
         User user = userRepository.save(new User("tester", "1234"));
-        Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345"));
+        Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345", "testDescription"));
 
         //when
         Rental rental = rentalService.rentBook(user, book);
@@ -43,7 +43,7 @@ class RentalServiceTest {
     void returnBook() {
         //given
         User user = userRepository.save(new User("tester", "1234"));
-        Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345"));
+        Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345", "testDescription"));
         rentalService.rentBook(user, book);
 
         //when
@@ -60,7 +60,7 @@ class RentalServiceTest {
     void findUserByBookId() {
         //given
         User user = userRepository.save(new User("tester", "1234"));
-        Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345"));
+        Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345", "testDescription"));
         rentalService.rentBook(user, book);
 
         //when

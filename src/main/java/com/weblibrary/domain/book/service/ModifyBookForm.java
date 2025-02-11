@@ -24,5 +24,8 @@ public class ModifyBookForm {
     @NotBlank
     private String isbn;
 
+    @NotBlank
+    private String description;
+
     private MultipartFile coverImage;
 }

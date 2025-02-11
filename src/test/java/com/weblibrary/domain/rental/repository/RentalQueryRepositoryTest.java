@@ -32,7 +32,7 @@ class RentalQueryRepositoryTest {
     void findActiveRentalByBookId_ok() {
         //given
         User user = userRepository.save(new User("tester", "1234"));
-        Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345"));
+        Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345", "testDescription"));
         rentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
 
         //when
@@ -47,7 +47,7 @@ class RentalQueryRepositoryTest {
     void findActiveRentalByBookId_fail() {
         //given
         User user = userRepository.save(new User("tester", "1234"));
-        Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345"));
+        Book book = bookRepository.save(new Book("testBook", "testAuthor", "12345", "testDescription"));
         Rental saved = rentalRepository.save(new Rental(user.getUserId(), book.getBookId()));
         saved.returnBook();
 

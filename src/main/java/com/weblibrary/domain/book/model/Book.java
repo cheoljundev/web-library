@@ -58,6 +58,7 @@ public class Book {
         this.bookName = form.getBookName();
         this.author = form.getAuthor();
         this.isbn = form.getIsbn();
+        this.description = form.getDescription();
 
         return oldBook;
     }

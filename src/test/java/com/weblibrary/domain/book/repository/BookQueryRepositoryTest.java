@@ -26,7 +26,7 @@ class BookQueryRepositoryTest {
     void findAll_no_cond() {
         //given
         for (int i = 0; i < 3; i++) {
-            Book book = new Book("test" + i, "testAuthor" + i, "12345" + i);
+            Book book = new Book("test" + i, "testAuthor" + i, "12345" + i, "testDescription" + i);
             bookRepository.save(book);
         }
         //when
@@ -43,12 +43,12 @@ class BookQueryRepositoryTest {
     void findAll_cond_bookName() {
         //given
         for (int i = 0; i < 20; i++) {
-            Book book = new Book("test" + i, "testAuthor" + i, "1234" + i);
+            Book book = new Book("test" + i, "testAuthor" + i, "1234" + i, "testDescription" + i);
             bookRepository.save(book);
         }
 
         for (int i = 0; i < 2; i++) {
-            Book book = new Book( "newBook" + i, "testAuthor1", "5678" + i);
+            Book book = new Book( "newBook" + i, "testAuthor1", "5678" + i, "testDescription" + i);
             bookRepository.save(book);
         }
 
@@ -66,12 +66,12 @@ class BookQueryRepositoryTest {
     void findAll_cond_author() {
         //given
         for (int i = 0; i < 20; i++) {
-            Book book = new Book("test" + i, "testAuthor" + i, "1234" + i);
+            Book book = new Book("test" + i, "testAuthor" + i, "1234" + i, "testDescription" + i);
             bookRepository.save(book);
         }
 
         for (int i = 0; i < 3; i++) {
-            Book book = new Book( "newBook" + i, "김철준" + i, "5678" + i);
+            Book book = new Book( "newBook" + i, "김철준" + i, "5678" + i, "testDescription" + i);
             bookRepository.save(book);
         }
 
@@ -87,11 +87,11 @@ class BookQueryRepositoryTest {
     void findAll_cond_isbn() {
         //given
         for (int i = 0; i < 20; i++) {
-            Book book = new Book("test" + i, "testAuthor" + i, "1234" + i);
+            Book book = new Book("test" + i, "testAuthor" + i, "1234" + i, "testDescription" + i);
             bookRepository.save(book);
         }
 
-        Book findBook = new Book("unique book", "김철준", "94932");
+        Book findBook = new Book("unique book", "김철준", "94932", "testDescription");
         bookRepository.save(findBook);
 
         //when
@@ -108,14 +108,14 @@ class BookQueryRepositoryTest {
     void findAll_cond_and() {
         //given
         for (int i = 0; i < 20; i++) {
-            Book book = new Book("test" + i, "testAuthor" + i, "1234" + i);
+            Book book = new Book("test" + i, "testAuthor" + i, "1234" + i, "testDescription" + i);
             bookRepository.save(book);
         }
 
-        Book findBook = new Book("unique book", "김철준", "94932");
+        Book findBook = new Book("unique book", "김철준", "94932", "testDescription");
         bookRepository.save(findBook);
 
-        Book likeBook = new Book("not unique book", "김철준 유사 작가", "949324");
+        Book likeBook = new Book("not unique book", "김철준 유사 작가", "949324", "testDescription");
         bookRepository.save(likeBook);
 
         //when
@@ -132,7 +132,7 @@ class BookQueryRepositoryTest {
     void countAll_no_cond() {
         //given
         for (int i = 0; i < 3; i++) {
-            Book book = new Book("test" + i, "testAuthor" + i, "12345" + i);
+            Book book = new Book("test" + i, "testAuthor" + i, "12345" + i, "testDescription" + i);
             bookRepository.save(book);
         }
 
@@ -148,12 +148,12 @@ class BookQueryRepositoryTest {
     void countAll_cond_bookName() {
         //given
         for (int i = 0; i < 3; i++) {
-            Book book = new Book("test" + i, "testAuthor" + i, "12345" + i);
+            Book book = new Book("test" + i, "testAuthor" + i, "12345" + i, "testDescription" + i);
             bookRepository.save(book);
         }
 
         for (int i = 0; i < 2; i++) {
-            Book book = new Book( "newBook" + i, "testAuthor1", "5678" + i);
+            Book book = new Book( "newBook" + i, "testAuthor1", "5678" + i, "testDescription" + i);
             bookRepository.save(book);
         }
 
@@ -169,12 +169,12 @@ class BookQueryRepositoryTest {
     void countAll_cond_author() {
         //given
         for (int i = 0; i < 3; i++) {
-            Book book = new Book("test" + i, "testAuthor" + i, "12345" + i);
+            Book book = new Book("test" + i, "testAuthor" + i, "12345" + i, "testDescription" + i);
             bookRepository.save(book);
         }
 
         for (int i = 0; i < 3; i++) {
-            Book book = new Book( "newBook" + i, "김철준" + i, "5678" + i);
+            Book book = new Book( "newBook" + i, "김철준" + i, "5678" + i, "testDescription" + i);
             bookRepository.save(book);
         }
 
@@ -190,11 +190,11 @@ class BookQueryRepositoryTest {
     void countAll_cond_isbn() {
         //given
         for (int i = 0; i < 3; i++) {
-            Book book = new Book("test" + i, "testAuthor" + i, "12345" + i);
+            Book book = new Book("test" + i, "testAuthor" + i, "12345" + i, "testDescription" + i);
             bookRepository.save(book);
         }
 
-        Book findBook = new Book("unique book", "김철준", "94932");
+        Book findBook = new Book("unique book", "김철준", "94932", "testDescription");
         bookRepository.save(findBook);
 
         //when
@@ -209,14 +209,14 @@ class BookQueryRepositoryTest {
     void countAll_cond_and() {
         //given
         for (int i = 0; i < 3; i++) {
-            Book book = new Book("test" + i, "testAuthor" + i, "12345" + i);
+            Book book = new Book("test" + i, "testAuthor" + i, "12345" + i, "testDescription" + i);
             bookRepository.save(book);
         }
 
-        Book findBook = new Book("unique book", "김철준", "94932");
+        Book findBook = new Book("unique book", "김철준", "94932", "testDescription");
         bookRepository.save(findBook);
 
-        Book likeBook = new Book("not unique book", "김철준 유사 작가", "949324");
+        Book likeBook = new Book("not unique book", "김철준 유사 작가", "949324", "testDescription");
         bookRepository.save(likeBook);
 
         //when

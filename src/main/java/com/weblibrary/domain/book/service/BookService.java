@@ -35,7 +35,7 @@ public class BookService {
     private final UploadFileService uploadFileService;
 
     public Book save(NewBookForm newBookForm) {
-        Book book = new Book(newBookForm.getBookName(), newBookForm.getAuthor(), newBookForm.getIsbn());
+        Book book = new Book(newBookForm.getBookName(), newBookForm.getAuthor(), newBookForm.getIsbn(), newBookForm.getDescription());
         Book savedBook = bookRepository.save(book);
         saveBookCover(savedBook, newBookForm.getCoverImage());
         return savedBook;
