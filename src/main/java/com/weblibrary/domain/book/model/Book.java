@@ -1,6 +1,7 @@
 package com.weblibrary.domain.book.model;
 
 import com.weblibrary.domain.book.service.ModifyBookForm;
+import com.weblibrary.web.response.JsonResponse;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,17 +42,13 @@ public class Book {
         this.rented = book.isRented();
     }
 
-    public static Book createBook(Book book) {
-        return new Book(book);
-    }
-
     /**
      * 새로운 book 정보를 받아 현재 객체를 수정하고, 기존 객체를 반환한다
      *
      * @return 기존 정보를담은 Book
      */
     public Book modify(ModifyBookForm form) {
-        Book oldBook = createBook(this);
+        Book oldBook = new Book(this);
         this.bookName = form.getBookName();
         this.author = form.getAuthor();
         this.isbn = form.getIsbn();
@@ -74,4 +71,5 @@ public class Book {
     public void returnBook() {
         rented = false;
     }
+
 }
