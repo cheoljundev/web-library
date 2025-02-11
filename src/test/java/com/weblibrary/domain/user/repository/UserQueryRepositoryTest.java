@@ -40,7 +40,8 @@ class UserQueryRepositoryTest {
 
         //when
         Pageable pageable = PageRequest.of(0, 10);
-        List<User> page = userQueryRepository.findAll(pageable.getPageSize(), pageable.getOffset());
+        UserSearchCond cond = new UserSearchCond();
+        List<User> page = userQueryRepository.findAll(cond, pageable.getPageSize(), pageable.getOffset());
 
         //then
         assertThat(page.size()).isEqualTo(10);

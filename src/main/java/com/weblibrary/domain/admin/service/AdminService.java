@@ -6,6 +6,7 @@ import com.weblibrary.domain.user.repository.RoleRepository;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserQueryRepository;
 import com.weblibrary.domain.user.repository.UserRepository;
+import com.weblibrary.domain.user.repository.UserSearchCond;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -79,8 +80,8 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
-    public Page<UserInfo> findAllUsers(Pageable pageable) {
-        List<User> users = userQueryRepository.findAll(pageable.getPageSize(), pageable.getOffset());
+    public Page<UserInfo> findAllUsers(UserSearchCond cond, Pageable pageable) {
+        List<User> users = userQueryRepository.findAll(cond, pageable.getPageSize(), pageable.getOffset());
         long total = userQueryRepository.count();
         List<UserInfo> userInfos = users.stream().map(user -> {
             RoleType roleType = findUserRoleType(user.getUserId());

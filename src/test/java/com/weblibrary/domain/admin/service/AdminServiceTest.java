@@ -4,6 +4,7 @@ import com.weblibrary.domain.account.service.AccountService;
 import com.weblibrary.domain.account.service.JoinUserForm;
 import com.weblibrary.domain.user.model.RoleType;
 import com.weblibrary.domain.user.model.User;
+import com.weblibrary.domain.user.repository.UserSearchCond;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +77,8 @@ class AdminServiceTest {
 
         //when
         Pageable pageable = PageRequest.of(0, 10);
-        Page<UserInfo> userPage = adminService.findAllUsers(pageable);
+        UserSearchCond cond = new UserSearchCond();
+        Page<UserInfo> userPage = adminService.findAllUsers(cond, pageable);
 
         //then
         assertThat(userPage.getContent().size()).isEqualTo(10);

@@ -4,6 +4,7 @@ import com.weblibrary.domain.account.service.AccountService;
 import com.weblibrary.domain.user.model.RoleType;
 import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.admin.service.UserInfo;
+import com.weblibrary.domain.user.repository.UserSearchCond;
 import com.weblibrary.domain.user.service.UserService;
 import com.weblibrary.web.response.ErrorResponse;
 import com.weblibrary.web.response.JsonResponse;
@@ -26,7 +27,6 @@ public class AdminUsersController {
 
     private final AdminService adminService;
     private final AccountService accountService;
-    private final UserService userService;
 
     @ModelAttribute("roleTypes")
     public RoleType[] roleTypes() {
@@ -34,8 +34,8 @@ public class AdminUsersController {
     }
 
     @GetMapping("/admin/user")
-    public String adminUserPage(Pageable pageable, Model model) {
-        Page<UserInfo> userPage = adminService.findAllUsers(pageable);
+    public String adminUserPage(@ModelAttribute("cond") UserSearchCond cond, Pageable pageable, Model model) {
+        Page<UserInfo> userPage = adminService.findAllUsers(cond, pageable);
         int blockSize = 10; // 한 블록에 표시할 페이지 수
         PageBlock pageBlock = PaginationUtil.createPageBlock(userPage, blockSize);
 
