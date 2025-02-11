@@ -4,13 +4,16 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.weblibrary.domain.book.model.Book;
 import jakarta.persistence.EntityManager;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
 import static com.weblibrary.domain.book.model.QBook.book;
 
 @Repository
+@Slf4j
 public class BookQueryRepository {
     private final JPAQueryFactory query;
 
@@ -19,7 +22,9 @@ public class BookQueryRepository {
     }
 
     public List<Book> findAll(BookSearchCond cond, Number limit, Number offset) {
-        return query.selectFrom(book)
+        log.debug("cond={}", cond);
+
+        List<Book> fetch = query.selectFrom(book)
                 .where(
                         likeBookName(cond.getBookName()),
                         likeAuthor(cond.getAuthor()),
@@ -29,6 +34,9 @@ public class BookQueryRepository {
                 .limit(limit.longValue())
                 .offset(offset.longValue())
                 .fetch();
+
+        log.debug("fetch={}", fetch);
+        return fetch;
     }
 
     public long count(BookSearchCond cond) {
@@ -43,14 +51,14 @@ public class BookQueryRepository {
     }
 
     private BooleanExpression eqIsbn(String isbn) {
-        return isbn != null ? book.isbn.eq(isbn) : null;
+        return StringUtils.hasText(isbn) ? book.isbn.eq(isbn) : null;
     }
 
     private BooleanExpression likeAuthor(String author) {
-        return author != null ? book.author.contains(author) : null;
+        return StringUtils.hasText(author) ? book.author.contains(author) : null;
     }
 
     private BooleanExpression likeBookName(String bookName) {
-        return bookName != null ? book.bookName.contains(bookName) : null;
+        return StringUtils.hasText(bookName) ? book.bookName.contains(bookName) : null;
     }
 }
