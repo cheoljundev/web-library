@@ -1,6 +1,6 @@
 package com.weblibrary.web.interceptor;
 
-import com.weblibrary.domain.admin.service.AdminService;
+import com.weblibrary.domain.user.service.UserService;
 import com.weblibrary.web.SessionConst;
 import com.weblibrary.web.account.controller.LoginUser;
 import com.weblibrary.web.exception.UnauthorizedAccessException;
@@ -12,7 +12,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 @RequiredArgsConstructor
 public class RestAdminCheckInterceptor implements HandlerInterceptor {
-    private final AdminService adminService;
+    private final UserService userService;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
@@ -22,7 +22,7 @@ public class RestAdminCheckInterceptor implements HandlerInterceptor {
 
         HttpSession session = request.getSession(false);
         LoginUser user = (LoginUser) session.getAttribute(SessionConst.LOGIN_USER);
-        if (!adminService.isAdmin(user.getUserId())) {
+        if (!userService.isAdmin(user.getUserId())) {
                 session.invalidate();
                 throw new UnauthorizedAccessException("관리자가 아닙니다.");
             }

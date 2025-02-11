@@ -1,6 +1,5 @@
 package com.weblibrary.web;
 
-import com.weblibrary.domain.admin.service.AdminService;
 import com.weblibrary.domain.user.service.UserService;
 import com.weblibrary.web.argumentresolver.LoginUserArgumentResolver;
 import com.weblibrary.web.interceptor.RestAdminCheckInterceptor;
@@ -19,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    private final AdminService adminService;
+    private final UserService userService;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
@@ -36,11 +35,11 @@ public class WebConfig implements WebMvcConfigurer {
                 .order(2)
                 .addPathPatterns("/books/**");
 
-        registry.addInterceptor(new SsrAdminCheckInterceptor(adminService))
+        registry.addInterceptor(new SsrAdminCheckInterceptor(userService))
                 .order(3)
                 .addPathPatterns("/admin/**");
 
-        registry.addInterceptor(new RestAdminCheckInterceptor(adminService))
+        registry.addInterceptor(new RestAdminCheckInterceptor(userService))
                 .order(4)
                 .addPathPatterns("/books/{id:\\d+}", "/books/add");
 
