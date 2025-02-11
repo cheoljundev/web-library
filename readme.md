@@ -52,3 +52,4 @@
   - [x] JPA 적용
     - [x] Spring Data JPA 적용
     - [x] QueryDSL 적용
+  - [x] 유저 검색 조건 추가
