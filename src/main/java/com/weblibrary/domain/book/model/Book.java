@@ -34,11 +34,15 @@ public class Book {
      *
      * @param book : 같은 값으로 생성할 book
      */
-    public Book(Book book) {
+    private Book(Book book) {
         this.bookId = book.getBookId();
         this.bookName = book.getBookName();
         this.isbn = book.getIsbn();
         this.rented = book.isRented();
+    }
+
+    public static Book createBook(Book book) {
+        return new Book(book);
     }
 
     /**
@@ -47,7 +51,7 @@ public class Book {
      * @return 기존 정보를담은 Book
      */
     public Book modify(ModifyBookForm form) {
-        Book oldBook = new Book(this);
+        Book oldBook = createBook(this);
         this.bookName = form.getBookName();
         this.author = form.getAuthor();
         this.isbn = form.getIsbn();
