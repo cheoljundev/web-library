@@ -21,12 +21,14 @@ public class Book {
     private String bookName;
     private String author;
     private String isbn;
+    private String description;
     private boolean rented;
 
-    public Book(String bookName, String author, String isbn) {
+    public Book(String bookName, String author, String isbn, String description) {
         this.bookName = bookName;
         this.author = author;
         this.isbn = isbn;
+        this.description = description;
     }
 
     /**
@@ -36,10 +38,14 @@ public class Book {
      * @param book : 같은 값으로 생성할 book
      */
     private Book(Book book) {
-        this.bookId = book.getBookId();
-        this.bookName = book.getBookName();
-        this.isbn = book.getIsbn();
-        this.rented = book.isRented();
+        this(
+                book.getBookId(),
+                book.getBookName(),
+                book.getAuthor(),
+                book.getIsbn(),
+                book.getDescription(),
+                book.isRented()
+        );
     }
 
     /**
