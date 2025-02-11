@@ -53,8 +53,12 @@ public class UserQueryRepository {
         return StringUtils.hasText(username) ? user.username.contains(username) : null;
     }
 
-    public long count() {
+    public long count(UserSearchCond cond) {
         return query.selectFrom(user)
+                .where(
+                        likeUsername(cond.getUsername()),
+                        eqRole(cond.getRoleType())
+                )
                 .fetch()
                 .size();
     }

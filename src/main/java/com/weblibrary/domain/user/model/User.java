@@ -49,11 +49,4 @@ public class User {
     private void incrementRemainingRents() {
         remainingRents++;
     }
-
-    public void update(User updateUser) {
-        this.userId = updateUser.getUserId();
-        this.username = updateUser.getUsername();
-        this.password = updateUser.getPassword();
-        this.remainingRents = updateUser.getRemainingRents();
-    }
 }

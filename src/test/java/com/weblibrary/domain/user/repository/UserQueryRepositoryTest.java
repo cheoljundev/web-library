@@ -1,6 +1,10 @@
 package com.weblibrary.domain.user.repository;
 
+import com.weblibrary.domain.account.service.AccountService;
+import com.weblibrary.domain.account.service.JoinUserForm;
+import com.weblibrary.domain.user.model.RoleType;
 import com.weblibrary.domain.user.model.User;
+import com.weblibrary.domain.user.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,21 +26,17 @@ class UserQueryRepositoryTest {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    AccountService accountService;
+    @Autowired
+    private UserService userService;
+
     @Test
-    void findAll() {
+    void findAll_no_cond() {
         //given
-        userRepository.save(new User("user1", "1234"));
-        userRepository.save(new User("user2", "1234"));
-        userRepository.save(new User("user3", "1234"));
-        userRepository.save(new User("user4", "1234"));
-        userRepository.save(new User("user5", "1234"));
-        userRepository.save(new User("user6", "1234"));
-        userRepository.save(new User("user7", "1234"));
-        userRepository.save(new User("user8", "1234"));
-        userRepository.save(new User("user9", "1234"));
-        userRepository.save(new User("user10", "1234"));
-        userRepository.save(new User("user11", "1234"));
-        userRepository.save(new User("user12", "1234"));
+        for (int i = 0; i < 15; i++) {
+            accountService.join(new JoinUserForm("tester" + i, "1234"));
+        }
 
         //when
         Pageable pageable = PageRequest.of(0, 10);
@@ -48,25 +48,140 @@ class UserQueryRepositoryTest {
     }
 
     @Test
-    void count() {
+    void findAll_cond_username() {
         //given
-        userRepository.save(new User("user1", "1234"));
-        userRepository.save(new User("user2", "1234"));
-        userRepository.save(new User("user3", "1234"));
-        userRepository.save(new User("user4", "1234"));
-        userRepository.save(new User("user5", "1234"));
-        userRepository.save(new User("user6", "1234"));
-        userRepository.save(new User("user7", "1234"));
-        userRepository.save(new User("user8", "1234"));
-        userRepository.save(new User("user9", "1234"));
-        userRepository.save(new User("user10", "1234"));
-        userRepository.save(new User("user11", "1234"));
-        userRepository.save(new User("user12", "1234"));
+        for (int i = 0; i < 15; i++) {
+            accountService.join(new JoinUserForm("tester" + i, "1234"));
+        }
+
+        User target = accountService.join(new JoinUserForm("target", "1234"));
 
         //when
-        long total = userQueryRepository.count();
+        Pageable pageable = PageRequest.of(0, 10);
+        UserSearchCond cond = new UserSearchCond(target.getUsername(), null);
+        List<User> page = userQueryRepository.findAll(cond, pageable.getPageSize(), pageable.getOffset());
 
         //then
-        assertThat(total).isEqualTo(12);
+        assertThat(page.size()).isEqualTo(1);
+        assertThat(page.get(0).getUsername()).isEqualTo(target.getUsername());
+
+    }
+
+    @Test
+    void findAll_cond_roleType() {
+        //given
+        for (int i = 0; i < 15; i++) {
+            accountService.join(new JoinUserForm("tester" + i, "1234"));
+        }
+
+        User admin1 = accountService.join(new JoinUserForm("admin1", "1234"));
+        User admin2 = accountService.join(new JoinUserForm("admin2", "1234"));
+        userService.setUserAsAdmin(admin1.getUserId());
+        userService.setUserAsAdmin(admin2.getUserId());
+
+        //when
+        Pageable pageable = PageRequest.of(0, 10);
+        UserSearchCond cond = new UserSearchCond(null, RoleType.ADMIN);
+        List<User> page = userQueryRepository.findAll(cond, pageable.getPageSize(), pageable.getOffset());
+
+        //then
+        assertThat(page.size()).isEqualTo(2);
+    }
+
+    @Test
+    void findAll_cond_and() {
+        //given
+        for (int i = 0; i < 15; i++) {
+            userRepository.save(new User("tester" + i, "1234"));
+        }
+
+        User admin1 = accountService.join(new JoinUserForm("admin1", "1234"));
+        User admin2 = accountService.join(new JoinUserForm("admin2", "1234"));
+        userService.setUserAsAdmin(admin1.getUserId());
+        userService.setUserAsAdmin(admin2.getUserId());
+
+        //when
+        Pageable pageable = PageRequest.of(0, 10);
+        UserSearchCond cond = new UserSearchCond(admin1.getUsername(), RoleType.ADMIN);
+        List<User> page = userQueryRepository.findAll(cond, pageable.getPageSize(), pageable.getOffset());
+
+        //then
+        assertThat(page.size()).isEqualTo(1);
+        assertThat(page.get(0).getUsername()).isEqualTo(admin1.getUsername());
+    }
+
+    @Test
+    void count_no_cond() {
+        //given
+        for (int i = 0; i < 15; i++) {
+            accountService.join(new JoinUserForm("tester" + i, "1234"));
+        }
+
+        //when
+        UserSearchCond cond = new UserSearchCond();
+        long total = userQueryRepository.count(cond);
+
+        //then
+        assertThat(total).isEqualTo(15);
+    }
+
+    @Test
+    void count_cond_username() {
+        //given
+        for (int i = 0; i < 15; i++) {
+            accountService.join(new JoinUserForm("tester" + i, "1234"));
+        }
+
+        User target = accountService.join(new JoinUserForm("target", "1234"));
+
+
+        //when
+        UserSearchCond cond = new UserSearchCond(target.getUsername(), null);
+        long total = userQueryRepository.count(cond);
+
+        //then
+        assertThat(total).isEqualTo(1);
+    }
+
+    @Test
+    void count_cond_roleType() {
+        //given
+        for (int i = 0; i < 15; i++) {
+            accountService.join(new JoinUserForm("tester" + i, "1234"));
+        }
+
+
+        User admin1 = accountService.join(new JoinUserForm("admin1", "1234"));
+        User admin2 = accountService.join(new JoinUserForm("admin2", "1234"));
+        userService.setUserAsAdmin(admin1.getUserId());
+        userService.setUserAsAdmin(admin2.getUserId());
+
+
+        //when
+        UserSearchCond cond = new UserSearchCond(null, RoleType.ADMIN);
+        long total = userQueryRepository.count(cond);
+
+        //then
+        assertThat(total).isEqualTo(2);
+    }
+
+    @Test
+    void count_cond_and() {
+        //given
+        for (int i = 0; i < 15; i++) {
+            accountService.join(new JoinUserForm("tester" + i, "1234"));
+        }
+
+        User admin1 = accountService.join(new JoinUserForm("admin1", "1234"));
+        User admin2 = accountService.join(new JoinUserForm("admin2", "1234"));
+        userService.setUserAsAdmin(admin1.getUserId());
+        userService.setUserAsAdmin(admin2.getUserId());
+
+        //when
+        UserSearchCond cond = new UserSearchCond(admin1.getUsername(), RoleType.ADMIN);
+        long total = userQueryRepository.count(cond);
+
+        //then
+        assertThat(total).isEqualTo(1);
     }
 }

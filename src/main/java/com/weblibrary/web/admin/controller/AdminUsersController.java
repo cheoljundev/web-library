@@ -2,9 +2,8 @@ package com.weblibrary.web.admin.controller;
 
 import com.weblibrary.domain.account.service.AccountService;
 import com.weblibrary.domain.user.model.RoleType;
-import com.weblibrary.domain.admin.service.AdminService;
-import com.weblibrary.domain.admin.service.UserInfo;
 import com.weblibrary.domain.user.repository.UserSearchCond;
+import com.weblibrary.domain.user.service.UserInfo;
 import com.weblibrary.domain.user.service.UserService;
 import com.weblibrary.web.response.ErrorResponse;
 import com.weblibrary.web.response.JsonResponse;
@@ -25,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AdminUsersController {
 
-    private final AdminService adminService;
+    private final UserService userService;
     private final AccountService accountService;
 
     @ModelAttribute("roleTypes")
@@ -35,7 +34,7 @@ public class AdminUsersController {
 
     @GetMapping("/admin/user")
     public String adminUserPage(@ModelAttribute("cond") UserSearchCond cond, Pageable pageable, Model model) {
-        Page<UserInfo> userPage = adminService.findAllUsers(cond, pageable);
+        Page<UserInfo> userPage = userService.findAll(cond, pageable);
         int blockSize = 10; // 한 블록에 표시할 페이지 수
         PageBlock pageBlock = PaginationUtil.createPageBlock(userPage, blockSize);
 
@@ -52,13 +51,13 @@ public class AdminUsersController {
         log.debug("roleType={}", roleType);
 
         if (roleType == RoleType.DEFAULT) {
-            if (!adminService.setUserAsDefault(id)) {
+            if (!userService.setUserAsDefault(id)) {
                 return new ResponseEntity<>(ErrorResponse.builder()
                         .message("권한 변경에 실패했습니다. 이미 일반 유저입니다.")
                         .build(), HttpStatus.BAD_REQUEST);
             }
         } else {
-            if (!adminService.setUserAsAdmin(id)) {
+            if (!userService.setUserAsAdmin(id)) {
                 return new ResponseEntity<>(ErrorResponse.builder()
                         .message("권한 변경에 실패했습니다. 이미 관리자 유저입니다.")
                         .build(), HttpStatus.BAD_REQUEST);
