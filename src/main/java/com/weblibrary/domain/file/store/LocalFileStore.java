@@ -55,7 +55,6 @@ public class LocalFileStore implements FileStore {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                //getfullpath : nullfillname
                 try {
                     multipartFile.transferTo(new File(getFullPath(storeFileName)));
                 } catch (IOException e) {
