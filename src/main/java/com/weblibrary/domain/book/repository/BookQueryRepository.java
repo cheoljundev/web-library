@@ -25,6 +25,7 @@ public class BookQueryRepository {
                         likeAuthor(cond.getAuthor()),
                         eqIsbn(cond.getIsbn())
                 )
+                .orderBy(book.bookId.desc())
                 .limit(limit.longValue())
                 .offset(offset.longValue())
                 .fetch();
