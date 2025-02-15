@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BookSearchCond {
     private String bookName;
-    private String author;
     private String isbn;
+    private String author;
 }
