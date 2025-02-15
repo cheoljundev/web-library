@@ -19,6 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static com.weblibrary.domain.user.model.RoleType.DEFAULT;
 
+/**
+ * AccountService 클래스는 사용자 계정 관련 비즈니스 로직을 처리합니다.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -30,8 +33,12 @@ public class AccountService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
+
     /**
-     * 가입 처리 서비스 계층 메서드
+     * 사용자 계정 관련 비즈니스 로직을 처리하는 서비스 클래스입니다.
+     *
+     * @param form : 사용자 회원가입 폼
+     * @return : 사용자 엔티티
      */
     public User join(JoinUserForm form) {
         if (!isUniqueUsername(form.getUsername())) {
@@ -45,13 +52,11 @@ public class AccountService {
     }
 
     /**
-     * 로그인 처리를 담은 서비스 계층 메서드
-     * Validator에서 호출한다.
+     * 사용자 로그인 처리
      *
-     * @param session      : 세션
-     * @param form : Valitation에 성공한 유저Dto
+     * @param session : 세션
+     * @param form : 사용자 로그인 폼
      */
-
     @Transactional(readOnly = true)
     public void login(HttpSession session, LoginUserForm form) {
         LoginUser loginUser = userService.findByUsername(form.getUsername())
@@ -62,6 +67,11 @@ public class AccountService {
         session.setAttribute(SessionConst.LOGIN_USER, loginUser);
     }
 
+    /**
+     * 사용자 계정 삭제
+     *
+     * @param userId : 삭제할 사용자 ID
+     */
     public void deleteUser(Long userId) {
         userService.findById(userId)
                 .orElseThrow(NotFoundUserException::new);
@@ -69,6 +79,12 @@ public class AccountService {
         userRepository.deleteById(userId);
     }
 
+    /**
+     * 사용자 이름의 고유성을 확인합니다.
+     *
+     * @param username : 확인할 사용자 이름
+     * @return : 사용자 이름이 고유하면 true, 그렇지 않으면 false
+     */
     private boolean isUniqueUsername(String username) {
         return userService.findByUsername(username).isEmpty();
     }
