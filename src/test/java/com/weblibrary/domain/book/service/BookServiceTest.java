@@ -2,12 +2,15 @@ package com.weblibrary.domain.book.service;
 
 import com.weblibrary.domain.book.model.Book;
 import com.weblibrary.domain.book.repository.BookSearchCond;
+import com.weblibrary.web.response.PageResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,6 +20,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Slf4j
 @Transactional
 @SpringBootTest
 class BookServiceTest {
@@ -128,6 +132,24 @@ class BookServiceTest {
     }
 
     @Test
+    void findBookInfoByBookId() {
+        // given
+        MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
+        NewBookForm newBookForm = new NewBookForm("test", "testAuthor", "12345", "testDescription", multipartFile);
+        Book savedBook = bookService.save(newBookForm);
+
+        //when
+        BookInfo bookInfo = bookService.findBookInfoByBookId(savedBook.getBookId());
+
+        //then
+        assertThat(bookInfo).isNotNull();
+        assertThat(bookInfo.getId()).isEqualTo(savedBook.getBookId());
+        assertThat(bookInfo.getBookName()).isEqualTo(savedBook.getBookName());
+        assertThat(bookInfo.getAuthor()).isEqualTo(savedBook.getAuthor());
+        assertThat(bookInfo.getIsbn()).isEqualTo(savedBook.getIsbn());
+    }
+
+    @Test
     void findAll_no_cond() {
         //given
 
@@ -144,7 +166,7 @@ class BookServiceTest {
         //when
         BookSearchCond cond = new BookSearchCond();
         PageRequest pageable = PageRequest.of(0, 5);
-        Page<BookListItem> bookPage = bookService.findAll(cond, pageable);
+        PageResponse<BookInfo> bookPage = bookService.findAll(cond, pageable);
 
         //then
         assertThat(bookPage.getContent().size()).isEqualTo(5);
@@ -179,7 +201,7 @@ class BookServiceTest {
         //when
         BookSearchCond cond = new BookSearchCond("newBook", null, null);
         PageRequest pageable = PageRequest.of(0, 5);
-        Page<BookListItem> bookPage = bookService.findAll(cond, pageable);
+        PageResponse<BookInfo> bookPage = bookService.findAll(cond, pageable);
 
         //then
         assertThat(bookPage.getContent().size()).isEqualTo(2);
@@ -214,7 +236,7 @@ class BookServiceTest {
         //when
         BookSearchCond cond = new BookSearchCond(null, "김철준", null);
         PageRequest pageable = PageRequest.of(0, 5);
-        Page<BookListItem> bookPage = bookService.findAll(cond, pageable);
+        PageResponse<BookInfo> bookPage = bookService.findAll(cond, pageable);
 
         //then
         assertThat(bookPage.getContent().size()).isEqualTo(2);
@@ -247,7 +269,7 @@ class BookServiceTest {
         //when
         BookSearchCond cond = new BookSearchCond(null, null, "23456");
         PageRequest pageable = PageRequest.of(0, 5);
-        Page<BookListItem> bookPage = bookService.findAll(cond, pageable);
+        PageResponse<BookInfo> bookPage = bookService.findAll(cond, pageable);
 
         //then
         assertThat(bookPage.getContent().size()).isEqualTo(1);
@@ -284,7 +306,7 @@ class BookServiceTest {
         //when
         BookSearchCond cond = new BookSearchCond("good newBook", "김철준", "23456");
         PageRequest pageable = PageRequest.of(0, 5);
-        Page<BookListItem> bookPage = bookService.findAll(cond, pageable);
+        PageResponse<BookInfo> bookPage = bookService.findAll(cond, pageable);
 
         //then
         assertThat(bookPage.getContent().size()).isEqualTo(1);

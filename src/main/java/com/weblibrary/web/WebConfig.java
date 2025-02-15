@@ -7,7 +7,10 @@ import com.weblibrary.web.interceptor.RestLoginCheckInterceptor;
 import com.weblibrary.web.interceptor.SsrAdminCheckInterceptor;
 import com.weblibrary.web.interceptor.SsrLoginCheckInterceptor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -33,7 +36,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(new RestLoginCheckInterceptor())
                 .order(2)
-                .addPathPatterns("/books/**");
+                .addPathPatterns("/books/{id:\\d+}/rent", "/books/{id:\\d+}/return");
 
         registry.addInterceptor(new SsrAdminCheckInterceptor(userService))
                 .order(3)
@@ -43,6 +46,11 @@ public class WebConfig implements WebMvcConfigurer {
                 .order(4)
                 .addPathPatterns("/books/{id:\\d+}", "/books/add");
 
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }

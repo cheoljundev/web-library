@@ -1,21 +1,14 @@
 package com.weblibrary.web.admin.controller;
 
-import com.weblibrary.domain.book.repository.BookSearchCond;
-import com.weblibrary.domain.book.service.BookListItem;
+import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.domain.book.service.ModifyBookForm;
 import com.weblibrary.domain.book.service.NewBookForm;
-import com.weblibrary.domain.book.service.BookService;
 import com.weblibrary.web.response.ErrorResponseUtils;
 import com.weblibrary.web.response.JsonResponse;
-import com.weblibrary.web.util.PageBlock;
-import com.weblibrary.web.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -28,23 +21,6 @@ public class AdminBookController {
 
     private final BookService bookService;
     private final ErrorResponseUtils errorResponseUtils;
-
-    @GetMapping("/admin/book")
-    public String adminBookPage(@ModelAttribute("addBook") NewBookForm newBookForm,
-                                @ModelAttribute("modifyBook") ModifyBookViewForm modifyBookViewForm,
-                                @ModelAttribute("cond") BookSearchCond cond,
-                                Pageable pageable, Model model) {
-
-        Page<BookListItem> bookPage = bookService.findAll(cond, pageable);
-
-        int blockSize = 10; // 한 블록에 표시할 페이지 수
-        PageBlock pageBlock = PaginationUtil.createPageBlock(bookPage, blockSize);
-
-        model.addAttribute("bookPage", bookPage);
-        model.addAttribute("pageBlock", pageBlock);
-
-        return "admin/book";
-    }
 
     @ResponseBody
     @PostMapping("/books/add")

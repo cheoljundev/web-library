@@ -32,10 +32,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     /* /swagger-ui.html */
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'	//Swagger
+    // ControllerAdvice를 사용할 경우 2.7.0 버전 이상을 사용해야함
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
     runtimeOnly 'com.h2database:h2'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+
+    implementation 'org.springframework.security:spring-security-crypto:5.8.1' // 버전은 필요에 따라 조정
 
     //Querydsl 추가
     implementation "com.querydsl:querydsl-jpa:${querydslVersion}:jakarta"
