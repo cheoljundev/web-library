@@ -11,5 +11,6 @@ public class BookListItem {
     private final String name;
     private final String author;
     private final String isbn;
-    private final UploadFile coverImage;
+    private final String description;
+    private final String coverImage;
 }

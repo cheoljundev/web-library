@@ -11,6 +11,7 @@ import com.weblibrary.domain.book.repository.BookRepository;
 import com.weblibrary.domain.book.repository.BookSearchCond;
 import com.weblibrary.domain.file.model.UploadFile;
 import com.weblibrary.domain.file.service.UploadFileService;
+import com.weblibrary.web.response.PageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -79,7 +80,7 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public Page<BookListItem> findAll(BookSearchCond cond, Pageable pageable) {
+    public PageResponse<BookListItem> findAll(BookSearchCond cond, Pageable pageable) {
         // 페이징 처리된 책 리스트 조회
         List<Book> books = bookQueryRepository.findAll(cond, pageable.getPageSize(), pageable.getOffset());
 
@@ -92,12 +93,13 @@ public class BookService {
                     UploadFile image = bookCoverRepository.findByBookId(book.getBookId())
                             .flatMap(bookCover -> uploadFileService.findById(bookCover.getUploadFileId()))
                             .orElseThrow(NotFoundBookCoverException::new);
-                    return new BookListItem(book.getBookId(), book.getBookName(), book.getAuthor(), book.getIsbn(), image);
+                    return new BookListItem(book.getBookId(), book.getBookName(), book.getAuthor(), book.getIsbn(), book.getDescription(), "/images/" + image.getStoreFileName());
                 })
                 .collect(Collectors.toList());
 
         // 변환된 결과와 페이징 정보를 이용해 새로운 Page 객체 생성
-        return new PageImpl<>(bookListItems, pageable, total);
+        PageImpl<BookListItem> bookPage = new PageImpl<>(bookListItems, pageable, total);
+        return new PageResponse<>(bookListItems, bookPage.getTotalPages(), bookPage.getTotalElements(), bookPage.isFirst(), bookPage.isLast());
     }
 
     private void removeBookCover(Book book) {
