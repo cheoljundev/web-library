@@ -144,7 +144,7 @@ class BookServiceTest {
         //when
         BookSearchCond cond = new BookSearchCond();
         PageRequest pageable = PageRequest.of(0, 5);
-        Page<BookListItem> bookPage = bookService.findAll(cond, pageable);
+        Page<BookInfo> bookPage = bookService.findAll(cond, pageable);
 
         //then
         assertThat(bookPage.getContent().size()).isEqualTo(5);
@@ -179,7 +179,7 @@ class BookServiceTest {
         //when
         BookSearchCond cond = new BookSearchCond("newBook", null, null);
         PageRequest pageable = PageRequest.of(0, 5);
-        Page<BookListItem> bookPage = bookService.findAll(cond, pageable);
+        Page<BookInfo> bookPage = bookService.findAll(cond, pageable);
 
         //then
         assertThat(bookPage.getContent().size()).isEqualTo(2);
@@ -214,7 +214,7 @@ class BookServiceTest {
         //when
         BookSearchCond cond = new BookSearchCond(null, "김철준", null);
         PageRequest pageable = PageRequest.of(0, 5);
-        Page<BookListItem> bookPage = bookService.findAll(cond, pageable);
+        Page<BookInfo> bookPage = bookService.findAll(cond, pageable);
 
         //then
         assertThat(bookPage.getContent().size()).isEqualTo(2);
@@ -247,7 +247,7 @@ class BookServiceTest {
         //when
         BookSearchCond cond = new BookSearchCond(null, null, "23456");
         PageRequest pageable = PageRequest.of(0, 5);
-        Page<BookListItem> bookPage = bookService.findAll(cond, pageable);
+        Page<BookInfo> bookPage = bookService.findAll(cond, pageable);
 
         //then
         assertThat(bookPage.getContent().size()).isEqualTo(1);
@@ -284,7 +284,7 @@ class BookServiceTest {
         //when
         BookSearchCond cond = new BookSearchCond("good newBook", "김철준", "23456");
         PageRequest pageable = PageRequest.of(0, 5);
-        Page<BookListItem> bookPage = bookService.findAll(cond, pageable);
+        Page<BookInfo> bookPage = bookService.findAll(cond, pageable);
 
         //then
         assertThat(bookPage.getContent().size()).isEqualTo(1);

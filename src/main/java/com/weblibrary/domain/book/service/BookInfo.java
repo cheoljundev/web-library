@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
-public class BookListItem {
+public class BookInfo {
     private final Long id;
     private final String bookName;
     private final String author;

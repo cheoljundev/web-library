@@ -14,7 +14,6 @@ import com.weblibrary.domain.file.service.UploadFileService;
 import com.weblibrary.web.response.PageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -80,7 +79,19 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<BookListItem> findAll(BookSearchCond cond, Pageable pageable) {
+    public BookInfo findBookInfoByBookId(Long bookId) {
+
+        return bookRepository.findById(bookId)
+                .map(book -> {
+                    UploadFile image = bookCoverRepository.findByBookId(book.getBookId())
+                            .flatMap(bookCover -> uploadFileService.findById(bookCover.getUploadFileId()))
+                            .orElseThrow(NotFoundBookCoverException::new);
+                    return new BookInfo(book.getBookId(), book.getBookName(), book.getAuthor(), book.getIsbn(), book.getDescription(), "/images/" + image.getStoreFileName());
+                }).orElseThrow(NotFoundBookException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<BookInfo> findAll(BookSearchCond cond, Pageable pageable) {
         // 페이징 처리된 책 리스트 조회
         List<Book> books = bookQueryRepository.findAll(cond, pageable.getPageSize(), pageable.getOffset());
 
@@ -88,18 +99,18 @@ public class BookService {
         long total = bookQueryRepository.count(cond);
 
         // 각 Book을 BookListItem으로 변환
-        List<BookListItem> bookListItems = books.stream()
+        List<BookInfo> bookInfos = books.stream()
                 .map(book -> {
                     UploadFile image = bookCoverRepository.findByBookId(book.getBookId())
                             .flatMap(bookCover -> uploadFileService.findById(bookCover.getUploadFileId()))
                             .orElseThrow(NotFoundBookCoverException::new);
-                    return new BookListItem(book.getBookId(), book.getBookName(), book.getAuthor(), book.getIsbn(), book.getDescription(), "/images/" + image.getStoreFileName());
+                    return new BookInfo(book.getBookId(), book.getBookName(), book.getAuthor(), book.getIsbn(), book.getDescription(), "/images/" + image.getStoreFileName());
                 })
                 .collect(Collectors.toList());
 
         // 변환된 결과와 페이징 정보를 이용해 새로운 Page 객체 생성
-        PageImpl<BookListItem> bookPage = new PageImpl<>(bookListItems, pageable, total);
-        return new PageResponse<>(bookListItems, bookPage.getTotalPages(), bookPage.getTotalElements(), bookPage.isFirst(), bookPage.isLast());
+        PageImpl<BookInfo> bookPage = new PageImpl<>(bookInfos, pageable, total);
+        return new PageResponse<>(bookInfos, bookPage.getTotalPages(), bookPage.getTotalElements(), bookPage.isFirst(), bookPage.isLast());
     }
 
     private void removeBookCover(Book book) {
