@@ -98,7 +98,7 @@ public class BookService {
         // 전체 책 수 조회
         long total = bookQueryRepository.count(cond);
 
-        // 각 Book을 BookListItem으로 변환
+        // 각 Book을 BookInfo로 변환
         List<BookInfo> bookInfos = books.stream()
                 .map(book -> {
                     UploadFile image = bookCoverRepository.findByBookId(book.getBookId())
@@ -108,7 +108,7 @@ public class BookService {
                 })
                 .collect(Collectors.toList());
 
-        // 변환된 결과와 페이징 정보를 이용해 새로운 Page 객체 생성
+        // 변환된 Page<BookInfo>를 PageResponse<BookInfo>로 변환
         PageImpl<BookInfo> bookPage = new PageImpl<>(bookInfos, pageable, total);
         return new PageResponse<>(bookInfos, bookPage.getTotalPages(), bookPage.getTotalElements(), bookPage.isFirst(), bookPage.isLast());
     }
