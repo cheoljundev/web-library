@@ -36,7 +36,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(new RestLoginCheckInterceptor())
                 .order(2)
-                .addPathPatterns("/books/**");
+                .addPathPatterns("/books/{id:\\d+}/rent", "/books/{id:\\d+}/return");
 
         registry.addInterceptor(new SsrAdminCheckInterceptor(userService))
                 .order(3)
