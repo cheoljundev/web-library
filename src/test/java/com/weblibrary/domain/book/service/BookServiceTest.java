@@ -132,6 +132,24 @@ class BookServiceTest {
     }
 
     @Test
+    void findBookInfoByBookId() {
+        // given
+        MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
+        NewBookForm newBookForm = new NewBookForm("test", "testAuthor", "12345", "testDescription", multipartFile);
+        Book savedBook = bookService.save(newBookForm);
+
+        //when
+        BookInfo bookInfo = bookService.findBookInfoByBookId(savedBook.getBookId());
+
+        //then
+        assertThat(bookInfo).isNotNull();
+        assertThat(bookInfo.getId()).isEqualTo(savedBook.getBookId());
+        assertThat(bookInfo.getBookName()).isEqualTo(savedBook.getBookName());
+        assertThat(bookInfo.getAuthor()).isEqualTo(savedBook.getAuthor());
+        assertThat(bookInfo.getIsbn()).isEqualTo(savedBook.getIsbn());
+    }
+
+    @Test
     void findAll_no_cond() {
         //given
 
@@ -221,10 +239,6 @@ class BookServiceTest {
         PageResponse<BookInfo> bookPage = bookService.findAll(cond, pageable);
 
         //then
-        log.debug("bookPage.getContent()={}", bookPage.getContent()); // []
-        log.debug("bookPage.getTotalElements()={}", bookPage.getTotalElements()); // 0
-        log.debug("bookPage.getTotalPages()={}", bookPage.getTotalPages()); // 0
-
         assertThat(bookPage.getContent().size()).isEqualTo(2);
         assertThat(bookPage.getTotalElements()).isEqualTo(2);
         assertThat(bookPage.getTotalPages()).isEqualTo(1);
