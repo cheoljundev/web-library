@@ -13,6 +13,7 @@ import com.weblibrary.web.account.controller.LoginUser;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,7 @@ public class AccountService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * 가입 처리 서비스 계층 메서드
@@ -35,7 +37,8 @@ public class AccountService {
         if (!isUniqueUsername(form.getUsername())) {
             throw new InvalidJoinException("이미 존재하는 유저이름입니다.", form);
         }
-        User savedUser = userService.save(new User(form.getUsername(), form.getPassword()));
+        String encodedPassword = passwordEncoder.encode(form.getPassword());
+        User savedUser = userService.save(new User(form.getUsername(), encodedPassword));
         Role role = new Role(savedUser.getUserId(), DEFAULT);
         roleRepository.save(role);
         return savedUser;
@@ -52,7 +55,7 @@ public class AccountService {
     @Transactional(readOnly = true)
     public void login(HttpSession session, LoginUserForm form) {
         LoginUser loginUser = userService.findByUsername(form.getUsername())
-                .filter(user -> user.getPassword().equals(form.getPassword()))
+                .filter(user -> passwordEncoder.matches(form.getPassword(), user.getPassword()))
                 .map(user -> new LoginUser(user.getUserId(), user.getUsername()))
                 .orElseThrow(() -> new InvalidLoginException("로그인에 실패했습니다. 아이디 및 비밀번호를 확인하세요.", form));
 
