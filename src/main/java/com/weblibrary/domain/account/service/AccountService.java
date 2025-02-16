@@ -33,7 +33,6 @@ public class AccountService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
-
     /**
      * 사용자 계정 관련 비즈니스 로직을 처리하는 서비스 클래스입니다.
      *

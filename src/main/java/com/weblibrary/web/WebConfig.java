@@ -2,10 +2,8 @@ package com.weblibrary.web;
 
 import com.weblibrary.domain.user.service.UserService;
 import com.weblibrary.web.argumentresolver.LoginUserArgumentResolver;
-import com.weblibrary.web.interceptor.RestAdminCheckInterceptor;
-import com.weblibrary.web.interceptor.RestLoginCheckInterceptor;
-import com.weblibrary.web.interceptor.SsrAdminCheckInterceptor;
-import com.weblibrary.web.interceptor.SsrLoginCheckInterceptor;
+import com.weblibrary.web.interceptor.AdminCheckInterceptor;
+import com.weblibrary.web.interceptor.LoginCheckInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,20 +28,13 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new SsrLoginCheckInterceptor())
+        registry.addInterceptor(new LoginCheckInterceptor())
                 .order(1)
-                .addPathPatterns("/admin/**");
-
-        registry.addInterceptor(new RestLoginCheckInterceptor())
-                .order(2)
                 .addPathPatterns("/books/{id:\\d+}/rent", "/books/{id:\\d+}/return");
 
-        registry.addInterceptor(new SsrAdminCheckInterceptor(userService))
-                .order(3)
-                .addPathPatterns("/admin/**");
-
-        registry.addInterceptor(new RestAdminCheckInterceptor(userService))
-                .order(4)
+        registry.addInterceptor(new AdminCheckInterceptor(userService))
+                .order(2)
+                .addPathPatterns("/admin/**")
                 .addPathPatterns("/books/{id:\\d+}", "/books/add");
 
     }

@@ -42,22 +42,31 @@ public class AccountController {
     private final UserService userService;
     private final ErrorResponseUtils errorResponseUtils;
 
+    /**
+     * 사용자 회원가입 처리
+     *
+     * @param form          회원가입 폼 데이터
+     * @param bindingResult 검증 결과
+     * @return 회원가입 결과를 포함하는 ResponseEntity
+     * @throws MethodArgumentNotValidException 메서드 인자가 유효하지 않은 경우
+     */
     @PostMapping("/join")
-    public String join(@Validated @ModelAttribute("user") JoinUserForm form, BindingResult bindingResult) {
+    public ResponseEntity<JsonResponse> join(@Validated @RequestBody JoinUserForm form, BindingResult bindingResult) {
 
         log.debug("Input User DTO: {}", form);
 
         /* 검증에 에러가 발견되면, 폼을 보여줌. */
         if (bindingResult.hasErrors()) {
-            log.debug("errors={}", bindingResult);
-            return "home/join";
+            return errorResponseUtils.handleValidationErrors(bindingResult);
         }
 
         /* 검증이 끝나면, 컨트롤러에서 회원가입 처리 */
         accountService.join(form);
 
         // 회원가입 후에 홈으로 리다이렉트
-        return "redirect:/";
+        return ResponseEntity.ok().body(JsonResponse.builder()
+                .message("회원가입 되었습니다.")
+                .build());
     }
 
     /**
@@ -127,13 +136,20 @@ public class AccountController {
                 .errors(errors).build());
     }
 
+    /**
+     * 회원가입 실패 예외 처리
+     *
+     * @param e InvalidJoinException 예외 객체
+     * @return 에러 응답을 포함하는 ResponseEntity
+     */
     @ExceptionHandler(InvalidJoinException.class)
-    public String handleInvalidJoinException(InvalidJoinException e, Model model) {
-        List<String> errors = new ArrayList<>();
-        errors.add(e.getMessage());
-        model.addAttribute("user", e.getForm());
-        model.addAttribute("errors", errors);
-        return "home/join";
+    public ResponseEntity<ErrorResponse> handleInvalidJoinException(InvalidJoinException e, Model model) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("root", e.getMessage());
+        return ResponseEntity.badRequest().body(ErrorResponse.builder()
+                .code("join")
+                .message("회원가입 실패")
+                .errors(errors).build());
     }
 
 }
