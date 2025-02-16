@@ -31,19 +31,11 @@ public class ErrorResponseUtils {
 
         /* 글로벌 에러 담기 */
         for (ObjectError globalError : globalErrors) {
-            String errorMessage = messageSource.getMessage(
-                    globalError.getCode(), //에러 코드 가지고 온다. 글로벌 에러는 별도의 code resolve 과정이 없다.
-                    globalError.getArguments(), //argument 가지고 옴
-                    Locale.getDefault()); //언어 정보는 기본 정보를 가져온다.
-            errors.put(globalError.getCode(), errorMessage);
+            errors.put(globalError.getCode(), globalError.getDefaultMessage());
         }
 
         for (FieldError fieldError : fieldErrors) {
-            String errorMessage = messageSource.getMessage(
-                    fieldError.getCodes()[0], //에러 코드 가지고 온다. MessageCodesResolver에 의해서 가장 상세한 코드가 가장 앞으로 온다.
-                    fieldError.getArguments(),
-                    Locale.getDefault());
-            errors.put(fieldError.getField(), errorMessage);
+            errors.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
 
         return ResponseEntity.badRequest().body(ErrorResponse.builder()
