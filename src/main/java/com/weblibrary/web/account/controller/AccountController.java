@@ -20,12 +20,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,7 +48,6 @@ public class AccountController {
      * @param form          회원가입 폼 데이터
      * @param bindingResult 검증 결과
      * @return 회원가입 결과를 포함하는 ResponseEntity
-     * @throws MethodArgumentNotValidException 메서드 인자가 유효하지 않은 경우
      */
     @PostMapping("/join")
     public ResponseEntity<JsonResponse> join(@Validated @RequestBody JoinUserForm form, BindingResult bindingResult) {
@@ -76,11 +75,10 @@ public class AccountController {
      * @param form          로그인 폼 데이터
      * @param bindingResult 검증 결과
      * @return 로그인 결과를 포함하는 ResponseEntity
-     * @throws MethodArgumentNotValidException 메서드 인자가 유효하지 않은 경우
      */
     @PostMapping("/login")
     public ResponseEntity<JsonResponse> login(HttpSession session, @Validated @RequestBody LoginUserForm form,
-                                              BindingResult bindingResult) throws MethodArgumentNotValidException {
+                                              BindingResult bindingResult) {
 
         log.debug("Input User DTO: {}", form);
 
@@ -94,7 +92,6 @@ public class AccountController {
         return ResponseEntity.ok().body(JsonResponse.builder()
                 .message("로그인 되었습니다.")
                 .build());
-
     }
 
     @PostMapping("/signout")
