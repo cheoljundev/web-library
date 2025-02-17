@@ -94,15 +94,20 @@ public class AccountController {
                 .build());
     }
 
+    /**
+     * 사용자 로그아웃 처리
+     *
+     * @param request   HTTP 요청 객체
+     * @param loginUser 로그인된 사용자 정보
+     * @return 로그아웃 결과를 포함하는 ResponseEntity
+     */
     @PostMapping("/signout")
     public ResponseEntity<JsonResponse> signOut(HttpServletRequest request, @Login LoginUser loginUser) {
         HttpSession session = request.getSession(false);
 
-        User user = userService.findById(loginUser.getUserId()).orElse(null);
+        log.debug("loginUser={}", loginUser);
 
-        log.debug("login user={}", user);
-
-        if (user == null) {
+        if (session == null || loginUser == null) {
             return new ResponseEntity<>(
                     ErrorResponse.builder()
                             .message("로그인되지 않았습니다.")
