@@ -122,6 +122,34 @@ public class AccountController {
     }
 
     /**
+     * 사용자 인증 상태 확인
+     *
+     * @param loginUser 로그인된 사용자 정보
+     * @return 인증 상태를 포함하는 ResponseEntity
+     */
+    @PostMapping("/auth-status")
+    public ResponseEntity<Boolean> authStatus(@Login LoginUser loginUser) {
+        log.debug("loginUser={}", loginUser);
+        if (loginUser == null) {
+            return ResponseEntity.ok().body(false);
+        }
+        return ResponseEntity.ok(true);
+    }
+
+    /**
+     * 사용자 권한 확인
+     *
+     * @param loginUser 로그인된 사용자 정보
+     * @return 권한 여부를 포함하는 ResponseEntity
+     */
+    @PostMapping("/is-admin")
+    public ResponseEntity<Boolean> isAdmin(@Login LoginUser loginUser) {
+        log.debug("loginUser={}", loginUser);
+        boolean isAdmin = loginUser != null && userService.isAdmin(loginUser.getUserId());
+        return ResponseEntity.ok(isAdmin);
+    }
+
+    /**
      * 로그인 실패 예외 처리
      *
      * @param e InvalidLoginException 예외 객체
