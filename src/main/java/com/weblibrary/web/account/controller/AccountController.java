@@ -5,7 +5,6 @@ import com.weblibrary.domain.account.exception.InvalidLoginException;
 import com.weblibrary.domain.account.service.AccountService;
 import com.weblibrary.domain.account.service.JoinUserForm;
 import com.weblibrary.domain.account.service.LoginUserForm;
-import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.service.UserService;
 import com.weblibrary.web.argumentresolver.Login;
 import com.weblibrary.web.response.ErrorResponse;
@@ -20,12 +19,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,7 +47,6 @@ public class AccountController {
      * @param form          회원가입 폼 데이터
      * @param bindingResult 검증 결과
      * @return 회원가입 결과를 포함하는 ResponseEntity
-     * @throws MethodArgumentNotValidException 메서드 인자가 유효하지 않은 경우
      */
     @PostMapping("/join")
     public ResponseEntity<JsonResponse> join(@Validated @RequestBody JoinUserForm form, BindingResult bindingResult) {
@@ -76,11 +74,10 @@ public class AccountController {
      * @param form          로그인 폼 데이터
      * @param bindingResult 검증 결과
      * @return 로그인 결과를 포함하는 ResponseEntity
-     * @throws MethodArgumentNotValidException 메서드 인자가 유효하지 않은 경우
      */
     @PostMapping("/login")
     public ResponseEntity<JsonResponse> login(HttpSession session, @Validated @RequestBody LoginUserForm form,
-                                              BindingResult bindingResult) throws MethodArgumentNotValidException {
+                                              BindingResult bindingResult) {
 
         log.debug("Input User DTO: {}", form);
 
@@ -94,18 +91,22 @@ public class AccountController {
         return ResponseEntity.ok().body(JsonResponse.builder()
                 .message("로그인 되었습니다.")
                 .build());
-
     }
 
+    /**
+     * 사용자 로그아웃 처리
+     *
+     * @param request   HTTP 요청 객체
+     * @param loginUser 로그인된 사용자 정보
+     * @return 로그아웃 결과를 포함하는 ResponseEntity
+     */
     @PostMapping("/signout")
     public ResponseEntity<JsonResponse> signOut(HttpServletRequest request, @Login LoginUser loginUser) {
         HttpSession session = request.getSession(false);
 
-        User user = userService.findById(loginUser.getUserId()).orElse(null);
+        log.debug("loginUser={}", loginUser);
 
-        log.debug("login user={}", user);
-
-        if (user == null) {
+        if (session == null || loginUser == null) {
             return new ResponseEntity<>(
                     ErrorResponse.builder()
                             .message("로그인되지 않았습니다.")
@@ -118,6 +119,34 @@ public class AccountController {
         return new ResponseEntity<>(JsonResponse.builder()
                 .message("로그아웃 되었습니다.")
                 .build(), HttpStatus.OK);
+    }
+
+    /**
+     * 사용자 인증 상태 확인
+     *
+     * @param loginUser 로그인된 사용자 정보
+     * @return 인증 상태를 포함하는 ResponseEntity
+     */
+    @PostMapping("/auth-status")
+    public ResponseEntity<Boolean> authStatus(@Login LoginUser loginUser) {
+        log.debug("loginUser={}", loginUser);
+        if (loginUser == null) {
+            return ResponseEntity.ok().body(false);
+        }
+        return ResponseEntity.ok(true);
+    }
+
+    /**
+     * 사용자 권한 확인
+     *
+     * @param loginUser 로그인된 사용자 정보
+     * @return 권한 여부를 포함하는 ResponseEntity
+     */
+    @PostMapping("/is-admin")
+    public ResponseEntity<Boolean> isAdmin(@Login LoginUser loginUser) {
+        log.debug("loginUser={}", loginUser);
+        boolean isAdmin = loginUser != null && userService.isAdmin(loginUser.getUserId());
+        return ResponseEntity.ok(isAdmin);
     }
 
     /**

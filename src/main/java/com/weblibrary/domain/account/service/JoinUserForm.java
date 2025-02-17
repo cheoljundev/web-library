@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class JoinUserForm {
 
     @Size(min = 5, message = "유저네임은 최소 5자 이상이어야 합니다.")
-    @Pattern(regexp = "^[a-z][a-z0-9]*$", message = "아이디는 첫 글자가 소문자 영문이어야 하며, 소문자 영문과 숫자만 올 수 있습니다.")
+    @Pattern(regexp = "^[a-z][a-z0-9]*$", message = "유저네임은 첫 글자가 소문자 영문이어야 하며, 소문자 영문과 숫자만 올 수 있습니다.")
     private String username;
 
     public void setUsername(String username) {
