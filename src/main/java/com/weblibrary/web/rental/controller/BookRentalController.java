@@ -76,7 +76,7 @@ public class BookRentalController {
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleNotFoundBookError(RentalException e) {
-        return errorResponseUtils.handleExceptionError(e, "book");
+        return errorResponseUtils.handleExceptionError(e, "bookRental");
     }
 
 }

@@ -28,6 +28,7 @@ public class RentalService {
     public Rental rentBook(User user, Book book) {
         // remailrents가 없거나, 현재 누가 대출중인 경우 예외 발생함
         User rendtedUser = findUserByBookId(book.getBookId());
+        log.debug("rendtedUser={}", rendtedUser);
 
         if (user.equals(rendtedUser)) {
             throw new RentalException("이미 대출중입니다.");

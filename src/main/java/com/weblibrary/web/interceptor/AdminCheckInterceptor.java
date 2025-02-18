@@ -21,7 +21,12 @@ public class AdminCheckInterceptor implements HandlerInterceptor {
         }
 
         HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute(SessionConst.LOGIN_USER) == null) {
+            throw new UnauthorizedAccessException("로그인해주세요.");
+        }
+
         LoginUser user = (LoginUser) session.getAttribute(SessionConst.LOGIN_USER);
+
         if (!userService.isAdmin(user.getUserId())) {
                 session.invalidate();
                 throw new UnauthorizedAccessException("관리자가 아닙니다.");

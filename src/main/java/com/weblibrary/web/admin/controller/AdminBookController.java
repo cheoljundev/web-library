@@ -38,7 +38,7 @@ public class AdminBookController {
         log.debug("form.isbn={}", form.getIsbn());
 
         if (form.getCoverImage() == null || form.getCoverImage().isEmpty()) {
-            bindingResult.rejectValue("coverImage", "NotBlank", null);
+            bindingResult.rejectValue("coverImage", "NotBlank", "책 표지는 필수입니다.");
         }
 
         if (bindingResult.hasErrors()) {
