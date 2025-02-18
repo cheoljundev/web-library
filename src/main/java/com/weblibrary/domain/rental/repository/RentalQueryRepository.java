@@ -21,7 +21,7 @@ public class RentalQueryRepository {
 
     public Optional<Rental> findActiveRentalByBookId(Long bookId) {
         Rental rental = query.selectFrom(QRental.rental)
-                .where(QRental.rental.returnedAt.isNull())
+                .where(QRental.rental.returnedAt.isNull(), QRental.rental.bookId.eq(bookId))
                 .fetchFirst();
 
         return Optional.ofNullable(rental);
