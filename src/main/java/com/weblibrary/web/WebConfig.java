@@ -30,9 +30,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginCheckInterceptor())
                 .order(1)
-                .addPathPatterns("/books/{id:\\d+}/rent", "/books/{id:\\d+}/return")
-                .addPathPatterns("/admin/**")
-                .addPathPatterns("/books/{id:\\d+}", "/books/add");
+                .addPathPatterns("/books/{id:\\d+}/rent", "/books/{id:\\d+}/return");
 
         registry.addInterceptor(new AdminCheckInterceptor(userService))
                 .order(2)
