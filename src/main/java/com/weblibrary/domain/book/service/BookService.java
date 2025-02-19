@@ -134,8 +134,10 @@ public class BookService {
             // 4. 기존 커버 객체의 uploadFileId를 새 이미지의 uploadFileId로 변경한다
             // 5. 기존 이미지를 삭제한다.
             UploadFile updateImage = uploadFileService.save(form.getCoverImage());
-            bookCoverRepository.findById(book.getBookId())
+            log.debug("book={}", book);
+            bookCoverRepository.findByBookId(book.getBookId())
                     .ifPresent(bookCover -> {
+                        log.debug("bookCover={}", bookCover);
                         Long oldUploadFileId = bookCover.getUploadFileId();
                         bookCover.setUploadFileId(updateImage.getUploadFileId());
                         uploadFileService.remove(oldUploadFileId);
