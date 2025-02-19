@@ -19,7 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 도서 대출 컨트롤러
+ * BookRentalController는 도서 대출 및 반납을 처리하는 컨트롤러입니다.
  */
 @Slf4j
 @RestController
@@ -31,6 +31,13 @@ public class BookRentalController {
     private final ErrorResponseUtils errorResponseUtils;
     private final UserService userService;
 
+    /**
+     * 사용자가 책을 대출합니다.
+     *
+     * @param loginUser 로그인한 사용자 정보
+     * @param bookId 대출할 책의 ID
+     * @return JsonResponse 대출 성공 메시지
+     */
     @PostMapping("/{bookId}/rent")
     public ResponseEntity<JsonResponse> rentBook(@Login LoginUser loginUser, @PathVariable("bookId") Long bookId) {
 
@@ -53,6 +60,13 @@ public class BookRentalController {
                 .build());
     }
 
+    /**
+     * 사용자가 책을 반납합니다.
+     *
+     * @param loginUser 로그인한 사용자 정보
+     * @param bookId 반납할 책의 ID
+     * @return JsonResponse 반납 성공 메시지
+     */
     @PostMapping("/{bookId}/return")
     public ResponseEntity<JsonResponse> returnBook(@Login LoginUser loginUser, @PathVariable("bookId") Long bookId) {
 
@@ -74,6 +88,12 @@ public class BookRentalController {
 
     }
 
+    /**
+     * 대출 예외 처리
+     *
+     * @param e 대출 예외
+     * @return ErrorResponse 대출 예외 응답
+     */
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleNotFoundBookError(RentalException e) {
         return errorResponseUtils.handleExceptionError(e, "bookRental");

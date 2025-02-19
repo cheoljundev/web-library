@@ -12,19 +12,19 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 public class ModifyBookForm {
 
-    @NotNull
+    @NotNull(message = "정상적인 접근이 아닙니다.")
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "책 이름은 필수입니다.")
     private String bookName;
 
-    @NotBlank
+    @NotBlank(message = "저자는 필수입니다.")
     private String author;
 
-    @NotBlank
+    @NotBlank(message = "ISBN은 필수입니다.")
     private String isbn;
 
-    @NotBlank
+    @NotBlank(message = "설명은 필수입니다.")
     private String description;
 
     private MultipartFile coverImage;

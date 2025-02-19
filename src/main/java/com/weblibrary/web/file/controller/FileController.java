@@ -12,12 +12,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.MalformedURLException;
 
+/**
+ * FileController는 파일 다운로드를 처리하는 REST 컨트롤러입니다.
+ */
 @RestController
 @RequiredArgsConstructor
 public class FileController {
 
     private final FileStore fileStore;
 
+    /**
+     * 이미지 파일을 다운로드합니다.
+     *
+     * @param filename 파일명
+     * @return 이미지 파일
+     * @throws MalformedURLException 파일 URL이 잘못된 경우
+     */
     @GetMapping("/images/{filename}")
     public ResponseEntity<Resource> getImage(@PathVariable("filename") String filename) throws MalformedURLException {
         UrlResource urlResource = new UrlResource(fileStore.getUrlPath(filename));
@@ -27,7 +37,12 @@ public class FileController {
                 .body(urlResource);
     }
 
-    // 파일 확장자에 맞는 Content-Type을 반환
+    /**
+     * 파일명에 따라 MediaType을 결정합니다.
+     *
+     * @param filename 파일명
+     * @return MediaType
+     */
     private MediaType getMediaType(String filename) {
         String extension = filename.substring(filename.lastIndexOf(".") + 1).toLowerCase();
         switch (extension) {

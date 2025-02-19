@@ -9,6 +9,7 @@ import lombok.*;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
+@ToString
 @Table(name = "book_covers")
 public class BookCover {
     @EqualsAndHashCode.Include

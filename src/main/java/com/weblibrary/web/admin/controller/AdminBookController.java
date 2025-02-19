@@ -14,6 +14,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * 관리자 도서 컨트롤러 클래스
+ * 도서 추가, 삭제, 수정 기능을 제공합니다.
+ */
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -22,6 +26,14 @@ public class AdminBookController {
     private final BookService bookService;
     private final ErrorResponseUtils errorResponseUtils;
 
+    /**
+     * 도서를 추가합니다.
+     *
+     * @param form          도서 정보 폼
+     * @param bindingResult 폼 검증 결과
+     * @param coverImage    도서 표지 이미지
+     * @return JsonResponse 응답 객체
+     */
     @ResponseBody
     @PostMapping("/books/add")
     public ResponseEntity<JsonResponse> addBook(@RequestPart("bookData") @Validated NewBookForm form,
@@ -53,6 +65,12 @@ public class AdminBookController {
                 .build());
     }
 
+    /**
+     * 도서를 삭제합니다.
+     *
+     * @param bookId 삭제할 도서의 ID
+     * @return JsonResponse 응답 객체
+     */
     @ResponseBody
     @DeleteMapping("/books/{bookId}")
     public JsonResponse deleteBook(@PathVariable("bookId") Long bookId) {
@@ -62,6 +80,14 @@ public class AdminBookController {
                 .build();
     }
 
+    /**
+     * 도서를 수정합니다.
+     *
+     * @param form          도서 정보 폼
+     * @param bindingResult 폼 검증 결과
+     * @param coverImage    도서 표지 이미지
+     * @return JsonResponse 응답 객체
+     */
     @ResponseBody
     @PutMapping("/books/{bookId}")
     public ResponseEntity<JsonResponse> modifyBook(@RequestPart("bookData") @Validated ModifyBookForm form,
