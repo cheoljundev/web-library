@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserSearchCond {
     private String username;
-    private RoleType roleType;
+    private RoleType role;
 }

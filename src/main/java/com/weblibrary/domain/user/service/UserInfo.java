@@ -1,6 +1,5 @@
 package com.weblibrary.domain.user.service;
 
-import com.weblibrary.domain.user.model.RoleType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -15,5 +14,5 @@ import java.util.List;
 public class UserInfo {
     private final Long id;
     private final String username;
-    private final List<RoleTypeInfo> roleTypeInfos;
+    private final List<RoleTypeInfo> roles;
 }

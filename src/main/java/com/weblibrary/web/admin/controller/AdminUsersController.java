@@ -11,7 +11,6 @@ import com.weblibrary.web.response.JsonResponse;
 import com.weblibrary.web.response.PageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +19,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * AdminUsersController는 사용자 계정의 관리를 처리합니다.
  * 여기에는 사용자 페이지 보기, 사용자 역할 설정 및 사용자 삭제가 포함됩니다.
  */
 @Slf4j
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class AdminUsersController {
 
@@ -43,6 +44,7 @@ public class AdminUsersController {
     public ResponseEntity<List<RoleTypeInfo>> getRoles() {
         RoleType[] roleTypes = RoleType.values();
         List<RoleTypeInfo> roles = Arrays.stream(roleTypes)
+                .sorted(Comparator.reverseOrder())
                 .map(roleType -> new RoleTypeInfo(roleType.name(), roleType.getDescription())).toList();
         return ResponseEntity.ok(roles);
     }
@@ -50,19 +52,17 @@ public class AdminUsersController {
     /**
      * 사용자 페이지를 반환합니다.
      *
-     * @param cond 검색 조건
+     * @param cond     검색 조건
      * @param pageable 페이지 정보
-     * @param model 모델
      * @return 사용자 정보 페이지 응답
      */
     @GetMapping("/users")
-    public ResponseEntity<PageResponse<UserInfo>> adminUserPage(@ModelAttribute("cond") UserSearchCond cond, Pageable pageable, Model model) {
+    public ResponseEntity<PageResponse<UserInfo>> adminUserPage(@ModelAttribute UserSearchCond cond, Pageable pageable) {
         PageResponse<UserInfo> page = userService.findAll(cond, pageable);
 
         return ResponseEntity.ok(page);
     }
 
-    @ResponseBody
     @PatchMapping("/users/{id}/role")
     public ResponseEntity<JsonResponse> setRole(@PathVariable("id") Long id, @RequestBody RoleType roleType) {
 
@@ -87,7 +87,6 @@ public class AdminUsersController {
                 .build(), HttpStatus.OK);
     }
 
-    @ResponseBody
     @DeleteMapping("/users/{id}")
     public ResponseEntity<JsonResponse> deleteUser(@PathVariable("id") Long id) {
 

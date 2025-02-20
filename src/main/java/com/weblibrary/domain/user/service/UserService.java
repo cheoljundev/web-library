@@ -10,7 +10,6 @@ import com.weblibrary.domain.user.repository.UserSearchCond;
 import com.weblibrary.web.response.PageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -57,7 +56,7 @@ public class UserService {
             return UserInfo.builder()
                     .id(user.getUserId())
                     .username(user.getUsername())
-                    .roleTypeInfos(roleTypeInfos)
+                    .roles(roleTypeInfos)
                     .build();
         }).collect(Collectors.toList());
         PageImpl<UserInfo> userPage = new PageImpl<>(userInfos, pageable, total);
