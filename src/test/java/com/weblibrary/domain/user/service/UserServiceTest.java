@@ -5,13 +5,15 @@ import com.weblibrary.domain.account.service.JoinUserForm;
 import com.weblibrary.domain.user.model.RoleType;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserSearchCond;
+import com.weblibrary.web.response.PageResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -73,7 +75,7 @@ class UserServiceTest {
         //when
         Pageable pageable = PageRequest.of(0, 10);
         UserSearchCond cond = new UserSearchCond();
-        Page<UserInfo> userPage = userService.findAll(cond, pageable);
+        PageResponse<UserInfo> userPage = userService.findAll(cond, pageable);
 
         //then
         assertThat(userPage.getContent().size()).isEqualTo(10);
@@ -92,7 +94,7 @@ class UserServiceTest {
         //when
         Pageable pageable = PageRequest.of(0, 10);
         UserSearchCond cond = new UserSearchCond(target.getUsername(), null);
-        Page<UserInfo> userPage = userService.findAll(cond, pageable);
+        PageResponse<UserInfo> userPage = userService.findAll(cond, pageable);
 
         //then
         assertThat(userPage.getContent().size()).isEqualTo(1);
@@ -116,7 +118,7 @@ class UserServiceTest {
         //when
         Pageable pageable = PageRequest.of(0, 10);
         UserSearchCond cond = new UserSearchCond(null, RoleType.ADMIN);
-        Page<UserInfo> userPage = userService.findAll(cond, pageable);
+        PageResponse<UserInfo> userPage = userService.findAll(cond, pageable);
 
         //then
         assertThat(userPage.getContent().size()).isEqualTo(2);
@@ -139,7 +141,7 @@ class UserServiceTest {
         //when
         Pageable pageable = PageRequest.of(0, 10);
         UserSearchCond cond = new UserSearchCond(admin1.getUsername(), RoleType.ADMIN);
-        Page<UserInfo> userPage = userService.findAll(cond, pageable);
+        PageResponse<UserInfo> userPage = userService.findAll(cond, pageable);
         //then
         assertThat(userPage.getContent().size()).isEqualTo(1);
         assertThat(userPage.getTotalElements()).isEqualTo(1);
@@ -168,10 +170,10 @@ class UserServiceTest {
         userService.setUserAsAdmin(tester.getUserId());
 
         //when
-        RoleType roleType = userService.findUserRoleType(tester.getUserId());
+        List<RoleTypeInfo> roles = userService.findUserRoleTypes(tester.getUserId());
 
         //then
-        assertThat(roleType).isEqualTo(RoleType.ADMIN);
+        assertThat(roles).contains(new RoleTypeInfo(RoleType.ADMIN.name(), RoleType.ADMIN.getDescription()));
 
     }
 
