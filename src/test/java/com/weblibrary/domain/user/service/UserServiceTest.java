@@ -164,7 +164,7 @@ class UserServiceTest {
     }
 
     @Test
-    void findUserRoleType() {
+    void findUserRoleTypes() {
         //given
         User tester = accountService.join(new JoinUserForm("tester", "1234"));
         userService.setUserAsAdmin(tester.getUserId());
