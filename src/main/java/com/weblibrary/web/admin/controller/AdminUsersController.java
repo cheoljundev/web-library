@@ -3,12 +3,12 @@ package com.weblibrary.web.admin.controller;
 import com.weblibrary.domain.account.service.AccountService;
 import com.weblibrary.domain.user.model.RoleType;
 import com.weblibrary.domain.user.repository.UserSearchCond;
+import com.weblibrary.domain.user.service.RoleTypeInfo;
 import com.weblibrary.domain.user.service.UserInfo;
 import com.weblibrary.domain.user.service.UserService;
 import com.weblibrary.web.response.ErrorResponse;
 import com.weblibrary.web.response.JsonResponse;
-import com.weblibrary.web.util.PageBlock;
-import com.weblibrary.web.util.PaginationUtil;
+import com.weblibrary.web.response.PageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -19,6 +19,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * AdminUsersController는 사용자 계정의 관리를 처리합니다.
+ * 여기에는 사용자 페이지 보기, 사용자 역할 설정 및 사용자 삭제가 포함됩니다.
+ */
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -27,21 +34,32 @@ public class AdminUsersController {
     private final UserService userService;
     private final AccountService accountService;
 
-    @ModelAttribute("roleTypes")
-    public RoleType[] roleTypes() {
-        return RoleType.values();
+    /**
+     * 모든 역할 정보를 반환합니다.
+     *
+     * @return 역할 정보 목록
+     */
+    @GetMapping("/users/roles")
+    public ResponseEntity<List<RoleTypeInfo>> getRoles() {
+        RoleType[] roleTypes = RoleType.values();
+        List<RoleTypeInfo> roles = Arrays.stream(roleTypes)
+                .map(roleType -> new RoleTypeInfo(roleType.name(), roleType.getDescription())).toList();
+        return ResponseEntity.ok(roles);
     }
 
-    @GetMapping("/admin/user")
-    public String adminUserPage(@ModelAttribute("cond") UserSearchCond cond, Pageable pageable, Model model) {
-        Page<UserInfo> userPage = userService.findAll(cond, pageable);
-        int blockSize = 10; // 한 블록에 표시할 페이지 수
-        PageBlock pageBlock = PaginationUtil.createPageBlock(userPage, blockSize);
+    /**
+     * 사용자 페이지를 반환합니다.
+     *
+     * @param cond 검색 조건
+     * @param pageable 페이지 정보
+     * @param model 모델
+     * @return 사용자 정보 페이지 응답
+     */
+    @GetMapping("/users")
+    public ResponseEntity<PageResponse<UserInfo>> adminUserPage(@ModelAttribute("cond") UserSearchCond cond, Pageable pageable, Model model) {
+        PageResponse<UserInfo> page = userService.findAll(cond, pageable);
 
-        model.addAttribute("userPage", userPage);
-        model.addAttribute("pageBlock", pageBlock);
-
-        return "admin/user";
+        return ResponseEntity.ok(page);
     }
 
     @ResponseBody

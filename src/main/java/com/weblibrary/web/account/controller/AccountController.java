@@ -104,7 +104,7 @@ public class AccountController {
     public ResponseEntity<JsonResponse> signOut(HttpServletRequest request, @Login LoginUser loginUser) {
         HttpSession session = request.getSession(false);
 
-        log.debug("loginUser={}", loginUser);
+        log.debug("at signout loginUser={}", loginUser);
 
         if (session == null || loginUser == null) {
             return new ResponseEntity<>(
@@ -129,7 +129,7 @@ public class AccountController {
      */
     @PostMapping("/auth-status")
     public ResponseEntity<Boolean> authStatus(@Login LoginUser loginUser) {
-        log.debug("loginUser={}", loginUser);
+        log.debug("at auth-status loginUser={}", loginUser);
         if (loginUser == null) {
             return ResponseEntity.ok().body(false);
         }
@@ -144,7 +144,7 @@ public class AccountController {
      */
     @PostMapping("/is-admin")
     public ResponseEntity<Boolean> isAdmin(@Login LoginUser loginUser) {
-        log.debug("loginUser={}", loginUser);
+        log.debug("at is-admin loginUser={}", loginUser);
         boolean isAdmin = loginUser != null && userService.isAdmin(loginUser.getUserId());
         return ResponseEntity.ok(isAdmin);
     }
