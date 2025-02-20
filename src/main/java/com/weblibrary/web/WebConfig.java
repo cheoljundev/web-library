@@ -4,6 +4,7 @@ import com.weblibrary.domain.user.service.UserService;
 import com.weblibrary.web.argumentresolver.LoginUserArgumentResolver;
 import com.weblibrary.web.interceptor.AdminCheckInterceptor;
 import com.weblibrary.web.interceptor.LoginCheckInterceptor;
+import com.weblibrary.web.interceptor.SkipAdminCheckForGetInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,10 +33,15 @@ public class WebConfig implements WebMvcConfigurer {
                 .order(1)
                 .addPathPatterns("/books/{id:\\d+}/rent", "/books/{id:\\d+}/return");
 
-        registry.addInterceptor(new AdminCheckInterceptor(userService))
+        registry.addInterceptor(new SkipAdminCheckForGetInterceptor(userService))
                 .order(2)
-                .addPathPatterns("/admin/**")
-                .addPathPatterns("/books/{id:\\d+}", "/books/add");
+                .addPathPatterns("/books/{id:\\d+}")
+                .addPathPatterns("/users/**");
+
+        registry.addInterceptor(new AdminCheckInterceptor(userService))
+                .order(3)
+                .addPathPatterns("/books/add")
+                .addPathPatterns("/users/roles");
 
     }
 

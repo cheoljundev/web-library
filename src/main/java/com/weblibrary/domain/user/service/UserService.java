@@ -7,9 +7,9 @@ import com.weblibrary.domain.user.repository.RoleRepository;
 import com.weblibrary.domain.user.repository.UserQueryRepository;
 import com.weblibrary.domain.user.repository.UserRepository;
 import com.weblibrary.domain.user.repository.UserSearchCond;
+import com.weblibrary.web.response.PageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.weblibrary.domain.user.model.RoleType.ADMIN;
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -47,29 +48,31 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<UserInfo> findAll(UserSearchCond cond, Pageable pageable) {
+    public PageResponse<UserInfo> findAll(UserSearchCond cond, Pageable pageable) {
         List<User> users = userQueryRepository.findAll(cond, pageable.getPageSize(), pageable.getOffset());
         long total = userQueryRepository.count(cond);
         List<UserInfo> userInfos = users.stream().map(user -> {
-            RoleType roleType = findUserRoleType(user.getUserId());
+            List<RoleTypeInfo> roleTypeInfos = findUserRoleTypes(user.getUserId());
             return UserInfo.builder()
                     .id(user.getUserId())
                     .username(user.getUsername())
-                    .roleTypeName(roleType.name())
+                    .roles(roleTypeInfos)
                     .build();
         }).collect(Collectors.toList());
-        return new PageImpl<>(userInfos, pageable, total);
+        PageImpl<UserInfo> userPage = new PageImpl<>(userInfos, pageable, total);
+        return new PageResponse<>(userInfos, userPage.getTotalPages(), userPage.getTotalElements(), userPage.isFirst(), userPage.isLast());
     }
 
     @Transactional(readOnly = true)
-    public RoleType findUserRoleType(Long userId) {
-        List<Role> roles = roleRepository.findRolesByUserId(userId);
+    public List<RoleTypeInfo> findUserRoleTypes(Long userId) {
 
-        /* 가장 높은 권한 순서로 sort <- Comparable<Role> */
-        roles.sort(null);
+        return roleRepository.findRolesByUserId(userId).stream()
+                .map(role -> {
+                    RoleType roleType = role.getRoleType();
+                    return new RoleTypeInfo(roleType.name(), roleType.getDescription());
+                })
+                .toList();
 
-        /* 첫번째 (가장 높은 권한을 반환) Role의 RoleType 반환 */
-        return roles.get(0).getRoleType();
     }
 
     public boolean setUserAsAdmin(Long userId) {

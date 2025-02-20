@@ -33,7 +33,7 @@ public class UserQueryRepository {
                 .limit(limit.longValue())
                 .where(
                         likeUsername(cond.getUsername()),
-                        eqRole(cond.getRoleType())
+                        eqRole(cond.getRole())
                 )
                 .orderBy(user.userId.desc())
                 .limit(limit.longValue())
@@ -57,7 +57,7 @@ public class UserQueryRepository {
         return query.selectFrom(user)
                 .where(
                         likeUsername(cond.getUsername()),
-                        eqRole(cond.getRoleType())
+                        eqRole(cond.getRole())
                 )
                 .fetch()
                 .size();

@@ -1,19 +1,9 @@
-### home test
-GET {{host}}
-
-### join GET test
-GET {{host}}/join
-
-### join POST test
-POST {{host}}/join
-Content-Type: application/x-www-form-urlencoded
-
-username=kim&
-password=1111
-
 ### login test
 POST {{host}}/login
-Content-Type: application/x-www-form-urlencoded
+Content-Type: application/json
 
-username=kim&
-password=1111
+{
+    "username": "admin",
+    "password": "123456"
+}
+
