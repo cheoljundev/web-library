@@ -76,8 +76,9 @@ class UserQueryRepositoryTest {
 
         User admin1 = accountService.join(new JoinUserForm("admin1", "1234"));
         User admin2 = accountService.join(new JoinUserForm("admin2", "1234"));
-        userService.setUserAsAdmin(admin1.getUserId());
-        userService.setUserAsAdmin(admin2.getUserId());
+        List<RoleType> roles = List.of(RoleType.DEFAULT,RoleType.ADMIN);
+        userService.setRoles(admin1.getUserId(), roles);
+        userService.setRoles(admin2.getUserId(), roles);
 
         //when
         Pageable pageable = PageRequest.of(0, 10);
@@ -97,8 +98,9 @@ class UserQueryRepositoryTest {
 
         User admin1 = accountService.join(new JoinUserForm("admin1", "1234"));
         User admin2 = accountService.join(new JoinUserForm("admin2", "1234"));
-        userService.setUserAsAdmin(admin1.getUserId());
-        userService.setUserAsAdmin(admin2.getUserId());
+        List<RoleType> roles = List.of(RoleType.DEFAULT,RoleType.ADMIN);
+        userService.setRoles(admin1.getUserId(), roles);
+        userService.setRoles(admin2.getUserId(), roles);
 
         //when
         Pageable pageable = PageRequest.of(0, 10);
@@ -153,8 +155,9 @@ class UserQueryRepositoryTest {
 
         User admin1 = accountService.join(new JoinUserForm("admin1", "1234"));
         User admin2 = accountService.join(new JoinUserForm("admin2", "1234"));
-        userService.setUserAsAdmin(admin1.getUserId());
-        userService.setUserAsAdmin(admin2.getUserId());
+        List<RoleType> roles = List.of(RoleType.DEFAULT,RoleType.ADMIN);
+        userService.setRoles(admin1.getUserId(), roles);
+        userService.setRoles(admin2.getUserId(), roles);
 
 
         //when
@@ -174,8 +177,9 @@ class UserQueryRepositoryTest {
 
         User admin1 = accountService.join(new JoinUserForm("admin1", "1234"));
         User admin2 = accountService.join(new JoinUserForm("admin2", "1234"));
-        userService.setUserAsAdmin(admin1.getUserId());
-        userService.setUserAsAdmin(admin2.getUserId());
+        List<RoleType> roles = List.of(RoleType.DEFAULT,RoleType.ADMIN);
+        userService.setRoles(admin1.getUserId(), roles);
+        userService.setRoles(admin2.getUserId(), roles);
 
         //when
         UserSearchCond cond = new UserSearchCond(admin1.getUsername(), RoleType.ADMIN);

@@ -63,30 +63,30 @@ public class AdminUsersController {
         return ResponseEntity.ok(page);
     }
 
-    @PatchMapping("/users/{id}/role")
-    public ResponseEntity<JsonResponse> setRole(@PathVariable("id") Long id, @RequestBody RoleType roleType) {
+    /**
+     * 사용자의 역할을 설정합니다.
+     *
+     * @param id    사용자 ID
+     * @param roles 역할 목록
+     * @return 역할 설정 결과를 포함하는 ResponseEntity
+     */
+    @PutMapping("/users/{id}/roles")
+    public ResponseEntity<JsonResponse> setRoles(@PathVariable("id") Long id, @RequestBody List<RoleType> roles) {
+        log.debug("roles={}", roles);
 
-        log.debug("roleType={}", roleType);
-
-        if (roleType == RoleType.DEFAULT) {
-            if (!userService.setUserAsDefault(id)) {
-                return new ResponseEntity<>(ErrorResponse.builder()
-                        .message("권한 변경에 실패했습니다. 이미 일반 유저입니다.")
-                        .build(), HttpStatus.BAD_REQUEST);
-            }
-        } else {
-            if (!userService.setUserAsAdmin(id)) {
-                return new ResponseEntity<>(ErrorResponse.builder()
-                        .message("권한 변경에 실패했습니다. 이미 관리자 유저입니다.")
-                        .build(), HttpStatus.BAD_REQUEST);
-            }
-        }
+        userService.setRoles(id, roles);
 
         return new ResponseEntity<>(JsonResponse.builder()
                 .message("정상 권한 변경 완료")
                 .build(), HttpStatus.OK);
     }
 
+    /**
+     * 사용자를 삭제합니다.
+     *
+     * @param id 사용자 ID
+     * @return 사용자 삭제 결과를 포함하는 ResponseEntity
+     */
     @DeleteMapping("/users/{id}")
     public ResponseEntity<JsonResponse> deleteUser(@PathVariable("id") Long id) {
 
