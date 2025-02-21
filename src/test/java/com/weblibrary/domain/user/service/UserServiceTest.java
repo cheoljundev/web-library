@@ -112,8 +112,9 @@ class UserServiceTest {
 
         User admin1 = accountService.join(new JoinUserForm("admin1", "1234"));
         User admin2 = accountService.join(new JoinUserForm("admin2", "1234"));
-        userService.setUserAsAdmin(admin1.getUserId());
-        userService.setUserAsAdmin(admin2.getUserId());
+        List<RoleType> roleTypes = List.of(RoleType.DEFAULT,RoleType.ADMIN);
+        userService.setRoles(admin1.getUserId(), roleTypes);
+        userService.setRoles(admin2.getUserId(), roleTypes);
 
         //when
         Pageable pageable = PageRequest.of(0, 10);
@@ -135,8 +136,9 @@ class UserServiceTest {
 
         User admin1 = accountService.join(new JoinUserForm("admin1", "1234"));
         User admin2 = accountService.join(new JoinUserForm("admin2", "1234"));
-        userService.setUserAsAdmin(admin1.getUserId());
-        userService.setUserAsAdmin(admin2.getUserId());
+        List<RoleType> roleTypes = List.of(RoleType.DEFAULT,RoleType.ADMIN);
+        userService.setRoles(admin1.getUserId(), roleTypes);
+        userService.setRoles(admin2.getUserId(), roleTypes);
 
         //when
         Pageable pageable = PageRequest.of(0, 10);
@@ -150,12 +152,13 @@ class UserServiceTest {
     }
 
     @Test
-    void setUserAsAdmin() {
+    void setRoles() {
         //given
         User tester = accountService.join(new JoinUserForm("tester", "1234"));
 
         //when
-        userService.setUserAsAdmin(tester.getUserId());
+        List<RoleType> roleTypes = List.of(RoleType.DEFAULT,RoleType.ADMIN);
+        userService.setRoles(tester.getUserId(), roleTypes);
 
         //then
         boolean isAdmin = userService.isAdmin(tester.getUserId());
@@ -167,7 +170,8 @@ class UserServiceTest {
     void findUserRoleTypes() {
         //given
         User tester = accountService.join(new JoinUserForm("tester", "1234"));
-        userService.setUserAsAdmin(tester.getUserId());
+        List<RoleType> roleTypes = List.of(RoleType.DEFAULT,RoleType.ADMIN);
+        userService.setRoles(tester.getUserId(), roleTypes);
 
         //when
         List<RoleTypeInfo> roles = userService.findUserRoleTypes(tester.getUserId());
@@ -178,24 +182,11 @@ class UserServiceTest {
     }
 
     @Test
-    void setUserAsDefault() {
-        //given
-        User tester = accountService.join(new JoinUserForm("tester", "1234"));
-        userService.setUserAsAdmin(tester.getUserId());
-
-        //when
-        userService.setUserAsDefault(tester.getUserId());
-
-        //then
-        boolean isAdmin = userService.isAdmin(tester.getUserId());
-        assertThat(isAdmin).isFalse();
-    }
-
-    @Test
     void isAdmin() {
         //given
         User tester = accountService.join(new JoinUserForm("tester", "1234"));
-        userService.setUserAsAdmin(tester.getUserId());
+        List<RoleType> roleTypes = List.of(RoleType.DEFAULT,RoleType.ADMIN);
+        userService.setRoles(tester.getUserId(), roleTypes);
 
         //when
         boolean admin = userService.isAdmin(tester.getUserId());
