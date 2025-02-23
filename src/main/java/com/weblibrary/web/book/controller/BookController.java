@@ -1,5 +1,6 @@
 package com.weblibrary.web.book.controller;
 
+import com.weblibrary.domain.book.exception.NotFoundBookException;
 import com.weblibrary.domain.book.repository.BookSearchCond;
 import com.weblibrary.domain.book.service.BookInfo;
 import com.weblibrary.domain.book.service.BookService;
@@ -47,7 +48,8 @@ public class BookController {
      */
     @GetMapping("/books/{bookId}")
     public ResponseEntity<BookInfo> getBook(@PathVariable("bookId") Long bookId) {
-        BookInfo bookInfo = bookService.findBookInfoByBookId(bookId);
+        BookInfo bookInfo = bookService.findBookInfoByBookId(bookId)
+                .orElseThrow(NotFoundBookException::new);
         return ResponseEntity.ok(bookInfo);
     }
 }
