@@ -66,15 +66,15 @@ public class AdminUsersController {
     /**
      * 사용자의 역할을 설정합니다.
      *
-     * @param id    사용자 ID
+     * @param userId    사용자 ID
      * @param roles 역할 목록
      * @return 역할 설정 결과를 포함하는 ResponseEntity
      */
-    @PutMapping("/users/{id}/roles")
-    public ResponseEntity<JsonResponse> setRoles(@PathVariable("id") Long id, @RequestBody List<RoleType> roles) {
+    @PutMapping("/users/{userId}/roles")
+    public ResponseEntity<JsonResponse> setRoles(@PathVariable("userId") Long userId, @RequestBody List<RoleType> roles) {
         log.debug("roles={}", roles);
 
-        userService.setRoles(id, roles);
+        userService.setRoles(userId, roles);
 
         return new ResponseEntity<>(JsonResponse.builder()
                 .message("정상 권한 변경 완료")
@@ -84,13 +84,13 @@ public class AdminUsersController {
     /**
      * 사용자를 삭제합니다.
      *
-     * @param id 사용자 ID
+     * @param userId 사용자 ID
      * @return 사용자 삭제 결과를 포함하는 ResponseEntity
      */
-    @DeleteMapping("/users/{id}")
-    public ResponseEntity<JsonResponse> deleteUser(@PathVariable("id") Long id) {
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<JsonResponse> deleteUser(@PathVariable("userId") Long userId) {
 
-        accountService.deleteUser(id);
+        accountService.deleteUser(userId);
 
         return ResponseEntity.ok().body(JsonResponse.builder()
                 .message("정상적으로 유저가 삭제되었습니다.")
