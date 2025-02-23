@@ -71,6 +71,7 @@ public class UserService {
                     .id(user.getUserId())
                     .username(user.getUsername())
                     .roles(roleTypeInfos)
+                    .remainingRents(user.getRemainingRents())
                     .build();
         });
     }
@@ -104,6 +105,7 @@ public class UserService {
                     .id(user.getUserId())
                     .username(user.getUsername())
                     .roles(roleTypeInfos)
+                    .remainingRents(user.getRemainingRents())
                     .build();
         }).collect(Collectors.toList());
         PageImpl<UserInfo> userPage = new PageImpl<>(userInfos, pageable, total);

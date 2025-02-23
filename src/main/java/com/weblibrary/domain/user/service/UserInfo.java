@@ -15,4 +15,5 @@ public class UserInfo {
     private final Long id;
     private final String username;
     private final List<RoleTypeInfo> roles;
+    private final int remainingRents;
 }
