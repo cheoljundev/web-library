@@ -58,6 +58,24 @@ public class UserService {
     }
 
     /**
+     * 주어진 사용자 ID로 사용자 정보를 조회합니다.
+     *
+     * @param userId 사용자 ID
+     * @return 사용자 정보 (Optional)
+     */
+    @Transactional(readOnly = true)
+    public Optional<UserInfo> findUserInfoById(Long userId) {
+        return userRepository.findByUserId(userId).map(user -> {
+            List<RoleTypeInfo> roleTypeInfos = findUserRoleTypes(user.getUserId());
+            return UserInfo.builder()
+                    .id(user.getUserId())
+                    .username(user.getUsername())
+                    .roles(roleTypeInfos)
+                    .build();
+        });
+    }
+
+    /**
      * 주어진 사용자 이름으로 사용자를 조회합니다.
      *
      * @param username 조회할 사용자 이름

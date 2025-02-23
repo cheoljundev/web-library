@@ -68,6 +68,23 @@ public class BookService {
         return bookRepository.findById(id);
     }
 
+    /**
+     * 책 정보를 책 ID로 조회합니다.
+     *
+     * @param bookId 조회할 책의 ID
+     * @return 책 정보를 포함한 Optional 객체, 없으면 빈 Optional
+     */
+    @Transactional(readOnly = true)
+    public Optional<BookInfo> findBookInfoById(Long bookId) {
+        return bookRepository.findById(bookId)
+                .map(book -> {
+                    UploadFile image = bookCoverRepository.findByBookId(book.getBookId())
+                            .flatMap(bookCover -> uploadFileService.findById(bookCover.getUploadFileId()))
+                            .orElseThrow(NotFoundBookCoverException::new);
+                    return new BookInfo(book.getBookId(), book.getBookName(), book.getAuthor(), book.getIsbn(), book.getDescription(), "/images/" + image.getStoreFileName());
+                });
+    }
+
     @Transactional(readOnly = true)
     public Optional<Book> findBookByName(String name) {
         return bookRepository.findByBookName(name);
@@ -79,15 +96,14 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public BookInfo findBookInfoByBookId(Long bookId) {
-
+    public Optional<BookInfo> findBookInfoByBookId(Long bookId) {
         return bookRepository.findById(bookId)
                 .map(book -> {
                     UploadFile image = bookCoverRepository.findByBookId(book.getBookId())
                             .flatMap(bookCover -> uploadFileService.findById(bookCover.getUploadFileId()))
                             .orElseThrow(NotFoundBookCoverException::new);
                     return new BookInfo(book.getBookId(), book.getBookName(), book.getAuthor(), book.getIsbn(), book.getDescription(), "/images/" + image.getStoreFileName());
-                }).orElseThrow(NotFoundBookException::new);
+                });
     }
 
     @Transactional(readOnly = true)

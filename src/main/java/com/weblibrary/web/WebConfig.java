@@ -40,7 +40,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(new AdminCheckInterceptor(userService))
                 .order(3)
-                .addPathPatterns("/books/add")
+                .addPathPatterns("/books/add", "/books/rentals")
                 .addPathPatterns("/users/roles");
 
     }
