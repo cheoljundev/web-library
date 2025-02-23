@@ -7,10 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -139,7 +137,7 @@ class BookServiceTest {
         Book savedBook = bookService.save(newBookForm);
 
         //when
-        BookInfo bookInfo = bookService.findBookInfoByBookId(savedBook.getBookId());
+        BookInfo bookInfo = bookService.findBookInfoByBookId(savedBook.getBookId()).get();
 
         //then
         assertThat(bookInfo).isNotNull();
@@ -295,7 +293,7 @@ class BookServiceTest {
             books.add(book);
         }
 
-        NewBookForm findBookForm = new NewBookForm("good newBook", "김철준", "23456","testDescription", multipartFile);
+        NewBookForm findBookForm = new NewBookForm("good newBook", "김철준", "23456", "testDescription", multipartFile);
         Book findBook = bookService.save(findBookForm);
         books.add(findBook);
 
