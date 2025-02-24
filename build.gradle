@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.web-library'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 
 ext {
     querydslVersion = '5.0.0'
@@ -34,6 +34,7 @@ dependencies {
     // ControllerAdvice를 사용할 경우 2.7.0 버전 이상을 사용해야함
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
     runtimeOnly 'com.h2database:h2'
+    implementation 'mysql:mysql-connector-java:8.0.33'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
 
