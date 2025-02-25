@@ -10,6 +10,7 @@ import lombok.*;
 @Entity
 @NoArgsConstructor(force = true)
 @Table(name = "upload_files")
+@ToString
 public class UploadFile {
     @EqualsAndHashCode.Include
     @Setter
@@ -17,5 +18,11 @@ public class UploadFile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uploadFileId;
     private final String uploadFileName;
-    private final String storeFileName;
+    @Setter
+    private String storeFileName;
+
+    public UploadFile(String uploadFileName, String storeFileName) {
+        this.uploadFileName = uploadFileName;
+        this.storeFileName = storeFileName;
+    }
 }
