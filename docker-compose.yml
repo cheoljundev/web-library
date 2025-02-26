@@ -14,7 +14,7 @@ services:
 
   app:
     build: .
-    image: web-library
+    image: cheoljundev/web-library:latest
     container_name: web-library
     depends_on:
       - db
