@@ -79,6 +79,7 @@ public class AccountController {
      * @param bindingResult 검증 결과
      * @return 로그인 결과를 포함하는 ResponseEntity
      */
+    @Operation(summary = "사용자 로그인", description = "사용자 로그인을 처리합니다.")
     @PostMapping("/login")
     public ResponseEntity<JsonResponse> login(HttpSession session, @Validated @RequestBody LoginUserForm form,
                                               BindingResult bindingResult) {
@@ -104,6 +105,7 @@ public class AccountController {
      * @param loginUser 로그인된 사용자 정보
      * @return 로그아웃 결과를 포함하는 ResponseEntity
      */
+    @Operation(summary = "사용자 로그아웃", description = "사용자 로그아웃을 처리합니다.")
     @PostMapping("/signout")
     public ResponseEntity<JsonResponse> signOut(HttpServletRequest request, @Login LoginUser loginUser) {
         HttpSession session = request.getSession(false);
@@ -131,6 +133,7 @@ public class AccountController {
      * @param loginUser 로그인된 사용자 정보
      * @return 인증 상태를 포함하는 ResponseEntity
      */
+    @Operation(summary = "사용자 인증 상태 확인", description = "사용자 인증 상태를 확인합니다.")
     @PostMapping("/auth-status")
     public ResponseEntity<Boolean> authStatus(@Login LoginUser loginUser) {
         log.debug("at auth-status loginUser={}", loginUser);
@@ -146,6 +149,7 @@ public class AccountController {
      * @param loginUser 로그인된 사용자 정보
      * @return 권한 여부를 포함하는 ResponseEntity
      */
+    @Operation(summary = "관리자 확인", description = "관리자인지 확인합니다.")
     @PostMapping("/is-admin")
     public ResponseEntity<Boolean> isAdmin(@Login LoginUser loginUser) {
         log.debug("at is-admin loginUser={}", loginUser);

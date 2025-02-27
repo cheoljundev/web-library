@@ -9,6 +9,8 @@ import com.weblibrary.domain.user.service.UserService;
 import com.weblibrary.web.response.ErrorResponse;
 import com.weblibrary.web.response.JsonResponse;
 import com.weblibrary.web.response.PageResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +29,7 @@ import java.util.stream.Stream;
  * AdminUsersController는 사용자 계정의 관리를 처리합니다.
  * 여기에는 사용자 페이지 보기, 사용자 역할 설정 및 사용자 삭제가 포함됩니다.
  */
+@Tag(name = "Admin User API", description = "관리자 사용자 관리 API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -40,6 +43,7 @@ public class AdminUsersController {
      *
      * @return 역할 정보 목록
      */
+    @Operation(summary = "모든 역할 정보 반환", description = "모든 역할 정보를 반환합니다.")
     @GetMapping("/users/roles")
     public ResponseEntity<List<RoleTypeInfo>> getRoles() {
         RoleType[] roleTypes = RoleType.values();
@@ -56,6 +60,7 @@ public class AdminUsersController {
      * @param pageable 페이지 정보
      * @return 사용자 정보 페이지 응답
      */
+    @Operation(summary = "사용자 페이지 반환", description = "사용자 페이지를 반환합니다.")
     @GetMapping("/users")
     public ResponseEntity<PageResponse<UserInfo>> adminUserPage(@ModelAttribute UserSearchCond cond, Pageable pageable) {
         PageResponse<UserInfo> page = userService.findAll(cond, pageable);
@@ -70,6 +75,7 @@ public class AdminUsersController {
      * @param roles 역할 목록
      * @return 역할 설정 결과를 포함하는 ResponseEntity
      */
+    @Operation(summary = "사용자 역할 설정", description = "사용자의 역할을 설정합니다.")
     @PutMapping("/users/{userId}/roles")
     public ResponseEntity<JsonResponse> setRoles(@PathVariable("userId") Long userId, @RequestBody List<RoleType> roles) {
         log.debug("roles={}", roles);
@@ -87,6 +93,7 @@ public class AdminUsersController {
      * @param userId 사용자 ID
      * @return 사용자 삭제 결과를 포함하는 ResponseEntity
      */
+    @Operation(summary = "사용자 삭제", description = "사용자를 삭제합니다.")
     @DeleteMapping("/users/{userId}")
     public ResponseEntity<JsonResponse> deleteUser(@PathVariable("userId") Long userId) {
 

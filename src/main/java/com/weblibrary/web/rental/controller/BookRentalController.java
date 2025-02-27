@@ -13,6 +13,8 @@ import com.weblibrary.web.argumentresolver.Login;
 import com.weblibrary.web.response.ErrorResponse;
 import com.weblibrary.web.response.ErrorResponseUtils;
 import com.weblibrary.web.response.JsonResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * BookRentalController는 도서 대출 및 반납을 처리하는 컨트롤러입니다.
  */
+@Tag(name = "Book Rental API", description = "도서 대출 및 반납 API")
 @Slf4j
 @RestController
 @RequestMapping("/books")
@@ -38,6 +41,7 @@ public class BookRentalController {
      * @param bookId 대출할 책의 ID
      * @return JsonResponse 대출 성공 메시지
      */
+    @Operation(summary = "책 대출", description = "사용자가 책을 대출합니다.")
     @PostMapping("/{bookId}/rent")
     public ResponseEntity<JsonResponse> rentBook(@Login LoginUser loginUser, @PathVariable("bookId") Long bookId) {
 
@@ -67,6 +71,7 @@ public class BookRentalController {
      * @param bookId 반납할 책의 ID
      * @return JsonResponse 반납 성공 메시지
      */
+    @Operation(summary = "책 반납", description = "사용자가 책을 반납합니다.")
     @PostMapping("/{bookId}/return")
     public ResponseEntity<JsonResponse> returnBook(@Login LoginUser loginUser, @PathVariable("bookId") Long bookId) {
 

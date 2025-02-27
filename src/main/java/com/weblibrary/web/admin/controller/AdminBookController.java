@@ -5,6 +5,8 @@ import com.weblibrary.domain.book.service.ModifyBookForm;
 import com.weblibrary.domain.book.service.NewBookForm;
 import com.weblibrary.web.response.ErrorResponseUtils;
 import com.weblibrary.web.response.JsonResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
  * 관리자 도서 컨트롤러 클래스
  * 도서 추가, 삭제, 수정 기능을 제공합니다.
  */
+@Tag(name = "Admin Book API", description = "관리자 도서 관리 API")
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -34,6 +37,7 @@ public class AdminBookController {
      * @param coverImage    도서 표지 이미지
      * @return JsonResponse 응답 객체
      */
+    @Operation(summary = "도서 추가", description = "도서를 추가합니다.")
     @ResponseBody
     @PostMapping("/books/add")
     public ResponseEntity<JsonResponse> addBook(@RequestPart("bookData") @Validated NewBookForm form,
@@ -66,21 +70,6 @@ public class AdminBookController {
     }
 
     /**
-     * 도서를 삭제합니다.
-     *
-     * @param bookId 삭제할 도서의 ID
-     * @return JsonResponse 응답 객체
-     */
-    @ResponseBody
-    @DeleteMapping("/books/{bookId}")
-    public JsonResponse deleteBook(@PathVariable("bookId") Long bookId) {
-        bookService.deleteBook(bookId);
-        return JsonResponse.builder()
-                .message("정상 삭제되었습니다.")
-                .build();
-    }
-
-    /**
      * 도서를 수정합니다.
      *
      * @param form          도서 정보 폼
@@ -88,6 +77,7 @@ public class AdminBookController {
      * @param coverImage    도서 표지 이미지
      * @return JsonResponse 응답 객체
      */
+    @Operation(summary = "도서 수정", description = "도서를 수정합니다.")
     @ResponseBody
     @PutMapping("/books/{bookId}")
     public ResponseEntity<JsonResponse> modifyBook(@RequestPart("bookData") @Validated ModifyBookForm form,
@@ -110,5 +100,21 @@ public class AdminBookController {
         return ResponseEntity.ok().body(JsonResponse.builder()
                 .message("정상 수정되었습니다.")
                 .build());
+    }
+
+    /**
+     * 도서를 삭제합니다.
+     *
+     * @param bookId 삭제할 도서의 ID
+     * @return JsonResponse 응답 객체
+     */
+    @Operation(summary = "도서 삭제", description = "도서를 삭제합니다.")
+    @ResponseBody
+    @DeleteMapping("/books/{bookId}")
+    public JsonResponse deleteBook(@PathVariable("bookId") Long bookId) {
+        bookService.deleteBook(bookId);
+        return JsonResponse.builder()
+                .message("정상 삭제되었습니다.")
+                .build();
     }
 }
