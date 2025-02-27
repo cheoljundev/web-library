@@ -10,6 +10,8 @@ import com.weblibrary.web.argumentresolver.Login;
 import com.weblibrary.web.response.ErrorResponse;
 import com.weblibrary.web.response.ErrorResponseUtils;
 import com.weblibrary.web.response.JsonResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,7 @@ import java.util.Map;
  * 로그인, 회원가입, 로그아웃
  * 로그인 실패, 회원가입 실패 시 ExceptionHandler를 통해 처리
  */
+@Tag(name = "Account API", description = "사용자 계정 관련 API")
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -48,6 +51,7 @@ public class AccountController {
      * @param bindingResult 검증 결과
      * @return 회원가입 결과를 포함하는 ResponseEntity
      */
+    @Operation(summary = "사용자 회원가입", description = "사용자 회원가입을 처리합니다.")
     @PostMapping("/join")
     public ResponseEntity<JsonResponse> join(@Validated @RequestBody JoinUserForm form, BindingResult bindingResult) {
 

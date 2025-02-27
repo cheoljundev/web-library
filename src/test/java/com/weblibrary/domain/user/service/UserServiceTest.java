@@ -2,6 +2,7 @@ package com.weblibrary.domain.user.service;
 
 import com.weblibrary.domain.account.service.AccountService;
 import com.weblibrary.domain.account.service.JoinUserForm;
+import com.weblibrary.domain.user.exception.NotFoundUserException;
 import com.weblibrary.domain.user.model.RoleType;
 import com.weblibrary.domain.user.model.User;
 import com.weblibrary.domain.user.repository.UserSearchCond;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
@@ -193,6 +195,19 @@ class UserServiceTest {
 
         //then
         assertThat(admin).isTrue();
+    }
+
+    @Test
+    void deleteUser() {
+        //given
+        User user = accountService.join(new JoinUserForm("tester", "1234"));
+
+        //when
+        userService.deleteUser(user.getUserId());
+
+        //then
+        assertThatThrownBy(() -> userService.deleteUser(user.getUserId()))
+                .isInstanceOf(NotFoundUserException.class);
     }
 
 }

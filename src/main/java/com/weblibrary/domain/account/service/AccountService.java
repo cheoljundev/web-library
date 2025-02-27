@@ -67,18 +67,6 @@ public class AccountService {
     }
 
     /**
-     * 사용자 계정 삭제
-     *
-     * @param userId : 삭제할 사용자 ID
-     */
-    public void deleteUser(Long userId) {
-        userService.findById(userId)
-                .orElseThrow(NotFoundUserException::new);
-
-        userRepository.deleteById(userId);
-    }
-
-    /**
      * 사용자 이름의 고유성을 확인합니다.
      *
      * @param username : 확인할 사용자 이름

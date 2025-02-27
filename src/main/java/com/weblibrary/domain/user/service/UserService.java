@@ -1,5 +1,6 @@
 package com.weblibrary.domain.user.service;
 
+import com.weblibrary.domain.user.exception.NotFoundUserException;
 import com.weblibrary.domain.user.model.Role;
 import com.weblibrary.domain.user.model.RoleType;
 import com.weblibrary.domain.user.model.User;
@@ -156,6 +157,18 @@ public class UserService {
     @Transactional(readOnly = true)
     public boolean isAdmin(Long userId) {
         return roleRepository.findRoleByUserIdAndRoleType(userId, ADMIN).isPresent();
+    }
+
+    /**
+     * 사용자 계정 삭제
+     *
+     * @param userId : 삭제할 사용자 ID
+     */
+    public void deleteUser(Long userId) {
+        findById(userId)
+                .orElseThrow(NotFoundUserException::new);
+
+        userRepository.deleteById(userId);
     }
 
 }

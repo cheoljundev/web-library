@@ -76,17 +76,4 @@ class AccountServiceTest {
         assertThatThrownBy(() -> accountService.login(session, loginUserForm))
                 .isInstanceOf(InvalidLoginException.class);
     }
-
-    @Test
-    void deleteUser() {
-        //given
-        User user = accountService.join(new JoinUserForm("tester", "1234"));
-
-        //when
-        accountService.deleteUser(user.getUserId());
-
-        //then
-        assertThatThrownBy(() -> accountService.deleteUser(user.getUserId()))
-                .isInstanceOf(NotFoundUserException.class);
-    }
 }

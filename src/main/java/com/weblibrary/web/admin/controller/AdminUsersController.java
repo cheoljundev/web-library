@@ -90,7 +90,7 @@ public class AdminUsersController {
     @DeleteMapping("/users/{userId}")
     public ResponseEntity<JsonResponse> deleteUser(@PathVariable("userId") Long userId) {
 
-        accountService.deleteUser(userId);
+        userService.deleteUser(userId);
 
         return ResponseEntity.ok().body(JsonResponse.builder()
                 .message("정상적으로 유저가 삭제되었습니다.")
