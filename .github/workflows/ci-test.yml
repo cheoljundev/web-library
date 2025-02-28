@@ -56,5 +56,5 @@ jobs:
           script: |
             docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
             docker pull ${{ secrets.DOCKER_USERNAME }}/web-library:latest
-            docker-compose down || true  # 기존 컨테이너 중지 (없어도 계속 진행)
-            docker-compose up -d --remove-orphans
+            docker compose down || true  # 기존 컨테이너 중지 (없어도 계속 진행)
+            docker compose up -d --remove-orphans
