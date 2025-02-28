@@ -23,8 +23,11 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build and run tests
-        run: ./gradlew clean test
+      - name: Build JAR File with Gradle
+        run: ./gradlew clean build
+
+      - name: Verify JAR File
+        run: ls -l build/libs/
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
@@ -53,5 +56,5 @@ jobs:
           script: |
             docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
             docker pull ${{ secrets.DOCKER_USERNAME }}/web-library:latest
-            docker-compose down
-            docker-compose up -d
+            docker-compose down || true  # 기존 컨테이너 중지 (없어도 계속 진행)
+            docker-compose up -d --remove-orphans
