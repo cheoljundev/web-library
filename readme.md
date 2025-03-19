@@ -105,7 +105,7 @@ job은 빌드와 docker hub로 push하는 build, aws ssh에 접속하고 docker 
 
 API 명세서는 Swagger를 통해 자동 생성되며, 애플리케이션 실행 후 아래 주소에서 확인할 수 있습니다.
 
-- [Swagger UI](http://localhost:8080/swagger-ui.html)
+- [Swagger UI](http://43.200.65.98:8080/swagger-ui/index.html)
 
 ## 참고 목록
 
